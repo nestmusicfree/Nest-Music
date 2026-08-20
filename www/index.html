@@ -1,1 +1,1947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Nest Music — Lossless Audio Dimension</title>
+  
+  <meta name="theme-color" content="#1DB954" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Nest Music" />
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" />
+  <link rel="apple-touch-icon" href="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" />
 
+  <!-- Dynamic Web App Manifest Injection -->
+  <link rel="manifest" id="manifestPlaceholder" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP Motion Graphics -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <!-- Lucide Monochrome Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Firebase Compatibility SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#1DB954',
+              light: '#1ed760',
+              dark: '#14833b',
+              glow: 'rgba(29, 185, 84, 0.4)'
+            },
+            darkBg: '#08080a',
+            surface: '#111116',
+            cardBg: 'rgba(20, 20, 26, 0.85)'
+          },
+          animation: {
+            'spin-slow': 'spin 12s linear infinite'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+    * { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      background: radial-gradient(circle at 50% 0%, #0c2b16 0%, #08080a 50%, #030304 100%);
+      min-height: 100vh;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    .glass {
+      background: rgba(20, 20, 26, 0.75);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-modal {
+      background: rgba(14, 14, 18, 0.96);
+      backdrop-filter: blur(35px);
+      -webkit-backdrop-filter: blur(35px);
+      border: 1px solid rgba(29, 185, 84, 0.3);
+    }
+
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 14px;
+      width: 14px;
+      border-radius: 50%;
+      background: #1DB954;
+      box-shadow: 0 0 10px #1DB954;
+      cursor: pointer;
+    }
+
+    .carousel-card {
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    }
+  </style>
+</head>
+<body class="pb-28 selection:bg-brand selection:text-black">
+
+  <!-- ==================== SPLASH SCREEN ==================== -->
+  <div id="splashScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black">
+    <div class="relative flex items-center justify-center">
+      <div id="splashRing" class="absolute w-44 h-44 rounded-full border border-brand/60 scale-50 opacity-0"></div>
+      <div id="splashLogo" class="w-24 h-24 rounded-3xl p-2 bg-gradient-to-tr from-brand-dark to-brand flex items-center justify-center shadow-2xl scale-0">
+        <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-full h-full object-contain rounded-2xl" alt="Nest Music" />
+      </div>
+    </div>
+    <h1 id="splashText" class="mt-6 text-3xl font-black tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-white via-brand-light to-brand opacity-0 transform translate-y-4">
+      NEST MUSIC
+    </h1>
+    <p id="splashTagline" class="text-[11px] text-gray-400 mt-2 tracking-widest uppercase opacity-0 font-bold">The Lossless Audio Dimension</p>
+  </div>
+
+  <!-- ==================== EXCLUSIVE SHARE REFERRAL LANDING SCREEN ==================== -->
+  <div id="sharedLandingModal" class="fixed inset-0 bg-black/95 z-50 hidden flex-col justify-between p-6 overflow-y-auto hide-scrollbar">
+    <div class="flex items-center justify-between border-b border-white/10 pb-4">
+      <div class="flex items-center space-x-2.5">
+        <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-10 h-10 rounded-2xl object-contain bg-black p-1 border border-brand/50 shadow-lg shadow-brand/25" />
+        <div>
+          <h2 class="text-base font-black text-white">Nest Music App</h2>
+          <span class="text-[10px] text-brand font-bold uppercase tracking-wider">Official Android & Web Edition</span>
+        </div>
+      </div>
+      <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-brand/20 text-brand border border-brand/30">Free Lossless</span>
+    </div>
+
+    <!-- Main Invite Content -->
+    <div class="my-auto py-6 space-y-6 text-center max-w-sm mx-auto">
+      <div class="w-24 h-24 rounded-3xl p-3 bg-gradient-to-tr from-brand-dark to-brand mx-auto shadow-2xl shadow-brand/30 flex items-center justify-center">
+        <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-full h-full object-contain" />
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-2xl font-black text-white leading-tight">Welcome to Nest Music</h3>
+        <!-- Requested Hindi Local Tagline -->
+        <p class="text-sm text-brand font-bold bg-brand/10 border border-brand/30 rounded-2xl p-3">
+          ⭐ Special For Rajgarh Sadulpur Public ⭐<br>
+          <span class="text-xs text-gray-200 font-medium mt-1 block">राजगढ़ सादुलपुर की जनता के लिए ख़ास तौर पर तैयार किया गया सुपरफास्ट और फ्री ऑडियो ऐप!</span>
+        </p>
+      </div>
+
+      <!-- App Real Statistics -->
+      <div class="grid grid-cols-3 gap-2">
+        <div class="glass p-3 rounded-2xl text-center">
+          <span class="text-base font-black text-brand block">1000+</span>
+          <span class="text-[9px] text-gray-400 font-bold uppercase">App Installs</span>
+        </div>
+        <div class="glass p-3 rounded-2xl text-center">
+          <span class="text-base font-black text-brand block">565+</span>
+          <span class="text-[9px] text-gray-400 font-bold uppercase">Daily Users</span>
+        </div>
+        <div class="glass p-3 rounded-2xl text-center">
+          <span class="text-base font-black text-brand block">100+</span>
+          <span class="text-[9px] text-gray-400 font-bold uppercase">Music & BGM</span>
+        </div>
+      </div>
+
+      <!-- Direct Install / Open Actions -->
+      <div class="space-y-3 pt-2">
+        <button onclick="triggerDirectPwaInstall()" class="w-full py-4 rounded-2xl bg-brand text-black font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-brand/30 hover:bg-brand-light active:scale-95 transition">
+          <i data-lucide="download" class="w-5 h-5 text-black"></i>
+          <span>Install Official App (1-Click)</span>
+        </button>
+        <button onclick="dismissSharedLandingModal()" class="w-full py-3 rounded-2xl glass text-white font-bold text-xs hover:bg-white/10 transition">
+          Continue to Web Stream
+        </button>
+      </div>
+    </div>
+
+    <div class="text-center text-[10px] text-gray-500 pb-2">
+      Lossless 320kbps Audio • AI Sound Effects • Zero Cost Forever
+    </div>
+  </div>
+
+  <!-- ==================== TOAST NOTIFICATION ENGINE ==================== -->
+  <div id="toastContainer" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-sm pointer-events-none"></div>
+
+  <!-- ==================== SIDE DRAWER ==================== -->
+  <div id="sideDrawerBackdrop" onclick="toggleDrawer(false)" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 hidden transition-opacity opacity-0"></div>
+  <aside id="sideDrawer" class="fixed top-0 left-0 bottom-0 w-72 glass-modal z-50 transform -translate-x-full transition-transform duration-300 flex flex-col justify-between p-6 shadow-2xl border-r border-brand/20">
+    <div class="space-y-6">
+      <div class="flex items-center justify-between pb-4 border-b border-white/10">
+        <div class="flex items-center space-x-3">
+          <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-10 h-10 rounded-2xl object-contain bg-black p-1 border border-brand/40 shadow-lg shadow-brand/20" alt="Logo" />
+          <div>
+            <h3 class="font-extrabold text-base leading-tight text-white">Nest Music</h3>
+            <span class="text-[10px] text-brand uppercase font-bold tracking-wider">Cloud Audio Studio</span>
+          </div>
+        </div>
+        <button onclick="toggleDrawer(false)" class="p-1.5 rounded-full hover:bg-white/10 text-white"><i data-lucide="x" class="w-5 h-5 text-white"></i></button>
+      </div>
+
+      <nav class="space-y-1.5 text-sm font-semibold">
+        <button onclick="switchView('homeView'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl bg-brand/10 text-brand border border-brand/20 transition">
+          <i data-lucide="compass" class="w-5 h-5 text-white"></i>
+          <span>Discover Feed</span>
+        </button>
+        <button onclick="switchView('playlistView'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
+          <i data-lucide="list-music" class="w-5 h-5 text-white"></i>
+          <span>My Playlists (<span id="drawerPlaylistCount">0</span>)</span>
+        </button>
+        <button onclick="switchView('likedView'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
+          <i data-lucide="heart" class="w-5 h-5 text-white"></i>
+          <span>Liked Songs (<span id="drawerLikedCount">0</span>)</span>
+        </button>
+        <button onclick="switchView('sfxView'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
+          <i data-lucide="zap" class="w-5 h-5 text-white"></i>
+          <span>SFX & Soundboard</span>
+        </button>
+        <button onclick="openModal('uploadModal'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
+          <i data-lucide="cloud-upload" class="w-5 h-5 text-white"></i>
+          <span>Upload Audio File</span>
+        </button>
+        <button onclick="switchView('profileView'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
+          <i data-lucide="user-check" class="w-5 h-5 text-white"></i>
+          <span>Profile & Verification</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="border-t border-white/10 pt-4 text-xs text-gray-400 flex items-center justify-between">
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-brand animate-ping"></span> Realtime Stream</span>
+      <button onclick="openModal('feedbackModal'); toggleDrawer(false);" class="text-white hover:text-brand transition">Feedback</button>
+    </div>
+  </aside>
+
+  <!-- ==================== MAIN CONTAINER ==================== -->
+  <div class="max-w-md mx-auto min-h-screen px-4 pt-4 relative">
+
+    <!-- Top App Bar -->
+    <header class="flex items-center justify-between py-2 mb-3">
+      <div class="flex items-center space-x-3">
+        <button onclick="toggleDrawer(true)" class="p-2.5 rounded-2xl glass hover:border-brand/40 text-white active:scale-90 transition">
+          <i data-lucide="menu" class="w-5 h-5 text-white"></i>
+        </button>
+        <div class="flex items-center space-x-2">
+          <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-8 h-8 rounded-xl object-contain bg-black p-0.5 border border-brand/30" alt="Logo" />
+          <div>
+            <span class="text-[9px] uppercase font-extrabold text-brand tracking-widest block leading-tight">Nest Audio Stream</span>
+            <h2 class="text-lg font-black tracking-tight text-white">Nest Music</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <button onclick="openModal('uploadModal')" class="p-2.5 rounded-2xl bg-brand text-black font-extrabold flex items-center gap-1 text-xs shadow-lg shadow-brand/25 active:scale-90 transition">
+          <i data-lucide="plus" class="w-4 h-4 text-black"></i> Upload
+        </button>
+        <button onclick="switchView('profileView')" id="topAvatarBtn" class="w-10 h-10 rounded-2xl border border-brand/40 overflow-hidden bg-neutral-900 p-0.5 flex items-center justify-center active:scale-95 transition">
+          <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-full h-full object-contain" />
+        </button>
+      </div>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="relative mb-4">
+      <i data-lucide="search" class="w-4 h-4 text-white absolute left-4 top-3.5"></i>
+      <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Search tracks, AI sounds, creators, handles..." class="w-full bg-cardBg border border-white/10 rounded-2xl py-3 pl-11 pr-10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand transition shadow-inner" />
+      <button onclick="clearSearch()" id="clearSearchBtn" class="hidden absolute right-4 top-3 text-white hover:text-brand"><i data-lucide="x" class="w-4 h-4 text-white"></i></button>
+    </div>
+
+    <!-- ==================== VIEW 1: HOME FEED ==================== -->
+    <main id="homeView" class="view-panel space-y-5">
+      <!-- Categories Filter Tabs -->
+      <div class="flex space-x-2 overflow-x-auto hide-scrollbar pb-1 text-xs font-bold">
+        <button onclick="filterCategory('all')" class="cat-pill active px-4 py-2 rounded-xl bg-brand text-black whitespace-nowrap transition">All Catalog</button>
+        <button onclick="filterCategory('music')" class="cat-pill px-4 py-2 rounded-xl glass text-white whitespace-nowrap hover:border-brand/50 transition">Music & AI</button>
+        <button onclick="filterCategory('bgm')" class="cat-pill px-4 py-2 rounded-xl glass text-white whitespace-nowrap hover:border-brand/50 transition">BGM & Loops</button>
+        <button onclick="filterCategory('sfx')" class="cat-pill px-4 py-2 rounded-xl glass text-white whitespace-nowrap hover:border-brand/50 transition">SFX Effects</button>
+        <button onclick="filterCategory('18plus')" class="cat-pill px-4 py-2 rounded-xl glass text-red-400 whitespace-nowrap hover:border-red-500/50 transition">Explicit 18+</button>
+      </div>
+
+      <!-- Hero Banner With Native PWA Install Action -->
+      <div class="relative overflow-hidden rounded-3xl p-5 bg-gradient-to-br from-emerald-950 via-zinc-900 to-black border border-brand/30 shadow-2xl">
+        <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-brand/20 rounded-full blur-3xl"></div>
+        <div class="flex items-center gap-2">
+          <span class="text-[9px] font-black uppercase tracking-widest bg-brand/20 text-brand px-2.5 py-0.5 rounded-full border border-brand/30">Lossless 320kbps</span>
+          <span class="text-[9px] font-bold text-gray-400">100% Free Audio Streaming</span>
+        </div>
+        <h3 class="text-xl font-black mt-2 leading-tight text-white">Stream, Upload & Share Lossless Waves</h3>
+        <p class="text-xs text-gray-400 mt-1 max-w-[240px]">Listen to AI generation, BGMs, and sound effects with verified creator badges & full cinema view.</p>
+        
+        <!-- Action Row -->
+        <div class="flex flex-wrap items-center gap-2 mt-4">
+          <!-- Native App Install Button -->
+          <button onclick="triggerDirectPwaInstall()" id="heroOfficialAppBtn" class="px-3.5 py-2.5 rounded-xl bg-white text-black text-xs font-black flex items-center gap-2 shadow-lg active:scale-95 transition hover:bg-gray-100">
+            <span class="w-5 h-5 rounded-full overflow-hidden bg-black p-0.5 flex-shrink-0 border border-brand">
+              <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-full h-full object-contain" alt="Nest Logo" />
+            </span>
+            <span id="heroOfficialAppBtnText">Install Official App</span>
+          </button>
+
+          <button onclick="openModal('uploadModal')" class="px-3.5 py-2.5 rounded-xl bg-brand text-black text-xs font-extrabold flex items-center gap-1.5 hover:bg-brand-light active:scale-95 transition">
+            <i data-lucide="zap" class="w-4 h-4 text-black fill-black"></i> Fast Upload
+          </button>
+          
+          <button onclick="openShareCenter()" class="px-3.5 py-2.5 rounded-xl glass text-white text-xs font-bold hover:bg-white/10 transition flex items-center gap-1.5">
+            <i data-lucide="share-2" class="w-4 h-4 text-white"></i> Share App
+          </button>
+        </div>
+      </div>
+
+      <!-- AI Recommended Matching -->
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-black flex items-center gap-2 tracking-wide uppercase text-gray-300">
+            <i data-lucide="sparkles" class="w-4 h-4 text-white"></i> Recommended For You
+          </h3>
+          <span class="text-[10px] text-brand font-bold" id="algoAgeIndicator">Curated Stream</span>
+        </div>
+        <div id="recommendedGrid" class="grid grid-cols-2 gap-3"></div>
+      </div>
+
+      <!-- Main Trending Catalog -->
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-black flex items-center gap-2 tracking-wide uppercase text-gray-300">
+            <i data-lucide="trending-up" class="w-4 h-4 text-white"></i> Trending Audio Catalog
+          </h3>
+          <span id="streamCountText" class="text-[10px] text-gray-400 font-mono">0 Tracks</span>
+        </div>
+        <div id="songsList" class="space-y-2.5">
+          <div class="text-center py-10 text-gray-500 text-xs">Connecting to Nest Server...</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ==================== VIEW 2: PLAYLISTS ==================== -->
+    <section id="playlistView" class="view-panel hidden space-y-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-base font-black flex items-center gap-2 text-white">
+          <i data-lucide="list-music" class="w-5 h-5 text-white"></i> Custom Playlists
+        </h3>
+        <button onclick="createCustomPlaylist()" class="px-3 py-1.5 bg-brand text-black text-xs font-bold rounded-xl flex items-center gap-1">
+          <i data-lucide="plus" class="w-3.5 h-3.5 text-black"></i> New Playlist
+        </button>
+      </div>
+      <div id="playlistsList" class="space-y-3"></div>
+    </section>
+
+    <!-- ==================== VIEW 3: LIKED SONGS ==================== -->
+    <section id="likedView" class="view-panel hidden space-y-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-base font-black flex items-center gap-2 text-white">
+          <i data-lucide="heart" class="w-5 h-5 text-white"></i> Liked Library
+        </h3>
+        <button onclick="switchView('homeView')" class="text-xs text-brand font-bold flex items-center gap-1">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-white"></i> Back Feed
+        </button>
+      </div>
+      <div id="likedSongsList" class="space-y-2.5"></div>
+    </section>
+
+    <!-- ==================== VIEW 4: SFX SOUNDBOARD ==================== -->
+    <section id="sfxView" class="view-panel hidden space-y-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-base font-black flex items-center gap-2 text-white">
+          <i data-lucide="zap" class="w-5 h-5 text-white"></i> SFX Soundboard Studio
+        </h3>
+        <button onclick="switchView('homeView')" class="text-xs text-brand font-bold flex items-center gap-1">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-white"></i> Back Feed
+        </button>
+      </div>
+      <p class="text-xs text-gray-400">Instant sound effect triggers for video editing and audio soundscapes.</p>
+      <div id="sfxGrid" class="grid grid-cols-2 gap-3"></div>
+    </section>
+
+    <!-- ==================== VIEW 5: USER PROFILE STUDIO ==================== -->
+    <section id="profileView" class="view-panel hidden space-y-5">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-base font-black flex items-center gap-2 text-white">
+          <i data-lucide="user" class="w-5 h-5 text-white"></i> Creator Profile Studio
+        </h3>
+        <button onclick="switchView('homeView')" class="text-xs text-brand font-bold flex items-center gap-1">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-white"></i> Back Feed
+        </button>
+      </div>
+
+      <!-- Auth Form -->
+      <div id="authBox" class="glass-modal p-6 rounded-3xl space-y-4 text-xs">
+        <h4 class="text-base font-extrabold text-center text-white">Account Gateway</h4>
+        <p class="text-center text-gray-400 text-[11px]">Sign in to unlock Unlimited Downloads, Custom Playlists & Verified Creator Tick.</p>
+
+        <div class="flex rounded-2xl bg-black/60 p-1 border border-white/10 text-xs">
+          <button onclick="setAuthMode('login')" id="loginTabBtn" class="flex-1 py-2 rounded-xl bg-brand text-black font-bold">Login</button>
+          <button onclick="setAuthMode('signup')" id="signupTabBtn" class="flex-1 py-2 rounded-xl text-gray-400 font-bold">Sign Up</button>
+        </div>
+
+        <form onsubmit="handleAuthSubmit(event)" class="space-y-3">
+          <div>
+            <label class="block text-gray-300 font-semibold mb-1">Email</label>
+            <input type="email" id="authEmail" required placeholder="name@nestmusic.com" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white focus:border-brand outline-none" />
+          </div>
+          <div>
+            <label class="block text-gray-300 font-semibold mb-1">Password</label>
+            <input type="password" id="authPass" required placeholder="••••••••" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white focus:border-brand outline-none" />
+          </div>
+          <div id="dobField" class="hidden">
+            <label class="block text-gray-300 font-semibold mb-1">Date of Birth (For Age & Content Curation)</label>
+            <input type="date" id="authDob" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white focus:border-brand outline-none" />
+          </div>
+          <button type="submit" id="authSubmitBtn" class="w-full py-3.5 bg-brand text-black font-extrabold rounded-xl active:scale-95 transition shadow-lg shadow-brand/20">
+            Continue To Studio
+          </button>
+        </form>
+      </div>
+
+      <!-- Logged-in Profile Details -->
+      <div id="profileDetailsBox" class="hidden space-y-4">
+        <div class="glass-modal p-6 rounded-3xl text-center relative overflow-hidden">
+          <div class="relative w-24 h-24 rounded-3xl border-2 border-brand/50 mx-auto overflow-hidden bg-black p-2 flex items-center justify-center shadow-2xl">
+            <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-full h-full object-contain" alt="Nest Music Emblem" />
+            <div class="absolute bottom-1 right-1 bg-brand text-black text-[9px] px-1.5 py-0.5 rounded font-black">NEST</div>
+          </div>
+          
+          <div class="flex items-center justify-center gap-1.5 mt-3">
+            <h3 id="userDisplayName" class="text-base font-extrabold text-white">Nest User</h3>
+            <span id="verifiedBadge" class="hidden"><i data-lucide="badge-check" class="w-5 h-5 text-brand fill-brand"></i></span>
+          </div>
+          <p id="userHandleDisplay" class="text-xs text-brand font-mono">@nestcreator</p>
+          <p id="userEmailText" class="text-xs text-gray-400">user@nestmusic.com</p>
+
+          <div id="userSocialBadges" class="flex items-center justify-center gap-2 mt-3 text-xs"></div>
+
+          <div class="flex items-center justify-center gap-2 mt-3">
+            <span id="userAgeBadge" class="px-3 py-0.5 rounded-full text-[10px] font-bold bg-brand/10 text-brand border border-brand/30">Age: 20</span>
+            <span class="px-3 py-0.5 rounded-full text-[10px] font-bold bg-white/10 text-white">Verified Audio Producer</span>
+          </div>
+
+          <!-- Profile Actions -->
+          <div class="grid grid-cols-3 gap-2 mt-5 pt-4 border-t border-white/10 text-xs">
+            <button onclick="openModal('editProfileModal')" class="py-2.5 rounded-xl glass border-white/10 text-white font-bold flex items-center justify-center gap-1 hover:border-brand/40 transition">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5 text-white"></i> Edit Info
+            </button>
+            <button onclick="openModal('blueTickModal')" class="py-2.5 rounded-xl bg-brand/10 border border-brand/40 text-brand font-bold flex items-center justify-center gap-1 hover:bg-brand/20 transition">
+              <i data-lucide="badge-check" class="w-3.5 h-3.5 text-brand"></i> Green Tick
+            </button>
+            <button onclick="openModal('feedbackModal')" class="py-2.5 rounded-xl glass hover:bg-white/10 text-white font-bold flex items-center justify-center gap-1 transition">
+              <i data-lucide="message-square" class="w-3.5 h-3.5 text-white"></i> Feedback
+            </button>
+          </div>
+          <button onclick="handleLogout()" class="mt-4 text-xs text-red-400 font-semibold hover:underline">Sign Out of Account</button>
+        </div>
+
+        <!-- My Tracks List -->
+        <div class="glass p-4 rounded-3xl">
+          <h4 class="text-xs font-black uppercase text-gray-400 tracking-wider mb-3 flex items-center justify-between">
+            <span>My Sound Releases</span>
+            <span id="myUploadCount" class="text-brand font-mono">0</span>
+          </h4>
+          <div id="userUploadsList" class="space-y-2 text-xs">
+            <div class="text-center py-4 text-gray-500">No tracks uploaded yet.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== MINI PLAYER DOCK ==================== -->
+    <div id="miniPlayer" onclick="openFullScreenPlayer()" class="fixed bottom-4 left-4 right-4 max-w-md mx-auto glass-modal rounded-3xl p-3 shadow-2xl border border-brand/40 z-30 transform translate-y-36 transition-transform duration-300 cursor-pointer">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center space-x-3 overflow-hidden">
+          <div class="relative w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0 border border-white/10">
+            <img id="miniThumb" src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-full h-full object-cover" />
+          </div>
+          <div class="truncate">
+            <h4 id="miniTitle" class="text-xs font-extrabold truncate text-white">Track Title</h4>
+            <p id="miniArtist" class="text-[10px] text-gray-400 truncate">Artist</p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-2" onclick="event.stopPropagation()">
+          <button onclick="toggleLikeCurrent()" id="miniLikeBtn" class="p-2 rounded-full glass text-white hover:text-red-500 transition">
+            <i data-lucide="heart" class="w-4 h-4 text-white"></i>
+          </button>
+          <button onclick="togglePlayPause()" id="miniPlayBtn" class="w-10 h-10 rounded-2xl bg-brand text-black flex items-center justify-center hover:bg-brand-light active:scale-90 transition shadow-lg shadow-brand/30">
+            <i data-lucide="play" class="w-5 h-5 text-black fill-black"></i>
+          </button>
+        </div>
+      </div>
+      <div class="w-full bg-white/10 rounded-full h-1 mt-2.5 overflow-hidden">
+        <div id="miniProgressLine" class="bg-brand h-full w-0 transition-all"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FULL-SCREEN CINEMA PLAYER ==================== -->
+  <div id="fullPlayerModal" class="fixed inset-0 bg-darkBg z-50 transform translate-y-full transition-transform duration-500 overflow-y-auto hide-scrollbar flex flex-col justify-between p-6">
+    <div id="playerAmbientGlow" class="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-brand/20 blur-3xl pointer-events-none transition-all duration-700"></div>
+
+    <!-- Header Controls -->
+    <div class="relative z-10 flex items-center justify-between">
+      <button onclick="closeFullScreenPlayer()" class="p-2.5 rounded-2xl glass hover:bg-white/10 text-white active:scale-90 transition">
+        <i data-lucide="chevron-down" class="w-6 h-6 text-white"></i>
+      </button>
+      <div class="text-center">
+        <span class="text-[10px] uppercase font-black tracking-widest text-brand block">Now Playing</span>
+        <h5 id="fpAlbumTitle" class="text-xs font-bold text-gray-300">Nest Master HQ</h5>
+      </div>
+      <button onclick="openModal('equalizerModal')" class="p-2.5 rounded-2xl glass hover:bg-white/10 text-white active:scale-90 transition">
+        <i data-lucide="sliders" class="w-5 h-5 text-brand"></i>
+      </button>
+    </div>
+
+    <!-- Central Carousel: Artwork & Lyrics -->
+    <div class="relative z-10 my-auto flex flex-col items-center py-3 w-full overflow-hidden">
+      <div class="flex items-center space-x-2 mb-3">
+        <button onclick="switchCarouselCard('art')" id="pillArt" class="px-3 py-1 bg-brand text-black text-[10px] font-bold rounded-full transition">Artwork</button>
+        <button onclick="switchCarouselCard('lyrics')" id="pillLyrics" class="px-3 py-1 glass text-white text-[10px] font-bold rounded-full transition">Lyrics</button>
+      </div>
+
+      <div class="relative w-72 h-72 sm:w-80 sm:h-80 flex items-center justify-center">
+        <!-- Card 1: Artwork -->
+        <div id="cardArtwork" onclick="switchCarouselCard('lyrics')" class="carousel-card absolute inset-0 rounded-3xl overflow-hidden shadow-2xl border border-brand/30 bg-black cursor-pointer">
+          <img id="fpCoverImg" src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-full h-full object-cover" />
+          <div class="absolute bottom-2 right-2 px-2 py-1 bg-black/70 rounded-xl text-[9px] font-bold text-brand flex items-center gap-1">
+            <i data-lucide="align-left" class="w-3 h-3 text-white"></i> Tap for Lyrics
+          </div>
+        </div>
+
+        <!-- Card 2: Synchronized Lyrics View -->
+        <div id="cardLyrics" onclick="switchCarouselCard('art')" class="carousel-card absolute inset-0 rounded-3xl p-5 glass-modal border border-brand/40 overflow-y-auto hide-scrollbar space-y-3 text-center cursor-pointer transform translate-x-full opacity-0 pointer-events-none">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2">
+            <span class="text-[10px] font-mono text-brand uppercase font-bold">Synchronized Lyrics</span>
+            <span class="text-[9px] text-gray-400">Tap to view Artwork</span>
+          </div>
+          <div id="lyricsContentBox" class="space-y-2.5 text-xs text-gray-300 font-medium py-2">
+            <p class="text-brand font-bold text-sm">♪ [Lossless Audio Stream Started] ♪</p>
+            <p>Rhythms pulsating deep in the night</p>
+            <p class="text-white font-extrabold text-sm scale-105">Nest Music elevating every byte</p>
+            <p>AI generation, lossless and pure</p>
+            <p>Vibrations designed to endure</p>
+            <p class="text-brand font-mono">♪ [Bass Drop & Spatial Waves] ♪</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Realtime Spectrum Canvas -->
+      <canvas id="audioVisualizerCanvas" class="w-64 h-10 mt-3 rounded-xl opacity-80"></canvas>
+    </div>
+
+    <!-- Track Details & Seekbar -->
+    <div class="relative z-10 space-y-3">
+      <div class="flex items-center justify-between">
+        <div class="truncate max-w-[70%]">
+          <h2 id="fpTrackTitle" class="text-xl font-black text-white truncate leading-tight">Track Title</h2>
+          <div class="flex items-center space-x-1.5 mt-0.5">
+            <span id="fpArtistHandle" class="text-xs text-brand font-mono truncate">@nestcreator</span>
+            <span id="fpGreenTick" class="text-brand"><i data-lucide="badge-check" class="w-4 h-4 fill-brand text-black"></i></span>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <div class="flex items-center gap-1 px-2.5 py-1.5 rounded-xl glass border border-white/10 text-[11px] font-mono text-brand">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-brand"></i>
+            <span id="fpDownloadCount">0</span>
+          </div>
+          <button onclick="toggleLikeCurrent()" id="fpLikeBtn" class="p-2.5 rounded-xl glass text-white hover:text-red-500 transition active:scale-90">
+            <i data-lucide="heart" class="w-5 h-5 text-white"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Seekbar -->
+      <div class="space-y-1 font-mono text-[11px] text-gray-400">
+        <input type="range" id="fpSeekbar" value="0" min="0" max="100" oninput="seekAudio(this.value)" class="w-full h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-brand" />
+        <div class="flex items-center justify-between">
+          <span id="fpCurrentTime">0:00</span>
+          <span id="fpTotalTime">0:00</span>
+        </div>
+      </div>
+
+      <!-- Transport Controls -->
+      <div class="flex items-center justify-between px-2">
+        <button onclick="toggleShuffle()" id="fpShuffleBtn" class="p-2.5 text-white hover:text-brand transition"><i data-lucide="shuffle" class="w-5 h-5 text-white"></i></button>
+        <button onclick="seekStep(-10)" class="p-2.5 text-white hover:text-brand transition"><i data-lucide="rotate-ccw" class="w-6 h-6 text-white"></i></button>
+        <button onclick="togglePlayPause()" id="fpPlayBtn" class="w-16 h-16 rounded-3xl bg-brand text-black flex items-center justify-center shadow-xl shadow-brand/40 active:scale-90 transition hover:bg-brand-light">
+          <i data-lucide="play" class="w-8 h-8 text-black fill-black"></i>
+        </button>
+        <button onclick="seekStep(10)" class="p-2.5 text-white hover:text-brand transition"><i data-lucide="rotate-cw" class="w-6 h-6 text-white"></i></button>
+        <button onclick="toggleLoop()" id="fpLoopBtn" class="p-2.5 text-white hover:text-brand transition"><i data-lucide="repeat" class="w-5 h-5 text-white"></i></button>
+      </div>
+
+      <!-- 5-Star Track Rating -->
+      <div class="flex items-center justify-center space-x-1.5 pt-2 border-t border-white/10 text-xs">
+        <span class="text-gray-400 mr-1 text-[11px]">Rate:</span>
+        <button onclick="rateTrack(1)" class="p-1 text-white hover:text-brand"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
+        <button onclick="rateTrack(2)" class="p-1 text-white hover:text-brand"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
+        <button onclick="rateTrack(3)" class="p-1 text-white hover:text-brand"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
+        <button onclick="rateTrack(4)" class="p-1 text-white hover:text-brand"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
+        <button onclick="rateTrack(5)" class="p-1 text-white hover:text-brand"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
+        <span id="fpRatingScore" class="text-brand font-bold font-mono ml-1.5">5.0 ★</span>
+      </div>
+
+      <!-- Action Utilities -->
+      <div class="flex items-center justify-around pt-2 text-xs">
+        <button onclick="handleDownloadCurrent()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+          <i data-lucide="download" class="w-4 h-4 text-white"></i>
+          <span class="text-[10px]">Download</span>
+        </button>
+        <button onclick="openShareCenter()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+          <i data-lucide="share-2" class="w-4 h-4 text-white"></i>
+          <span class="text-[10px]">Share App</span>
+        </button>
+        <button onclick="openModal('sleepTimerModal')" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+          <i data-lucide="moon" class="w-4 h-4 text-white"></i>
+          <span class="text-[10px]" id="sleepTimerLabel">Timer</span>
+        </button>
+        <button onclick="openModal('speedModal')" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+          <i data-lucide="gauge" class="w-4 h-4 text-white"></i>
+          <span class="text-[10px]" id="speedLabel">1.0x</span>
+        </button>
+        <button onclick="openModal('reportModal')" class="flex flex-col items-center gap-1 text-white hover:text-red-400 transition">
+          <i data-lucide="flag" class="w-4 h-4 text-white"></i>
+          <span class="text-[10px]">Report</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CLEAN SHARE SUITE (NO QR CODE - APP LINK ONLY) ==================== -->
+  <div id="shareSuiteModal" class="fixed inset-0 bg-darkBg z-50 transform translate-y-full transition-transform duration-500 overflow-y-auto hide-scrollbar p-6 flex flex-col justify-between">
+    <div class="flex items-center justify-between border-b border-white/10 pb-4">
+      <div class="flex items-center space-x-2">
+        <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-8 h-8 rounded-xl object-contain bg-black p-0.5 border border-brand/40" />
+        <div>
+          <h3 class="text-sm font-black text-white">Nest App Share Suite</h3>
+          <span class="text-[10px] text-brand font-mono font-bold">Official App Referral Link</span>
+        </div>
+      </div>
+      <button onclick="closeModal('shareSuiteModal')" class="p-2 rounded-full glass hover:bg-white/10 text-white"><i data-lucide="x" class="w-5 h-5 text-white"></i></button>
+    </div>
+
+    <!-- Center App Card -->
+    <div class="my-auto flex flex-col items-center justify-center space-y-5 py-6">
+      <div class="w-24 h-24 rounded-3xl p-3 bg-gradient-to-tr from-brand-dark to-brand flex items-center justify-center shadow-2xl shadow-brand/40">
+        <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-full h-full object-contain" />
+      </div>
+
+      <div class="text-center space-y-1">
+        <h4 class="text-lg font-black text-white">Share Nest Music With Friends</h4>
+        <p class="text-xs text-gray-400 max-w-xs">Send the link directly so anyone can stream or install the official app in 1-click!</p>
+      </div>
+
+      <!-- App URL Box & Copy -->
+      <div class="w-full max-w-sm glass p-3 rounded-2xl flex items-center justify-between border border-brand/30">
+        <span class="text-xs font-mono text-brand truncate mr-2" id="displayAppShareUrl">https://nestmusic.free.nf?invite=app</span>
+        <button onclick="copyShareSuiteLink()" class="px-3 py-1.5 bg-brand text-black font-extrabold rounded-xl text-xs flex items-center gap-1 active:scale-95 transition">
+          <i data-lucide="copy" class="w-3.5 h-3.5 text-black"></i> Copy
+        </button>
+      </div>
+    </div>
+
+    <!-- Social Apps Share Grid -->
+    <div class="space-y-3">
+      <span class="text-[11px] font-bold text-gray-400 uppercase tracking-wider block text-center">Share Directly via Social Apps</span>
+      <div class="grid grid-cols-4 gap-2 text-xs font-bold text-center">
+        <!-- WhatsApp -->
+        <button onclick="directSocialShare('whatsapp')" class="p-3 rounded-2xl glass hover:border-brand/40 flex flex-col items-center gap-1 active:scale-90 transition">
+          <i data-lucide="message-circle" class="w-5 h-5 text-emerald-400"></i>
+          <span class="text-[10px] text-white">WhatsApp</span>
+        </button>
+        <!-- Telegram -->
+        <button onclick="directSocialShare('telegram')" class="p-3 rounded-2xl glass hover:border-brand/40 flex flex-col items-center gap-1 active:scale-90 transition">
+          <i data-lucide="send" class="w-5 h-5 text-sky-400"></i>
+          <span class="text-[10px] text-white">Telegram</span>
+        </button>
+        <!-- Facebook -->
+        <button onclick="directSocialShare('facebook')" class="p-3 rounded-2xl glass hover:border-brand/40 flex flex-col items-center gap-1 active:scale-90 transition">
+          <i data-lucide="facebook" class="w-5 h-5 text-blue-400"></i>
+          <span class="text-[10px] text-white">Facebook</span>
+        </button>
+        <!-- Instagram -->
+        <button onclick="directSocialShare('instagram')" class="p-3 rounded-2xl glass hover:border-brand/40 flex flex-col items-center gap-1 active:scale-90 transition">
+          <i data-lucide="camera" class="w-5 h-5 text-pink-400"></i>
+          <span class="text-[10px] text-white">Instagram</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== WORKING EQUALIZER & BASS ENGINE ==================== -->
+  <div id="equalizerModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-modal max-w-sm w-full p-6 rounded-3xl space-y-4 text-xs">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-sm font-black flex items-center gap-2 text-white">
+          <i data-lucide="sliders" class="w-4 h-4 text-brand"></i> Equalizer & Bass Engine
+        </h3>
+        <button onclick="closeModal('equalizerModal')" class="text-white hover:text-brand"><i data-lucide="x" class="w-4 h-4 text-white"></i></button>
+      </div>
+
+      <!-- Presets -->
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="applyWorkingEqPreset('flat')" id="eqFlatBtn" class="py-2.5 glass text-white rounded-xl text-center font-bold hover:border-brand/40">Flat Default</button>
+        <button onclick="applyWorkingEqPreset('bass')" id="eqBassBtn" class="py-2.5 bg-brand/20 border border-brand text-brand rounded-xl text-center font-bold">Ultra Bass Boost</button>
+        <button onclick="applyWorkingEqPreset('vocal')" id="eqVocalBtn" class="py-2.5 glass text-white rounded-xl text-center font-bold hover:border-brand/40">Vocal Clarity</button>
+        <button onclick="applyWorkingEqPreset('spatial')" id="eqSpatialBtn" class="py-2.5 glass text-white rounded-xl text-center font-bold hover:border-brand/40">3D Spatial Mode</button>
+      </div>
+
+      <!-- Live Sliders -->
+      <div class="space-y-3 pt-2">
+        <div>
+          <div class="flex justify-between text-[11px] font-mono mb-1">
+            <span class="text-gray-300">Bass (100Hz LowShelf)</span>
+            <span id="bassGainLabel" class="text-brand font-bold">+8 dB</span>
+          </div>
+          <input type="range" id="bassSlider" min="-12" max="15" value="8" oninput="updateBassGain(this.value)" class="w-full h-1.5 bg-white/20 rounded accent-brand cursor-pointer" />
+        </div>
+        <div>
+          <div class="flex justify-between text-[11px] font-mono mb-1">
+            <span class="text-gray-300">Vocal Mid (1000Hz Peaking)</span>
+            <span id="midGainLabel" class="text-brand font-bold">0 dB</span>
+          </div>
+          <input type="range" id="midSlider" min="-12" max="15" value="0" oninput="updateMidGain(this.value)" class="w-full h-1.5 bg-white/20 rounded accent-brand cursor-pointer" />
+        </div>
+        <div>
+          <div class="flex justify-between text-[11px] font-mono mb-1">
+            <span class="text-gray-300">Treble / Air (3500Hz HighShelf)</span>
+            <span id="trebleGainLabel" class="text-brand font-bold">+2 dB</span>
+          </div>
+          <input type="range" id="trebleSlider" min="-12" max="15" value="2" oninput="updateTrebleGain(this.value)" class="w-full h-1.5 bg-white/20 rounded accent-brand cursor-pointer" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. Edit Profile Modal -->
+  <div id="editProfileModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-modal max-w-sm w-full p-6 rounded-3xl space-y-4 text-xs">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-sm font-black flex items-center gap-2 text-white">
+          <i data-lucide="user" class="w-5 h-5 text-white"></i> Edit Profile & Socials
+        </h3>
+        <button onclick="closeModal('editProfileModal')" class="text-white hover:text-brand"><i data-lucide="x" class="w-5 h-5 text-white"></i></button>
+      </div>
+
+      <form onsubmit="handleProfileUpdate(event)" class="space-y-3">
+        <div>
+          <label class="block text-gray-300 font-semibold mb-1">Display Name</label>
+          <input type="text" id="editDisplayName" required placeholder="Your Artist / Creator Name" class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand" />
+        </div>
+        <div>
+          <label class="block text-gray-300 font-semibold mb-1">Unique Username (Without @)</label>
+          <input type="text" id="editUsername" required placeholder="alexproducer" class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand" />
+        </div>
+
+        <div class="border-t border-white/10 pt-2 space-y-2">
+          <span class="text-[11px] font-bold text-brand block">Auto-Generating Social Links:</span>
+          <div>
+            <label class="block text-gray-400 text-[10px] mb-0.5">Instagram Handle</label>
+            <input type="text" id="editInstaHandle" placeholder="username" class="w-full bg-black/50 border border-white/10 rounded-xl p-2 text-white outline-none focus:border-brand" />
+          </div>
+          <div>
+            <label class="block text-gray-400 text-[10px] mb-0.5">YouTube Handle</label>
+            <input type="text" id="editYtHandle" placeholder="channel_handle" class="w-full bg-black/50 border border-white/10 rounded-xl p-2 text-white outline-none focus:border-brand" />
+          </div>
+          <div>
+            <label class="block text-gray-400 text-[10px] mb-0.5">Twitter / X Handle</label>
+            <input type="text" id="editXHandle" placeholder="username" class="w-full bg-black/50 border border-white/10 rounded-xl p-2 text-white outline-none focus:border-brand" />
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-brand text-black font-extrabold rounded-xl shadow-lg active:scale-95 transition">
+          Save Profile Updates
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Fast Upload Modal -->
+  <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-modal max-w-sm w-full p-6 rounded-3xl space-y-4 text-xs">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-sm font-black flex items-center gap-2 text-white">
+          <i data-lucide="upload-cloud" class="w-5 h-5 text-white"></i> Fast Audio Uploader
+        </h3>
+        <button onclick="closeModal('uploadModal')" class="text-white hover:text-brand"><i data-lucide="x" class="w-5 h-5 text-white"></i></button>
+      </div>
+
+      <form id="uploadForm" onsubmit="handleTrackUpload(event)" class="space-y-3">
+        <div class="border-2 border-dashed border-brand/40 rounded-2xl p-3.5 text-center bg-brand/5 hover:bg-brand/10 transition">
+          <label class="cursor-pointer block">
+            <i data-lucide="music" class="w-6 h-6 mx-auto text-white mb-1"></i>
+            <span class="font-bold text-white block" id="audioUploadLabel">Select or Drop Audio File</span>
+            <span class="text-[10px] text-gray-400">MP3 / WAV (Min 1m for Music)</span>
+            <input type="file" id="audioFileInput" accept="audio/*" required onchange="autoFillAudioDetails(this)" class="hidden" />
+          </label>
+        </div>
+
+        <div>
+          <label class="block text-gray-300 font-semibold mb-1">Cover Artwork *</label>
+          <input type="file" id="coverImageInput" accept="image/*" required class="w-full text-xs text-gray-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand file:text-black glass rounded-xl cursor-pointer" />
+        </div>
+
+        <div>
+          <input type="text" id="trackTitle" placeholder="Track Name *" required class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand" />
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <input type="text" id="trackArtist" placeholder="Artist Name *" required class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand" />
+          <input type="text" id="trackCreator" placeholder="Producer / AI Model *" required class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <select id="trackCategory" class="w-full bg-neutral-900 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand">
+            <option value="music" class="bg-neutral-900 text-white">Music Track</option>
+            <option value="bgm" class="bg-neutral-900 text-white">BGM Loop</option>
+            <option value="sfx" class="bg-neutral-900 text-white">Sound FX</option>
+          </select>
+          <select id="trackIsExplicit" class="w-full bg-neutral-900 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand">
+            <option value="false" class="bg-neutral-900 text-white">Family Safe</option>
+            <option value="true" class="bg-neutral-900 text-white">Explicit 18+</option>
+          </select>
+        </div>
+
+        <div id="uploadProgressBox" class="hidden space-y-1.5 pt-2">
+          <div class="flex justify-between text-[10px] text-gray-400 font-mono">
+            <span id="uploadStatusText">Encoding Base64...</span>
+            <span id="uploadPercentText">0%</span>
+          </div>
+          <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+            <div id="uploadProgressBar" class="bg-brand h-full w-0 transition-all duration-300"></div>
+          </div>
+        </div>
+
+        <button type="submit" id="submitUploadBtn" class="w-full py-3 bg-brand text-black font-black text-xs rounded-xl shadow-lg shadow-brand/20 active:scale-95 transition">
+          Publish Audio
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Sleep Timer Modal -->
+  <div id="sleepTimerModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-modal max-w-xs w-full p-5 rounded-3xl space-y-3 text-xs text-center">
+      <h3 class="text-sm font-bold text-white flex items-center justify-center gap-1.5">
+        <i data-lucide="moon" class="w-4 h-4 text-white"></i> Sleep Timer
+      </h3>
+      <div class="grid grid-cols-2 gap-2 pt-2">
+        <button onclick="setSleepTimer(15)" class="p-2.5 glass text-white rounded-xl font-bold hover:bg-brand hover:text-black">15 Minutes</button>
+        <button onclick="setSleepTimer(30)" class="p-2.5 glass text-white rounded-xl font-bold hover:bg-brand hover:text-black">30 Minutes</button>
+        <button onclick="setSleepTimer(45)" class="p-2.5 glass text-white rounded-xl font-bold hover:bg-brand hover:text-black">45 Minutes</button>
+        <button onclick="setSleepTimer(0)" class="p-2.5 bg-red-600/20 text-red-400 rounded-xl font-bold">Turn Off</button>
+      </div>
+      <button onclick="closeModal('sleepTimerModal')" class="text-xs text-gray-400 hover:text-white pt-2 block mx-auto">Cancel</button>
+    </div>
+  </div>
+
+  <!-- 4. Playback Speed Modal -->
+  <div id="speedModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-modal max-w-xs w-full p-5 rounded-3xl space-y-3 text-xs text-center">
+      <h3 class="text-sm font-bold text-white flex items-center justify-center gap-1.5">
+        <i data-lucide="gauge" class="w-4 h-4 text-white"></i> Playback Speed
+      </h3>
+      <div class="grid grid-cols-3 gap-2 pt-2">
+        <button onclick="setPlaybackSpeed(0.75)" class="p-2 glass text-white rounded-xl font-bold">0.75x</button>
+        <button onclick="setPlaybackSpeed(1.0)" class="p-2 bg-brand text-black font-black rounded-xl">1.0x</button>
+        <button onclick="setPlaybackSpeed(1.25)" class="p-2 glass text-white rounded-xl font-bold">1.25x</button>
+        <button onclick="setPlaybackSpeed(1.5)" class="p-2 glass text-white rounded-xl font-bold">1.5x</button>
+        <button onclick="setPlaybackSpeed(1.75)" class="p-2 glass text-white rounded-xl font-bold">1.75x</button>
+        <button onclick="setPlaybackSpeed(2.0)" class="p-2 glass text-white rounded-xl font-bold">2.0x</button>
+      </div>
+      <button onclick="closeModal('speedModal')" class="text-xs text-gray-400 hover:text-white pt-2 block mx-auto">Close</button>
+    </div>
+  </div>
+
+  <!-- 5. Blue / Green Tick Modal -->
+  <div id="blueTickModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-modal max-w-sm w-full p-5 rounded-3xl space-y-3 text-xs">
+      <div class="flex items-center justify-between border-b border-white/10 pb-2">
+        <h3 class="text-sm font-bold text-white flex items-center gap-1.5"><i data-lucide="badge-check" class="w-4 h-4 text-brand"></i> Apply For Verified Green Tick</h3>
+        <button onclick="closeModal('blueTickModal')" class="text-white hover:text-brand"><i data-lucide="x" class="w-4 h-4 text-white"></i></button>
+      </div>
+      <form onsubmit="handleBlueTickSubmit(event)" class="space-y-2.5">
+        <input type="text" id="btArtistName" placeholder="Official Artist / Band Name" required class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand" />
+        <input type="url" id="btProofLink" placeholder="Portfolio / Spotify / YouTube Link" required class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand" />
+        <textarea id="btReason" rows="2" placeholder="Why should your profile be verified with Green Tick?" required class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand"></textarea>
+        <button type="submit" class="w-full py-2.5 bg-brand text-black font-bold rounded-xl active:scale-95 transition">Submit Verification</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. Feedback Modal -->
+  <div id="feedbackModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-modal max-w-sm w-full p-5 rounded-3xl space-y-3 text-xs">
+      <div class="flex items-center justify-between border-b border-white/10 pb-2">
+        <h3 class="text-sm font-bold text-white flex items-center gap-1.5"><i data-lucide="message-circle" class="w-4 h-4 text-white"></i> Send App Feedback</h3>
+        <button onclick="closeModal('feedbackModal')" class="text-white hover:text-brand"><i data-lucide="x" class="w-4 h-4 text-white"></i></button>
+      </div>
+      <form onsubmit="handleFeedbackSubmit(event)" class="space-y-2.5">
+        <input type="text" id="fbSubject" placeholder="Feedback Subject" required class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand" />
+        <textarea id="fbMessage" rows="3" placeholder="Tell us your suggestions..." required class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand"></textarea>
+        <button type="submit" class="w-full py-2.5 bg-brand text-black font-bold rounded-xl active:scale-95 transition">Send To Team</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. Report Modal -->
+  <div id="reportModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-modal max-w-sm w-full p-5 rounded-3xl space-y-3 text-xs">
+      <div class="flex items-center justify-between border-b border-white/10 pb-2">
+        <h3 class="text-sm font-bold text-red-400 flex items-center gap-1.5"><i data-lucide="alert-triangle" class="w-4 h-4 text-red-400"></i> Report Audio</h3>
+        <button onclick="closeModal('reportModal')" class="text-white hover:text-brand"><i data-lucide="x" class="w-4 h-4 text-white"></i></button>
+      </div>
+      <form onsubmit="handleReportSubmit(event)" class="space-y-2.5">
+        <select id="reportReason" class="w-full bg-neutral-900 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand">
+          <option value="copyright" class="bg-neutral-900 text-white">Copyright Issue</option>
+          <option value="explicit" class="bg-neutral-900 text-white">Unmarked 18+ Content</option>
+          <option value="broken" class="bg-neutral-900 text-white">Broken Audio</option>
+        </select>
+        <textarea id="reportDetails" rows="2" placeholder="Describe the issue..." class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand"></textarea>
+        <button type="submit" class="w-full py-2.5 bg-red-600 text-white font-bold rounded-xl active:scale-95 transition">Submit Report</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Global Audio Element -->
+  <audio id="globalAudio" class="hidden" crossorigin="anonymous"></audio>
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
+    // 1. Injected Standalone PWA Manifest (Forces Chrome & Mobile browsers to offer real app install prompt)
+    const manifestData = {
+      name: "Nest Music — Lossless Audio Dimension",
+      short_name: "Nest Music",
+      start_url: "/?mode=standalone",
+      display: "standalone",
+      background_color: "#08080a",
+      theme_color: "#1DB954",
+      orientation: "portrait",
+      icons: [
+        {
+          src: "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png",
+          sizes: "192x192",
+          type: "image/png",
+          purpose: "any maskable"
+        },
+        {
+          src: "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "any maskable"
+        }
+      ]
+    };
+    const stringManifest = JSON.stringify(manifestData);
+    const blob = new Blob([stringManifest], {type: 'application/json'});
+    const manifestURL = URL.createObjectURL(blob);
+    document.querySelector('#manifestPlaceholder').setAttribute('href', manifestURL);
+
+    // Native PWA Deferred Prompt Handler
+    let deferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+    });
+
+    // 2. Firebase Initialization
+    const firebaseConfig = {
+      apiKey: "AIzaSyB-a6FWyTL6S5Ch6Fd5V9kuZ7bEH37jdEY",
+      authDomain: "jokefi.firebaseapp.com",
+      databaseURL: "https://jokefi-default-rtdb.firebaseio.com",
+      projectId: "jokefi",
+      storageBucket: "jokefi.firebasestorage.app",
+      messagingSenderId: "968982416863",
+      appId: "1:968982416863:web:c33622a88d6b71321a086a",
+      measurementId: "G-GBGZTBYV04"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    // Constant Universal App Share URL
+    const APP_SHARE_URL = "https://nestmusic.free.nf?invite=app";
+
+    // App State
+    let currentUser = null;
+    let currentUserData = null;
+    let allSongs = [];
+    let usersMap = {};
+    let currentPlayingTrack = null;
+    let currentCategory = 'all';
+    let authMode = 'login';
+    let likedTrackIds = JSON.parse(localStorage.getItem('nest_liked_songs') || '[]');
+    let userPlaylists = JSON.parse(localStorage.getItem('nest_playlists') || '[]');
+    let sleepTimerInterval = null;
+    let isLooping = false;
+    let isShuffle = false;
+    let officialAppConfig = { url: 'https://nestmusic.free.nf', mode: 'install' };
+
+    // Web Audio API Nodes
+    let audioCtx, analyser, sourceNode, bassFilter, midFilter, trebleFilter, canvas, canvasCtx;
+    const globalAudio = document.getElementById('globalAudio');
+
+    // 3. Lifecycle & Splash
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+
+      const tl = gsap.timeline();
+      tl.to("#splashLogo", { scale: 1, duration: 0.8, ease: "elastic.out(1, 0.5)" })
+        .to("#splashRing", { scale: 1.6, opacity: 0.8, duration: 0.6, ease: "power2.out" }, "-=0.4")
+        .to("#splashText", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, "-=0.3")
+        .to("#splashTagline", { opacity: 1, duration: 0.4 }, "-=0.2")
+        .to("#splashScreen", {
+          opacity: 0,
+          scale: 1.04,
+          duration: 0.6,
+          delay: 0.5,
+          ease: "power2.inOut",
+          onComplete: () => {
+            document.getElementById('splashScreen').style.display = 'none';
+            checkSharedInviteLink();
+          }
+        });
+
+      initAudioEngine();
+      listenForUsers();
+      listenForData();
+      listenForOfficialAppSettings();
+      updateLikedUI();
+      renderPlaylists();
+    });
+
+    // 4. Special Share Referral Landing Logic
+    function checkSharedInviteLink() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('invite') === 'app' || urlParams.get('ref') === 'share') {
+        const landing = document.getElementById('sharedLandingModal');
+        landing.classList.remove('hidden');
+        landing.classList.add('flex');
+        gsap.fromTo(landing, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.35 });
+      }
+    }
+
+    function dismissSharedLandingModal() {
+      const landing = document.getElementById('sharedLandingModal');
+      gsap.to(landing, { opacity: 0, scale: 0.95, duration: 0.25, onComplete: () => {
+        landing.classList.add('hidden');
+        landing.classList.remove('flex');
+      }});
+    }
+
+    // 5. Official App Direct Install Action
+    function triggerDirectPwaInstall() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            showToast("Installing Nest Music App...");
+          }
+          deferredInstallPrompt = null;
+        });
+      } else if (officialAppConfig && officialAppConfig.url && officialAppConfig.url !== 'https://nestmusic.free.nf') {
+        window.open(officialAppConfig.url, '_blank');
+      } else {
+        showToast("Tap browser menu (⋮) -> 'Install App' or 'Add to Home Screen'");
+      }
+    }
+
+    function listenForOfficialAppSettings() {
+      db.ref('app_settings/officialApp').on('value', snap => {
+        const val = snap.val();
+        if (val) {
+          officialAppConfig = val;
+          const btnText = document.getElementById('heroOfficialAppBtnText');
+          if (val.mode === 'update') {
+            btnText.innerText = 'Update App Available';
+          } else {
+            btnText.innerText = 'Install Official App';
+          }
+        }
+      });
+    }
+
+    // 6. Drawer & View Navigation
+    function toggleDrawer(open) {
+      const drawer = document.getElementById('sideDrawer');
+      const backdrop = document.getElementById('sideDrawerBackdrop');
+      if (open) {
+        backdrop.classList.remove('hidden');
+        setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+        drawer.classList.remove('-translate-x-full');
+      } else {
+        drawer.classList.add('-translate-x-full');
+        backdrop.classList.add('opacity-0');
+        setTimeout(() => backdrop.classList.add('hidden'), 300);
+      }
+    }
+
+    function switchView(viewId) {
+      document.querySelectorAll('.view-panel').forEach(el => el.classList.add('hidden'));
+      document.getElementById(viewId).classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function listenForUsers() {
+      db.ref('users').on('value', snap => {
+        usersMap = snap.val() || {};
+        renderFeeds();
+      });
+    }
+
+    function listenForData() {
+      db.ref('tracks').on('value', snap => {
+        const data = snap.val();
+        allSongs = [];
+        if (data) {
+          Object.keys(data).forEach(key => allSongs.push({ id: key, ...data[key] }));
+        }
+        document.getElementById('streamCountText').innerText = `${allSongs.length} Tracks`;
+        renderFeeds();
+        renderLikedSongs();
+        renderSoundboard();
+        if (currentUser) loadUserUploads(currentUser.uid);
+      });
+    }
+
+    // 7. User Authentication Listener
+    auth.onAuthStateChanged(async user => {
+      currentUser = user;
+      if (user) {
+        document.getElementById('authBox').classList.add('hidden');
+        document.getElementById('profileDetailsBox').classList.remove('hidden');
+        document.getElementById('userEmailText').innerText = user.email;
+
+        const snap = await db.ref(`users/${user.uid}`).once('value');
+        if (snap.exists()) {
+          currentUserData = snap.val();
+          document.getElementById('userDisplayName').innerText = currentUserData.name || currentUserData.email.split('@')[0];
+          document.getElementById('userHandleDisplay').innerText = `@${currentUserData.username || currentUserData.email.split('@')[0]}`;
+          
+          if (currentUserData.isVerified) {
+            document.getElementById('verifiedBadge').classList.remove('hidden');
+          }
+          if (currentUserData.dob) {
+            const age = calculateAge(currentUserData.dob);
+            document.getElementById('userAgeBadge').innerText = `Age: ${age}`;
+            document.getElementById('algoAgeIndicator').innerText = `Curated Stream (${age}y)`;
+          }
+
+          renderSocialBadges(currentUserData);
+        }
+        loadUserUploads(user.uid);
+      } else {
+        document.getElementById('authBox').classList.remove('hidden');
+        document.getElementById('profileDetailsBox').classList.add('hidden');
+      }
+      renderFeeds();
+    });
+
+    function calculateAge(dob) {
+      const diff = Date.now() - new Date(dob).getTime();
+      return Math.abs(new Date(diff).getUTCFullYear() - 1970);
+    }
+
+    function renderSocialBadges(userData) {
+      const box = document.getElementById('userSocialBadges');
+      box.innerHTML = '';
+      if (userData.instaHandle) {
+        box.innerHTML += `<a href="https://instagram.com/${userData.instaHandle}" target="_blank" class="px-2.5 py-1 glass rounded-xl text-white font-mono text-[10px] hover:border-brand/40">IG: @${userData.instaHandle}</a>`;
+      }
+      if (userData.ytHandle) {
+        box.innerHTML += `<a href="https://youtube.com/@${userData.ytHandle}" target="_blank" class="px-2.5 py-1 glass rounded-xl text-white font-mono text-[10px] hover:border-brand/40">YT: @${userData.ytHandle}</a>`;
+      }
+      if (userData.xHandle) {
+        box.innerHTML += `<a href="https://x.com/${userData.xHandle}" target="_blank" class="px-2.5 py-1 glass rounded-xl text-white font-mono text-[10px] hover:border-brand/40">X: @${userData.xHandle}</a>`;
+      }
+    }
+
+    // 8. Render Feeds
+    function renderFeeds(filterList = null) {
+      const list = filterList || allSongs;
+      let publicTracks = list.filter(t => t.status === 'approved' || !t.status || t.status === 'public');
+
+      if (currentUserData && currentUserData.dob && calculateAge(currentUserData.dob) < 18) {
+        publicTracks = publicTracks.filter(t => t.isExplicit !== 'true' && t.isExplicit !== true);
+      }
+
+      if (currentCategory !== 'all') {
+        if (currentCategory === '18plus') {
+          publicTracks = publicTracks.filter(t => t.isExplicit === 'true' || t.isExplicit === true);
+        } else {
+          publicTracks = publicTracks.filter(t => t.category === currentCategory);
+        }
+      }
+
+      // Recommended Grid
+      const rec = [...publicTracks].sort((a, b) => (b.rating || 5) - (a.rating || 5)).slice(0, 4);
+      document.getElementById('recommendedGrid').innerHTML = rec.map(t => {
+        const uploader = usersMap[t.uploaderUid] || {};
+        const handle = uploader.username ? `@${uploader.username}` : (t.artist || '@creator');
+        const isVerified = uploader.isVerified === true;
+
+        return `
+          <div onclick="playTrack('${t.id}')" class="glass p-3 rounded-2xl cursor-pointer hover:border-brand/40 transition group active:scale-95">
+            <div class="relative rounded-xl overflow-hidden aspect-square mb-2 bg-neutral-900">
+              <img src="${t.coverBase64 || 'https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png'}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+              <span class="absolute top-1.5 right-1.5 text-[9px] px-1.5 py-0.5 rounded bg-black/80 font-mono text-brand font-bold">★ ${t.rating || '5.0'}</span>
+              <div class="absolute bottom-1.5 right-1.5 text-[9px] px-1.5 py-0.5 rounded bg-black/80 font-mono text-white flex items-center gap-1">
+                <i data-lucide="download" class="w-3 h-3 text-white"></i> ${t.downloadsCount || 0}
+              </div>
+              ${t.isExplicit === 'true' || t.isExplicit === true ? '<span class="absolute bottom-1.5 left-1.5 text-[8px] bg-red-600 font-bold px-1 rounded">18+</span>' : ''}
+            </div>
+            <h4 class="text-xs font-black truncate text-white">${escapeHtml(t.title)}</h4>
+            <div class="flex items-center space-x-1 mt-0.5">
+              <p class="text-[10px] text-brand font-mono truncate">${escapeHtml(handle)}</p>
+              ${isVerified ? '<i data-lucide="badge-check" class="w-3.5 h-3.5 fill-brand text-black"></i>' : ''}
+            </div>
+          </div>
+        `;
+      }).join('') || '<p class="col-span-2 text-center text-xs text-gray-500 py-4">No tracks found.</p>';
+
+      // Stream List
+      document.getElementById('songsList').innerHTML = publicTracks.map(t => {
+        const uploader = usersMap[t.uploaderUid] || {};
+        const handle = uploader.username ? `@${uploader.username}` : (t.artist || '@creator');
+        const isVerified = uploader.isVerified === true;
+
+        return `
+          <div onclick="playTrack('${t.id}')" class="glass p-2.5 rounded-2xl flex items-center justify-between hover:border-brand/40 transition cursor-pointer active:scale-98">
+            <div class="flex items-center space-x-3 truncate">
+              <img src="${t.coverBase64 || 'https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png'}" class="w-11 h-11 rounded-xl object-cover" />
+              <div class="truncate">
+                <div class="flex items-center gap-1.5">
+                  <h4 class="text-xs font-bold text-white truncate">${escapeHtml(t.title)}</h4>
+                  ${t.isExplicit === 'true' || t.isExplicit === true ? '<span class="text-[8px] bg-red-600 px-1 rounded font-bold">18+</span>' : ''}
+                </div>
+                <div class="flex items-center space-x-1">
+                  <p class="text-[10px] text-brand font-mono truncate">${escapeHtml(handle)}</p>
+                  ${isVerified ? '<i data-lucide="badge-check" class="w-3.5 h-3.5 fill-brand text-black"></i>' : ''}
+                  <span class="text-[9px] uppercase text-gray-400 font-bold">• ${t.category || 'music'}</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-[10px] font-mono text-gray-400 flex items-center gap-1">
+                <i data-lucide="download" class="w-3 h-3 text-white"></i> ${t.downloadsCount || 0}
+              </span>
+              <button class="p-2 rounded-full bg-brand/10 text-white hover:bg-brand hover:text-black transition">
+                <i data-lucide="play" class="w-3.5 h-3.5 text-white"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('') || '<p class="text-center text-xs text-gray-500 py-6">No tracks in this category.</p>';
+
+      lucide.createIcons();
+    }
+
+    function handleSearch(q) {
+      const term = q.toLowerCase().trim();
+      document.getElementById('clearSearchBtn').classList.toggle('hidden', !term);
+      if (!term) return renderFeeds();
+      const filtered = allSongs.filter(t => 
+        (t.title && t.title.toLowerCase().includes(term)) ||
+        (t.artist && t.artist.toLowerCase().includes(term)) ||
+        (t.creator && t.creator.toLowerCase().includes(term)) ||
+        (t.category && t.category.toLowerCase().includes(term))
+      );
+      renderFeeds(filtered);
+    }
+
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('clearSearchBtn').classList.add('hidden');
+      renderFeeds();
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.classList.remove('bg-brand', 'text-black');
+        btn.classList.add('glass', 'text-white');
+      });
+      event.target.classList.add('bg-brand', 'text-black');
+      event.target.classList.remove('glass', 'text-white');
+      renderFeeds();
+    }
+
+    // 9. Audio Engine & Cinema Player
+    function initAudioEngine() {
+      globalAudio.addEventListener('timeupdate', () => {
+        if (!isNaN(globalAudio.duration)) {
+          const progress = (globalAudio.currentTime / globalAudio.duration) * 100;
+          document.getElementById('fpSeekbar').value = progress || 0;
+          document.getElementById('fpCurrentTime').innerText = formatTime(globalAudio.currentTime);
+          document.getElementById('fpTotalTime').innerText = formatTime(globalAudio.duration);
+
+          document.getElementById('miniProgressLine').style.width = `${progress}%`;
+        }
+      });
+
+      globalAudio.addEventListener('ended', () => {
+        if (isLooping) {
+          globalAudio.currentTime = 0;
+          globalAudio.play();
+        } else if (isShuffle) {
+          const rand = allSongs[Math.floor(Math.random() * allSongs.length)];
+          if (rand) playTrack(rand.id);
+        } else {
+          updatePlayIcons(false);
+        }
+      });
+    }
+
+    function playTrack(trackId) {
+      const track = allSongs.find(t => t.id === trackId);
+      if (!track) return;
+      currentPlayingTrack = track;
+
+      const uploader = usersMap[track.uploaderUid] || {};
+      const handle = uploader.username ? `@${uploader.username}` : (track.artist || '@creator');
+      const isVerified = uploader.isVerified === true;
+
+      document.getElementById('fpTrackTitle').innerText = track.title;
+      document.getElementById('fpArtistHandle').innerText = handle;
+      document.getElementById('fpGreenTick').style.display = isVerified ? 'inline-block' : 'none';
+      document.getElementById('fpCoverImg').src = track.coverBase64;
+      document.getElementById('fpAlbumTitle').innerText = track.category.toUpperCase();
+      document.getElementById('fpRatingScore').innerText = `${track.rating || '5.0'} ★`;
+      document.getElementById('fpDownloadCount').innerText = track.downloadsCount || 0;
+
+      document.getElementById('miniTitle').innerText = track.title;
+      document.getElementById('miniArtist').innerText = handle;
+      document.getElementById('miniThumb').src = track.coverBase64;
+
+      switchCarouselCard('art');
+
+      globalAudio.src = track.audioBase64;
+      globalAudio.play().then(() => {
+        updatePlayIcons(true);
+        setupWebAudioVisualizerAndEQ();
+      }).catch(e => console.log("Play note:", e));
+
+      updateLikedUI();
+      openFullScreenPlayer();
+    }
+
+    function togglePlayPause() {
+      if (!globalAudio.src) return;
+      if (globalAudio.paused) {
+        globalAudio.play();
+        updatePlayIcons(true);
+      } else {
+        globalAudio.pause();
+        updatePlayIcons(false);
+      }
+    }
+
+    function updatePlayIcons(isPlaying) {
+      const icon = isPlaying ? 'pause' : 'play';
+      document.getElementById('fpPlayBtn').innerHTML = `<i data-lucide="${icon}" class="w-8 h-8 text-black fill-black"></i>`;
+      document.getElementById('miniPlayBtn').innerHTML = `<i data-lucide="${icon}" class="w-5 h-5 text-black fill-black"></i>`;
+      lucide.createIcons();
+    }
+
+    function seekAudio(val) {
+      if (!isNaN(globalAudio.duration)) {
+        globalAudio.currentTime = (val / 100) * globalAudio.duration;
+      }
+    }
+
+    function seekStep(seconds) {
+      globalAudio.currentTime = Math.max(0, Math.min(globalAudio.duration, globalAudio.currentTime + seconds));
+    }
+
+    function openFullScreenPlayer() {
+      const modal = document.getElementById('fullPlayerModal');
+      const mini = document.getElementById('miniPlayer');
+      modal.classList.remove('translate-y-full');
+      mini.classList.add('translate-y-36');
+      gsap.fromTo(modal, { opacity: 0.8 }, { opacity: 1, duration: 0.3 });
+    }
+
+    function closeFullScreenPlayer() {
+      const modal = document.getElementById('fullPlayerModal');
+      const mini = document.getElementById('miniPlayer');
+      modal.classList.add('translate-y-full');
+      if (currentPlayingTrack) {
+        mini.classList.remove('translate-y-36');
+      }
+    }
+
+    function switchCarouselCard(type) {
+      const cardArt = document.getElementById('cardArtwork');
+      const cardLyrics = document.getElementById('cardLyrics');
+      const pillArt = document.getElementById('pillArt');
+      const pillLyrics = document.getElementById('pillLyrics');
+
+      if (type === 'lyrics') {
+        gsap.to(cardArt, { x: '-100%', opacity: 0, pointerEvents: 'none', duration: 0.4, ease: "power2.inOut" });
+        gsap.to(cardLyrics, { x: '0%', opacity: 1, pointerEvents: 'auto', duration: 0.4, ease: "power2.inOut" });
+        pillLyrics.className = 'px-3 py-1 bg-brand text-black text-[10px] font-bold rounded-full transition';
+        pillArt.className = 'px-3 py-1 glass text-white text-[10px] font-bold rounded-full transition';
+      } else {
+        gsap.to(cardArt, { x: '0%', opacity: 1, pointerEvents: 'auto', duration: 0.4, ease: "power2.inOut" });
+        gsap.to(cardLyrics, { x: '100%', opacity: 0, pointerEvents: 'none', duration: 0.4, ease: "power2.inOut" });
+        pillArt.className = 'px-3 py-1 bg-brand text-black text-[10px] font-bold rounded-full transition';
+        pillLyrics.className = 'px-3 py-1 glass text-white text-[10px] font-bold rounded-full transition';
+      }
+    }
+
+    // 10. Web Audio API Equalizer & Bass
+    function setupWebAudioVisualizerAndEQ() {
+      if (audioCtx) return;
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 64;
+
+        bassFilter = audioCtx.createBiquadFilter();
+        bassFilter.type = "lowshelf";
+        bassFilter.frequency.value = 100;
+        bassFilter.gain.value = 8;
+
+        midFilter = audioCtx.createBiquadFilter();
+        midFilter.type = "peaking";
+        midFilter.frequency.value = 1000;
+        midFilter.gain.value = 0;
+
+        trebleFilter = audioCtx.createBiquadFilter();
+        trebleFilter.type = "highshelf";
+        trebleFilter.frequency.value = 3500;
+        trebleFilter.gain.value = 2;
+
+        sourceNode = audioCtx.createMediaElementSource(globalAudio);
+        
+        sourceNode.connect(bassFilter);
+        bassFilter.connect(midFilter);
+        midFilter.connect(trebleFilter);
+        trebleFilter.connect(analyser);
+        analyser.connect(audioCtx.destination);
+
+        canvas = document.getElementById('audioVisualizerCanvas');
+        canvasCtx = canvas.getContext('2d');
+        drawSpectrum();
+      } catch (e) {
+        console.log("AudioContext note: ", e);
+      }
+    }
+
+    function updateBassGain(val) {
+      if (bassFilter) bassFilter.gain.value = parseFloat(val);
+      document.getElementById('bassGainLabel').innerText = (val > 0 ? '+' : '') + val + ' dB';
+    }
+
+    function updateMidGain(val) {
+      if (midFilter) midFilter.gain.value = parseFloat(val);
+      document.getElementById('midGainLabel').innerText = (val > 0 ? '+' : '') + val + ' dB';
+    }
+
+    function updateTrebleGain(val) {
+      if (trebleFilter) trebleFilter.gain.value = parseFloat(val);
+      document.getElementById('trebleGainLabel').innerText = (val > 0 ? '+' : '') + val + ' dB';
+    }
+
+    function applyWorkingEqPreset(preset) {
+      ['eqFlatBtn', 'eqBassBtn', 'eqVocalBtn', 'eqSpatialBtn'].forEach(id => {
+        document.getElementById(id).className = 'py-2.5 glass text-white rounded-xl text-center font-bold hover:border-brand/40';
+      });
+
+      if (preset === 'flat') {
+        updateBassGain(0); updateMidGain(0); updateTrebleGain(0);
+        document.getElementById('bassSlider').value = 0;
+        document.getElementById('midSlider').value = 0;
+        document.getElementById('trebleSlider').value = 0;
+        document.getElementById('eqFlatBtn').className = 'py-2.5 bg-brand/20 border border-brand text-brand rounded-xl text-center font-bold';
+      } else if (preset === 'bass') {
+        updateBassGain(12); updateMidGain(-2); updateTrebleGain(2);
+        document.getElementById('bassSlider').value = 12;
+        document.getElementById('midSlider').value = -2;
+        document.getElementById('trebleSlider').value = 2;
+        document.getElementById('eqBassBtn').className = 'py-2.5 bg-brand/20 border border-brand text-brand rounded-xl text-center font-bold';
+      } else if (preset === 'vocal') {
+        updateBassGain(-2); updateMidGain(8); updateTrebleGain(4);
+        document.getElementById('bassSlider').value = -2;
+        document.getElementById('midSlider').value = 8;
+        document.getElementById('trebleSlider').value = 4;
+        document.getElementById('eqVocalBtn').className = 'py-2.5 bg-brand/20 border border-brand text-brand rounded-xl text-center font-bold';
+      } else if (preset === 'spatial') {
+        updateBassGain(6); updateMidGain(2); updateTrebleGain(8);
+        document.getElementById('bassSlider').value = 6;
+        document.getElementById('midSlider').value = 2;
+        document.getElementById('trebleSlider').value = 8;
+        document.getElementById('eqSpatialBtn').className = 'py-2.5 bg-brand/20 border border-brand text-brand rounded-xl text-center font-bold';
+      }
+      showToast(`EQ Preset: ${preset.toUpperCase()}`);
+    }
+
+    function drawSpectrum() {
+      requestAnimationFrame(drawSpectrum);
+      if (!analyser) return;
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      analyser.getByteFrequencyData(dataArray);
+
+      canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+      const barWidth = (canvas.width / bufferLength) * 2;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = (dataArray[i] / 255) * canvas.height;
+        canvasCtx.fillStyle = '#1DB954';
+        canvasCtx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
+        x += barWidth;
+      }
+    }
+
+    // 11. Clean Share Suite (App Link Sharing)
+    function openShareCenter() {
+      const modal = document.getElementById('shareSuiteModal');
+      modal.classList.remove('translate-y-full');
+      gsap.fromTo(modal, { opacity: 0.8 }, { opacity: 1, duration: 0.3 });
+    }
+
+    function copyShareSuiteLink() {
+      navigator.clipboard.writeText(APP_SHARE_URL);
+      showToast("App Invite Link Copied to Clipboard!");
+    }
+
+    function directSocialShare(platform) {
+      const shareTitle = `Install & Stream on Nest Music App — Lossless Audio Dimension`;
+      const shareText = `${shareTitle}\n${APP_SHARE_URL}`;
+
+      if (platform === 'whatsapp') {
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+      } else if (platform === 'telegram') {
+        window.open(`https://t.me/share/url?url=${encodeURIComponent(APP_SHARE_URL)}&text=${encodeURIComponent(shareTitle)}`, '_blank');
+      } else if (platform === 'facebook') {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(APP_SHARE_URL)}`, '_blank');
+      } else if (platform === 'instagram') {
+        navigator.clipboard.writeText(APP_SHARE_URL);
+        showToast("App Link copied! Opening Instagram...");
+        setTimeout(() => window.open('https://instagram.com', '_blank'), 600);
+      }
+    }
+
+    // 12. Liked Songs
+    function toggleLikeCurrent() {
+      if (!currentPlayingTrack) return;
+      const id = currentPlayingTrack.id;
+      if (likedTrackIds.includes(id)) {
+        likedTrackIds = likedTrackIds.filter(x => x !== id);
+        showToast("Removed from Liked Library");
+      } else {
+        likedTrackIds.push(id);
+        showToast("Added to Liked Library");
+      }
+      localStorage.setItem('nest_liked_songs', JSON.stringify(likedTrackIds));
+      updateLikedUI();
+      renderLikedSongs();
+    }
+
+    function updateLikedUI() {
+      const isLiked = currentPlayingTrack && likedTrackIds.includes(currentPlayingTrack.id);
+      const color = isLiked ? 'text-red-500 fill-red-500' : 'text-white';
+      document.getElementById('fpLikeBtn').className = `p-2.5 rounded-xl glass ${color} transition active:scale-90`;
+      document.getElementById('miniLikeBtn').className = `p-2 rounded-full glass ${color} transition`;
+      document.getElementById('drawerLikedCount').innerText = likedTrackIds.length;
+    }
+
+    function renderLikedSongs() {
+      const liked = allSongs.filter(t => likedTrackIds.includes(t.id));
+      document.getElementById('likedSongsList').innerHTML = liked.map(t => {
+        const uploader = usersMap[t.uploaderUid] || {};
+        const handle = uploader.username ? `@${uploader.username}` : (t.artist || '@creator');
+        const isVerified = uploader.isVerified === true;
+
+        return `
+          <div onclick="playTrack('${t.id}')" class="glass p-2.5 rounded-2xl flex items-center justify-between cursor-pointer hover:border-brand/40">
+            <div class="flex items-center space-x-3 truncate">
+              <img src="${t.coverBase64}" class="w-10 h-10 rounded-xl object-cover" />
+              <div class="truncate">
+                <h5 class="text-xs font-bold text-white truncate">${escapeHtml(t.title)}</h5>
+                <div class="flex items-center space-x-1">
+                  <p class="text-[10px] text-brand font-mono truncate">${escapeHtml(handle)}</p>
+                  ${isVerified ? '<i data-lucide="badge-check" class="w-3.5 h-3.5 fill-brand text-black"></i>' : ''}
+                </div>
+              </div>
+            </div>
+            <button class="text-red-500 p-2"><i data-lucide="heart" class="w-4 h-4 text-red-500 fill-red-500"></i></button>
+          </div>
+        `;
+      }).join('') || '<p class="text-center text-xs text-gray-500 py-6">No liked tracks yet.</p>';
+      lucide.createIcons();
+    }
+
+    function renderSoundboard() {
+      const sfx = allSongs.filter(t => t.category === 'sfx' || t.category === 'bgm');
+      document.getElementById('sfxGrid').innerHTML = sfx.map(t => `
+        <button onclick="playTrack('${t.id}')" class="glass p-4 rounded-2xl text-left hover:border-brand/50 active:scale-95 transition group">
+          <i data-lucide="zap" class="w-5 h-5 text-white mb-2 group-hover:scale-110 transition"></i>
+          <h5 class="text-xs font-bold text-white truncate">${escapeHtml(t.title)}</h5>
+          <span class="text-[9px] uppercase font-bold text-gray-400">${t.category}</span>
+        </button>
+      `).join('') || '<p class="col-span-2 text-center text-xs text-gray-500 py-6">No sound effects yet.</p>';
+      lucide.createIcons();
+    }
+
+    function createCustomPlaylist() {
+      const name = prompt("Enter new playlist name:");
+      if (!name) return;
+      const playlist = { id: 'pl_' + Date.now(), name, trackIds: [] };
+      userPlaylists.push(playlist);
+      localStorage.setItem('nest_playlists', JSON.stringify(userPlaylists));
+      renderPlaylists();
+      showToast(`Playlist '${name}' created!`);
+    }
+
+    function renderPlaylists() {
+      document.getElementById('drawerPlaylistCount').innerText = userPlaylists.length;
+      document.getElementById('playlistsList').innerHTML = userPlaylists.map(pl => `
+        <div class="glass p-3 rounded-2xl flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-brand/20 border border-brand/40 flex items-center justify-center">
+              <i data-lucide="list-music" class="w-5 h-5 text-brand"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-white">${escapeHtml(pl.name)}</h4>
+              <p class="text-[10px] text-gray-400">${pl.trackIds.length} Tracks</p>
+            </div>
+          </div>
+          <button onclick="deletePlaylist('${pl.id}')" class="text-gray-400 hover:text-red-400 p-1.5"><i data-lucide="trash-2" class="w-4 h-4 text-white"></i></button>
+        </div>
+      `).join('') || '<p class="text-center text-xs text-gray-500 py-6">No custom playlists yet. Tap "New Playlist" to start.</p>';
+      lucide.createIcons();
+    }
+
+    function deletePlaylist(id) {
+      userPlaylists = userPlaylists.filter(p => p.id !== id);
+      localStorage.setItem('nest_playlists', JSON.stringify(userPlaylists));
+      renderPlaylists();
+      showToast("Playlist deleted");
+    }
+
+    // 13. Fast Upload Studio
+    function autoFillAudioDetails(input) {
+      const file = input.files[0];
+      if (!file) return;
+      document.getElementById('audioUploadLabel').innerText = file.name;
+      const baseName = file.name.replace(/\.[^/.]+$/, "");
+      if (!document.getElementById('trackTitle').value) {
+        document.getElementById('trackTitle').value = baseName;
+      }
+      if (currentUserData && !document.getElementById('trackArtist').value) {
+        document.getElementById('trackArtist').value = currentUserData.name || '';
+      }
+    }
+
+    async function handleTrackUpload(e) {
+      e.preventDefault();
+      const audioFile = document.getElementById('audioFileInput').files[0];
+      const coverFile = document.getElementById('coverImageInput').files[0];
+      const title = document.getElementById('trackTitle').value;
+      const artist = document.getElementById('trackArtist').value;
+      const creator = document.getElementById('trackCreator').value;
+      const category = document.getElementById('trackCategory').value;
+      const isExplicit = document.getElementById('trackIsExplicit').value;
+
+      if (!audioFile || !coverFile) return showToast("Audio & cover files required");
+
+      const dur = await getAudioDuration(audioFile);
+      if (category === 'music' && dur < 60) {
+        return showToast("Standard music tracks must be at least 1 minute long.");
+      }
+
+      const progressBox = document.getElementById('uploadProgressBox');
+      const progressBar = document.getElementById('uploadProgressBar');
+      const percentText = document.getElementById('uploadPercentText');
+      progressBox.classList.remove('hidden');
+
+      const audioBase64 = await fileToBase64(audioFile);
+      const coverBase64 = await fileToBase64(coverFile);
+
+      let p = 0;
+      const interval = setInterval(async () => {
+        p += 20;
+        progressBar.style.width = `${p}%`;
+        percentText.innerText = `${p}%`;
+
+        if (p >= 100) {
+          clearInterval(interval);
+          const newRef = db.ref('tracks').push();
+          await newRef.set({
+            id: newRef.key,
+            title,
+            artist,
+            creator,
+            category,
+            isExplicit,
+            audioBase64,
+            coverBase64,
+            durationFormatted: formatTime(dur),
+            rating: "5.0",
+            downloadsCount: 0,
+            status: "approved",
+            uploaderUid: currentUser ? currentUser.uid : 'guest',
+            createdAt: firebase.database.ServerValue.TIMESTAMP
+          });
+
+          showToast("Sound uploaded successfully!");
+          document.getElementById('uploadForm').reset();
+          progressBox.classList.add('hidden');
+          closeModal('uploadModal');
+        }
+      }, 300);
+    }
+
+    function loadUserUploads(uid) {
+      const userTracks = allSongs.filter(t => t.uploaderUid === uid);
+      document.getElementById('myUploadCount').innerText = userTracks.length;
+      document.getElementById('userUploadsList').innerHTML = userTracks.map(t => `
+        <div class="glass p-2.5 rounded-xl flex items-center justify-between">
+          <div class="truncate">
+            <h5 class="font-bold text-white truncate">${escapeHtml(t.title)}</h5>
+            <span class="text-[9px] px-1.5 py-0.5 rounded font-bold ${t.status === 'hold' ? 'bg-amber-500/20 text-amber-300' : 'bg-brand/20 text-brand'}">
+              ${t.status === 'hold' ? 'Hold' : 'Live'}
+            </span>
+          </div>
+          <button onclick="playTrack('${t.id}')" class="text-white p-1"><i data-lucide="play" class="w-4 h-4 text-white"></i></button>
+        </div>
+      `).join('') || '<div class="text-center py-2 text-gray-500">No uploads yet.</div>';
+      lucide.createIcons();
+    }
+
+    async function handleProfileUpdate(e) {
+      e.preventDefault();
+      if (!currentUser) return;
+      const name = document.getElementById('editDisplayName').value;
+      const username = document.getElementById('editUsername').value.replace(/@/g, '').trim();
+      const instaHandle = document.getElementById('editInstaHandle').value.replace(/@/g, '').trim();
+      const ytHandle = document.getElementById('editYtHandle').value.replace(/@/g, '').trim();
+      const xHandle = document.getElementById('editXHandle').value.replace(/@/g, '').trim();
+
+      await db.ref(`users/${currentUser.uid}`).update({
+        name,
+        username,
+        instaHandle,
+        ytHandle,
+        xHandle
+      });
+
+      document.getElementById('userDisplayName').innerText = name;
+      document.getElementById('userHandleDisplay').innerText = `@${username}`;
+      renderSocialBadges({ instaHandle, ytHandle, xHandle });
+      showToast("Profile & social handles saved!");
+      closeModal('editProfileModal');
+    }
+
+    async function handleDownloadCurrent() {
+      if (!currentUser) {
+        showToast("Please sign in to download tracks!");
+        switchView('profileView');
+        closeFullScreenPlayer();
+        return;
+      }
+      if (!currentPlayingTrack || !currentPlayingTrack.audioBase64) return;
+
+      const trackRef = db.ref(`tracks/${currentPlayingTrack.id}`);
+      const newCount = (currentPlayingTrack.downloadsCount || 0) + 1;
+      await trackRef.update({ downloadsCount: newCount });
+      document.getElementById('fpDownloadCount').innerText = newCount;
+
+      const a = document.createElement('a');
+      a.href = currentPlayingTrack.audioBase64;
+      a.download = `${currentPlayingTrack.title || 'NestMusic'}.mp3`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast("Downloading lossless audio file...");
+    }
+
+    async function rateTrack(stars) {
+      if (!currentUser) {
+        showToast("Please sign in to rate tracks");
+        switchView('profileView');
+        closeFullScreenPlayer();
+        return;
+      }
+      if (!currentPlayingTrack) return;
+      const trackRef = db.ref(`tracks/${currentPlayingTrack.id}`);
+      const newRating = ((parseFloat(currentPlayingTrack.rating || 5) + stars) / 2).toFixed(1);
+      await trackRef.update({ rating: newRating });
+      document.getElementById('fpRatingScore').innerText = `${newRating} ★`;
+      showToast(`Rated ${stars} Stars!`);
+    }
+
+    function setSleepTimer(mins) {
+      clearInterval(sleepTimerInterval);
+      if (mins === 0) {
+        document.getElementById('sleepTimerLabel').innerText = 'Timer';
+        showToast("Sleep Timer Disabled");
+      } else {
+        document.getElementById('sleepTimerLabel').innerText = `${mins}m`;
+        showToast(`Sleep Timer set for ${mins} mins`);
+        sleepTimerInterval = setTimeout(() => {
+          globalAudio.pause();
+          updatePlayIcons(false);
+          showToast("Playback Paused by Timer");
+        }, mins * 60 * 1000);
+      }
+      closeModal('sleepTimerModal');
+    }
+
+    function setPlaybackSpeed(speed) {
+      globalAudio.playbackRate = speed;
+      document.getElementById('speedLabel').innerText = `${speed}x`;
+      closeModal('speedModal');
+    }
+
+    function toggleShuffle() {
+      isShuffle = !isShuffle;
+      document.getElementById('fpShuffleBtn').classList.toggle('text-brand', isShuffle);
+      showToast(isShuffle ? 'Shuffle Active' : 'Shuffle Off');
+    }
+
+    function toggleLoop() {
+      isLooping = !isLooping;
+      document.getElementById('fpLoopBtn').classList.toggle('text-brand', isLooping);
+      showToast(isLooping ? 'Loop Active' : 'Loop Off');
+    }
+
+    function getAudioDuration(file) {
+      return new Promise(resolve => {
+        const audio = new Audio();
+        audio.src = URL.createObjectURL(file);
+        audio.onloadedmetadata = () => resolve(audio.duration);
+      });
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = e => reject(e);
+      });
+    }
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toastContainer');
+      const el = document.createElement('div');
+      el.className = 'glass-modal px-4 py-2.5 rounded-2xl text-xs font-bold text-white border border-brand/40 shadow-2xl flex items-center gap-2';
+      el.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4 text-white"></i> <span>${msg}</span>`;
+      box.appendChild(el);
+      lucide.createIcons();
+      gsap.fromTo(el, { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3 });
+      setTimeout(() => {
+        gsap.to(el, { opacity: 0, y: -20, duration: 0.3, onComplete: () => el.remove() });
+      }, 3000);
+    }
+
+    function setAuthMode(mode) {
+      authMode = mode;
+      document.getElementById('loginTabBtn').classList.toggle('bg-brand', mode === 'login');
+      document.getElementById('loginTabBtn').classList.toggle('text-black', mode === 'login');
+      document.getElementById('signupTabBtn').classList.toggle('bg-brand', mode === 'signup');
+      document.getElementById('signupTabBtn').classList.toggle('text-black', mode === 'signup');
+      document.getElementById('dobField').classList.toggle('hidden', mode !== 'signup');
+    }
+
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('authEmail').value;
+      const pass = document.getElementById('authPass').value;
+      const dob = document.getElementById('authDob').value;
+
+      try {
+        if (authMode === 'signup') {
+          const cred = await auth.createUserWithEmailAndPassword(email, pass);
+          await db.ref(`users/${cred.user.uid}`).set({
+            email,
+            name: email.split('@')[0],
+            username: email.split('@')[0],
+            dob: dob || '2000-01-01',
+            isVerified: false
+          });
+          showToast("Account Created!");
+        } else {
+          await auth.signInWithEmailAndPassword(email, pass);
+          showToast("Signed in successfully!");
+        }
+      } catch (err) {
+        showToast(err.message);
+      }
+    }
+
+    function handleLogout() {
+      auth.signOut();
+      showToast("Signed out");
+    }
+
+    async function handleBlueTickSubmit(e) {
+      e.preventDefault();
+      if (!currentUser) return;
+      await db.ref('blue_tick_requests').push({
+        uid: currentUser.uid,
+        email: currentUser.email,
+        artistName: document.getElementById('btArtistName').value,
+        proofLink: document.getElementById('btProofLink').value,
+        reason: document.getElementById('btReason').value,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      });
+      showToast("Verification Request Sent!");
+      closeModal('blueTickModal');
+    }
+
+    async function handleFeedbackSubmit(e) {
+      e.preventDefault();
+      await db.ref('feedbacks').push({
+        email: currentUser ? currentUser.email : 'guest@nestmusic.com',
+        subject: document.getElementById('fbSubject').value,
+        message: document.getElementById('fbMessage').value,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      });
+      showToast("Feedback sent! Thank you.");
+      closeModal('feedbackModal');
+    }
+
+    async function handleReportSubmit(e) {
+      e.preventDefault();
+      await db.ref('reports').push({
+        trackId: currentPlayingTrack ? currentPlayingTrack.id : 'unknown',
+        trackTitle: currentPlayingTrack ? currentPlayingTrack.title : 'unknown',
+        reason: document.getElementById('reportReason').value,
+        details: document.getElementById('reportDetails').value,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      });
+      showToast("Report logged. Our team will review it.");
+      closeModal('reportModal');
+    }
+
+    function openModal(id) {
+      const m = document.getElementById(id);
+      m.classList.remove('hidden');
+      gsap.fromTo(m.children[0], { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(1.5)" });
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m]);
+    }
+  </script>
+</body>
+</html>
