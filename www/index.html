@@ -90,6 +90,11 @@
     .carousel-card {
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
     }
+
+    .pinned-glow {
+      border: 1px solid rgba(29, 185, 84, 0.6);
+      box-shadow: 0 0 15px rgba(29, 185, 84, 0.2);
+    }
   </style>
 </head>
 <body class="pb-28 selection:bg-brand selection:text-black">
@@ -129,7 +134,7 @@
 
       <div class="space-y-2">
         <h3 class="text-2xl font-black text-white leading-tight">Welcome to Nest Music</h3>
-        <!-- Requested Hindi Local Tagline -->
+        <!-- Hindi Regional Tagline -->
         <p class="text-sm text-brand font-bold bg-brand/10 border border-brand/30 rounded-2xl p-3">
           ⭐ Special For Rajgarh Sadulpur Public ⭐<br>
           <span class="text-xs text-gray-200 font-medium mt-1 block">राजगढ़ सादुलपुर की जनता के लिए ख़ास तौर पर तैयार किया गया सुपरफास्ट और फ्री ऑडियो ऐप!</span>
@@ -165,12 +170,17 @@
     </div>
 
     <div class="text-center text-[10px] text-gray-500 pb-2">
-      Lossless 320kbps Audio • AI Sound Effects • Zero Cost Forever
+      Lossless 320kbps Audio • Offline Mode • Zero Cost Forever
     </div>
   </div>
 
   <!-- ==================== TOAST NOTIFICATION ENGINE ==================== -->
   <div id="toastContainer" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-sm pointer-events-none"></div>
+
+  <!-- ==================== OFFLINE STATUS BANNER ==================== -->
+  <div id="offlineIndicator" class="hidden fixed top-0 inset-x-0 z-40 bg-amber-500 text-black text-[10px] font-black uppercase text-center py-1 tracking-widest flex items-center justify-center gap-1.5 shadow-md">
+    <i data-lucide="wifi-off" class="w-3.5 h-3.5"></i> You are in Offline Mode (Playing Local Cache)
+  </div>
 
   <!-- ==================== SIDE DRAWER ==================== -->
   <div id="sideDrawerBackdrop" onclick="toggleDrawer(false)" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 hidden transition-opacity opacity-0"></div>
@@ -208,6 +218,10 @@
           <i data-lucide="cloud-upload" class="w-5 h-5 text-white"></i>
           <span>Upload Audio File</span>
         </button>
+        <button onclick="requestDeviceNotificationPermission(); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-brand transition">
+          <i data-lucide="bell" class="w-5 h-5 text-brand"></i>
+          <span>Allow Device Alerts</span>
+        </button>
         <button onclick="switchView('profileView'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
           <i data-lucide="user-check" class="w-5 h-5 text-white"></i>
           <span>Profile & Verification</span>
@@ -216,7 +230,7 @@
     </div>
 
     <div class="border-t border-white/10 pt-4 text-xs text-gray-400 flex items-center justify-between">
-      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-brand animate-ping"></span> Realtime Stream</span>
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-brand animate-ping"></span> Realtime Audio</span>
       <button onclick="openModal('feedbackModal'); toggleDrawer(false);" class="text-white hover:text-brand transition">Feedback</button>
     </div>
   </aside>
@@ -272,7 +286,7 @@
         <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-brand/20 rounded-full blur-3xl"></div>
         <div class="flex items-center gap-2">
           <span class="text-[9px] font-black uppercase tracking-widest bg-brand/20 text-brand px-2.5 py-0.5 rounded-full border border-brand/30">Lossless 320kbps</span>
-          <span class="text-[9px] font-bold text-gray-400">100% Free Audio Streaming</span>
+          <span class="text-[9px] font-bold text-gray-400">Offline & Online Stream</span>
         </div>
         <h3 class="text-xl font-black mt-2 leading-tight text-white">Stream, Upload & Share Lossless Waves</h3>
         <p class="text-xs text-gray-400 mt-1 max-w-[240px]">Listen to AI generation, BGMs, and sound effects with verified creator badges & full cinema view.</p>
@@ -308,11 +322,11 @@
         <div id="recommendedGrid" class="grid grid-cols-2 gap-3"></div>
       </div>
 
-      <!-- Main Trending Catalog -->
+      <!-- Main Audio Catalog (With Pinned Track Glow Support) -->
       <div>
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-xs font-black flex items-center gap-2 tracking-wide uppercase text-gray-300">
-            <i data-lucide="trending-up" class="w-4 h-4 text-white"></i> Trending Audio Catalog
+            <i data-lucide="trending-up" class="w-4 h-4 text-white"></i> Audio Catalog
           </h3>
           <span id="streamCountText" class="text-[10px] text-gray-400 font-mono">0 Tracks</span>
         </div>
@@ -613,7 +627,7 @@
     </div>
   </div>
 
-  <!-- ==================== CLEAN SHARE SUITE (NO QR CODE - APP LINK ONLY) ==================== -->
+  <!-- ==================== CLEAN SHARE SUITE ==================== -->
   <div id="shareSuiteModal" class="fixed inset-0 bg-darkBg z-50 transform translate-y-full transition-transform duration-500 overflow-y-auto hide-scrollbar p-6 flex flex-col justify-between">
     <div class="flex items-center justify-between border-b border-white/10 pb-4">
       <div class="flex items-center space-x-2">
@@ -719,7 +733,7 @@
     </div>
   </div>
 
-  <!-- 1. Edit Profile Modal -->
+  <!-- Other Modals -->
   <div id="editProfileModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
     <div class="glass-modal max-w-sm w-full p-6 rounded-3xl space-y-4 text-xs">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
@@ -762,7 +776,6 @@
     </div>
   </div>
 
-  <!-- 2. Fast Upload Modal -->
   <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
     <div class="glass-modal max-w-sm w-full p-6 rounded-3xl space-y-4 text-xs">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
@@ -824,7 +837,6 @@
     </div>
   </div>
 
-  <!-- 3. Sleep Timer Modal -->
   <div id="sleepTimerModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
     <div class="glass-modal max-w-xs w-full p-5 rounded-3xl space-y-3 text-xs text-center">
       <h3 class="text-sm font-bold text-white flex items-center justify-center gap-1.5">
@@ -840,7 +852,6 @@
     </div>
   </div>
 
-  <!-- 4. Playback Speed Modal -->
   <div id="speedModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
     <div class="glass-modal max-w-xs w-full p-5 rounded-3xl space-y-3 text-xs text-center">
       <h3 class="text-sm font-bold text-white flex items-center justify-center gap-1.5">
@@ -858,7 +869,6 @@
     </div>
   </div>
 
-  <!-- 5. Blue / Green Tick Modal -->
   <div id="blueTickModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
     <div class="glass-modal max-w-sm w-full p-5 rounded-3xl space-y-3 text-xs">
       <div class="flex items-center justify-between border-b border-white/10 pb-2">
@@ -874,7 +884,6 @@
     </div>
   </div>
 
-  <!-- 6. Feedback Modal -->
   <div id="feedbackModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
     <div class="glass-modal max-w-sm w-full p-5 rounded-3xl space-y-3 text-xs">
       <div class="flex items-center justify-between border-b border-white/10 pb-2">
@@ -889,7 +898,6 @@
     </div>
   </div>
 
-  <!-- 7. Report Modal -->
   <div id="reportModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
     <div class="glass-modal max-w-sm w-full p-5 rounded-3xl space-y-3 text-xs">
       <div class="flex items-center justify-between border-b border-white/10 pb-2">
@@ -913,7 +921,7 @@
 
   <!-- ==================== JAVASCRIPT LOGIC ==================== -->
   <script>
-    // 1. Injected Standalone PWA Manifest (Forces Chrome & Mobile browsers to offer real app install prompt)
+    // 1. PWA Dynamic Manifest & Inline Offline Service Worker
     const manifestData = {
       name: "Nest Music — Lossless Audio Dimension",
       short_name: "Nest Music",
@@ -923,26 +931,53 @@
       theme_color: "#1DB954",
       orientation: "portrait",
       icons: [
-        {
-          src: "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png",
-          sizes: "192x192",
-          type: "image/png",
-          purpose: "any maskable"
-        },
-        {
-          src: "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png",
-          sizes: "512x512",
-          type: "image/png",
-          purpose: "any maskable"
-        }
+        { src: "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
+        { src: "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
       ]
     };
     const stringManifest = JSON.stringify(manifestData);
     const blob = new Blob([stringManifest], {type: 'application/json'});
-    const manifestURL = URL.createObjectURL(blob);
-    document.querySelector('#manifestPlaceholder').setAttribute('href', manifestURL);
+    document.querySelector('#manifestPlaceholder').setAttribute('href', URL.createObjectURL(blob));
 
-    // Native PWA Deferred Prompt Handler
+    // Register Inline Service Worker for Offline Mode
+    if ('serviceWorker' in navigator) {
+      const swCode = `
+        const CACHE_NAME = 'nest-music-v1';
+        self.addEventListener('install', e => {
+          self.skipWaiting();
+        });
+        self.addEventListener('activate', e => {
+          e.waitUntil(clients.claim());
+        });
+        self.addEventListener('fetch', e => {
+          e.respondWith(
+            caches.match(e.request).then(res => res || fetch(e.request).then(fetchRes => {
+              return caches.open(CACHE_NAME).then(cache => {
+                try { cache.put(e.request.url, fetchRes.clone()); } catch(err){}
+                return fetchRes;
+              });
+            })).catch(() => caches.match(e.request))
+          );
+        });
+      `;
+      const swBlob = new Blob([swCode], { type: 'application/javascript' });
+      navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(e => console.log("SW note:", e));
+    }
+
+    // Offline / Online Listener
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    function updateOnlineStatus() {
+      const banner = document.getElementById('offlineIndicator');
+      if (!navigator.onLine) {
+        banner.classList.remove('hidden');
+        showToast("Switched to Offline Mode");
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    // Deferred PWA Prompt
     let deferredInstallPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -964,10 +999,9 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
-    // Constant Universal App Share URL
     const APP_SHARE_URL = "https://nestmusic.free.nf?invite=app";
 
-    // App State
+    // State Variables
     let currentUser = null;
     let currentUserData = null;
     let allSongs = [];
@@ -980,15 +1014,17 @@
     let sleepTimerInterval = null;
     let isLooping = false;
     let isShuffle = false;
+    let lastHandledNotifTime = Date.now();
     let officialAppConfig = { url: 'https://nestmusic.free.nf', mode: 'install' };
 
-    // Web Audio API Nodes
+    // Web Audio Nodes
     let audioCtx, analyser, sourceNode, bassFilter, midFilter, trebleFilter, canvas, canvasCtx;
     const globalAudio = document.getElementById('globalAudio');
 
-    // 3. Lifecycle & Splash
+    // 3. Lifecycle & Boot
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
+      updateOnlineStatus();
 
       const tl = gsap.timeline();
       tl.to("#splashLogo", { scale: 1, duration: 0.8, ease: "elastic.out(1, 0.5)" })
@@ -1004,18 +1040,78 @@
           onComplete: () => {
             document.getElementById('splashScreen').style.display = 'none';
             checkSharedInviteLink();
+            autoRequestNotificationPermission();
           }
         });
 
       initAudioEngine();
       listenForUsers();
       listenForData();
+      listenForBroadcastNotifications();
       listenForOfficialAppSettings();
       updateLikedUI();
       renderPlaylists();
     });
 
-    // 4. Special Share Referral Landing Logic
+    // 4. Native Mobile Device Notification System
+    function autoRequestNotificationPermission() {
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+    }
+
+    function requestDeviceNotificationPermission() {
+      if (!('Notification' in window)) {
+        showToast("System Notifications are not supported in this browser");
+        return;
+      }
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          showToast("Device notifications allowed!");
+          triggerDevicePushNotification({
+            title: "Nest Music Alerts Active",
+            body: "You will receive updates directly on your mobile device!",
+            icon: "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png"
+          });
+        } else {
+          showToast("Notification permission denied");
+        }
+      });
+    }
+
+    function triggerDevicePushNotification(data) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        try {
+          const options = {
+            body: data.body || "New Lossless Audio is streaming now on Nest Music!",
+            icon: data.icon || "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png",
+            badge: "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png",
+            vibrate: [200, 100, 200],
+            data: { trackId: data.trackId || null }
+          };
+          if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.ready.then(reg => reg.showNotification(data.title, options));
+          } else {
+            new Notification(data.title, options);
+          }
+        } catch(e) {
+          console.log("Push trigger note:", e);
+        }
+      }
+    }
+
+    // Realtime Listener for Mobile Device Notifications sent from Admin
+    function listenForBroadcastNotifications() {
+      db.ref('broadcast_notifications').limitToLast(1).on('child_added', snap => {
+        const notif = snap.val();
+        if (notif && notif.timestamp && notif.timestamp > lastHandledNotifTime) {
+          triggerDevicePushNotification(notif);
+          showToast(`🔔 ${notif.title}`);
+        }
+      });
+    }
+
+    // 5. Special Share Referral Landing Logic
     function checkSharedInviteLink() {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('invite') === 'app' || urlParams.get('ref') === 'share') {
@@ -1034,7 +1130,6 @@
       }});
     }
 
-    // 5. Official App Direct Install Action
     function triggerDirectPwaInstall() {
       if (deferredInstallPrompt) {
         deferredInstallPrompt.prompt();
@@ -1047,7 +1142,7 @@
       } else if (officialAppConfig && officialAppConfig.url && officialAppConfig.url !== 'https://nestmusic.free.nf') {
         window.open(officialAppConfig.url, '_blank');
       } else {
-        showToast("Tap browser menu (⋮) -> 'Install App' or 'Add to Home Screen'");
+        showToast("Tap browser menu (⋮) -> 'Install App' / 'Add to Home Screen'");
       }
     }
 
@@ -1066,7 +1161,7 @@
       });
     }
 
-    // 6. Drawer & View Navigation
+    // 6. Navigation & View Handlers
     function toggleDrawer(open) {
       const drawer = document.getElementById('sideDrawer');
       const backdrop = document.getElementById('sideDrawerBackdrop');
@@ -1101,6 +1196,8 @@
         if (data) {
           Object.keys(data).forEach(key => allSongs.push({ id: key, ...data[key] }));
         }
+        // Save to offline cache
+        try { localStorage.setItem('nest_offline_tracks', JSON.stringify(allSongs)); } catch(e){}
         document.getElementById('streamCountText').innerText = `${allSongs.length} Tracks`;
         renderFeeds();
         renderLikedSongs();
@@ -1161,10 +1258,17 @@
       }
     }
 
-    // 8. Render Feeds
+    // 8. Render Feeds (With Pinned Track Glow Support)
     function renderFeeds(filterList = null) {
       const list = filterList || allSongs;
       let publicTracks = list.filter(t => t.status === 'approved' || !t.status || t.status === 'public');
+
+      // Sort Pinned Tracks to Top First
+      publicTracks.sort((a, b) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        return 0;
+      });
 
       if (currentUserData && currentUserData.dob && calculateAge(currentUserData.dob) < 18) {
         publicTracks = publicTracks.filter(t => t.isExplicit !== 'true' && t.isExplicit !== true);
@@ -1186,13 +1290,14 @@
         const isVerified = uploader.isVerified === true;
 
         return `
-          <div onclick="playTrack('${t.id}')" class="glass p-3 rounded-2xl cursor-pointer hover:border-brand/40 transition group active:scale-95">
+          <div onclick="playTrack('${t.id}')" class="glass p-3 rounded-2xl cursor-pointer hover:border-brand/40 transition group active:scale-95 ${t.isPinned ? 'pinned-glow' : ''}">
             <div class="relative rounded-xl overflow-hidden aspect-square mb-2 bg-neutral-900">
               <img src="${t.coverBase64 || 'https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png'}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
               <span class="absolute top-1.5 right-1.5 text-[9px] px-1.5 py-0.5 rounded bg-black/80 font-mono text-brand font-bold">★ ${t.rating || '5.0'}</span>
               <div class="absolute bottom-1.5 right-1.5 text-[9px] px-1.5 py-0.5 rounded bg-black/80 font-mono text-white flex items-center gap-1">
                 <i data-lucide="download" class="w-3 h-3 text-white"></i> ${t.downloadsCount || 0}
               </div>
+              ${t.isPinned ? '<span class="absolute top-1.5 left-1.5 text-[8px] bg-brand text-black font-black px-1.5 py-0.5 rounded shadow">📌 PINNED</span>' : ''}
               ${t.isExplicit === 'true' || t.isExplicit === true ? '<span class="absolute bottom-1.5 left-1.5 text-[8px] bg-red-600 font-bold px-1 rounded">18+</span>' : ''}
             </div>
             <h4 class="text-xs font-black truncate text-white">${escapeHtml(t.title)}</h4>
@@ -1211,12 +1316,13 @@
         const isVerified = uploader.isVerified === true;
 
         return `
-          <div onclick="playTrack('${t.id}')" class="glass p-2.5 rounded-2xl flex items-center justify-between hover:border-brand/40 transition cursor-pointer active:scale-98">
+          <div onclick="playTrack('${t.id}')" class="glass p-2.5 rounded-2xl flex items-center justify-between hover:border-brand/40 transition cursor-pointer active:scale-98 ${t.isPinned ? 'pinned-glow' : ''}">
             <div class="flex items-center space-x-3 truncate">
-              <img src="${t.coverBase64 || 'https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png'}" class="w-11 h-11 rounded-xl object-cover" />
+              <img src="${t.coverBase64 || 'https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png'}" class="w-11 h-11 rounded-xl object-cover flex-shrink-0" />
               <div class="truncate">
                 <div class="flex items-center gap-1.5">
                   <h4 class="text-xs font-bold text-white truncate">${escapeHtml(t.title)}</h4>
+                  ${t.isPinned ? '<span class="text-[8px] bg-brand text-black px-1.5 py-0.2 rounded font-black">PINNED</span>' : ''}
                   ${t.isExplicit === 'true' || t.isExplicit === true ? '<span class="text-[8px] bg-red-600 px-1 rounded font-bold">18+</span>' : ''}
                 </div>
                 <div class="flex items-center space-x-1">
@@ -1279,7 +1385,6 @@
           document.getElementById('fpSeekbar').value = progress || 0;
           document.getElementById('fpCurrentTime').innerText = formatTime(globalAudio.currentTime);
           document.getElementById('fpTotalTime').innerText = formatTime(globalAudio.duration);
-
           document.getElementById('miniProgressLine').style.width = `${progress}%`;
         }
       });
@@ -1500,7 +1605,7 @@
       }
     }
 
-    // 11. Clean Share Suite (App Link Sharing)
+    // 11. Clean Share Suite
     function openShareCenter() {
       const modal = document.getElementById('shareSuiteModal');
       modal.classList.remove('translate-y-full');
@@ -1627,7 +1732,7 @@
       showToast("Playlist deleted");
     }
 
-    // 13. Fast Upload Studio
+    // 13. Fast Upload Studio (With Automatic Verified Notification Trigger)
     function autoFillAudioDetails(input) {
       const file = input.files[0];
       if (!file) return;
@@ -1675,7 +1780,7 @@
         if (p >= 100) {
           clearInterval(interval);
           const newRef = db.ref('tracks').push();
-          await newRef.set({
+          const trackData = {
             id: newRef.key,
             title,
             artist,
@@ -1688,9 +1793,22 @@
             rating: "5.0",
             downloadsCount: 0,
             status: "approved",
+            isPinned: false,
             uploaderUid: currentUser ? currentUser.uid : 'guest',
             createdAt: firebase.database.ServerValue.TIMESTAMP
-          });
+          };
+          await newRef.set(trackData);
+
+          // If uploader is verified & Admin has enabled auto-notification
+          if (currentUserData && currentUserData.isVerified && currentUserData.autoNotifyEnabled) {
+            db.ref('broadcast_notifications').push({
+              title: `New Song by ${artist || currentUserData.name}!`,
+              body: `Listen to lossless audio: "${title}" now on Nest Music.`,
+              icon: "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png",
+              trackId: newRef.key,
+              timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+          }
 
           showToast("Sound uploaded successfully!");
           document.getElementById('uploadForm').reset();
@@ -1873,7 +1991,8 @@
             name: email.split('@')[0],
             username: email.split('@')[0],
             dob: dob || '2000-01-01',
-            isVerified: false
+            isVerified: false,
+            autoNotifyEnabled: true
           });
           showToast("Account Created!");
         } else {
