@@ -170,7 +170,7 @@
     </div>
 
     <div class="text-center text-[10px] text-gray-500 pb-2">
-      Lossless 320kbps Audio • Offline Mode • Zero Cost Forever
+      Lossless 320kbps Audio • Native Android Push • Zero Cost Forever
     </div>
   </div>
 
@@ -218,9 +218,9 @@
           <i data-lucide="cloud-upload" class="w-5 h-5 text-white"></i>
           <span>Upload Audio File</span>
         </button>
-        <button onclick="requestDeviceNotificationPermission(); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-brand transition">
+        <button onclick="requestNativeNotificationPermission(); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-brand transition">
           <i data-lucide="bell" class="w-5 h-5 text-brand"></i>
-          <span>Allow Device Alerts</span>
+          <span>Enable Native Push</span>
         </button>
         <button onclick="switchView('profileView'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
           <i data-lucide="user-check" class="w-5 h-5 text-white"></i>
@@ -230,7 +230,7 @@
     </div>
 
     <div class="border-t border-white/10 pt-4 text-xs text-gray-400 flex items-center justify-between">
-      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-brand animate-ping"></span> Realtime Audio</span>
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-brand animate-ping"></span> Realtime Stream</span>
       <button onclick="openModal('feedbackModal'); toggleDrawer(false);" class="text-white hover:text-brand transition">Feedback</button>
     </div>
   </aside>
@@ -293,7 +293,6 @@
         
         <!-- Action Row -->
         <div class="flex flex-wrap items-center gap-2 mt-4">
-          <!-- Native App Install Button -->
           <button onclick="triggerDirectPwaInstall()" id="heroOfficialAppBtn" class="px-3.5 py-2.5 rounded-xl bg-white text-black text-xs font-black flex items-center gap-2 shadow-lg active:scale-95 transition hover:bg-gray-100">
             <span class="w-5 h-5 rounded-full overflow-hidden bg-black p-0.5 flex-shrink-0 border border-brand">
               <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-full h-full object-contain" alt="Nest Logo" />
@@ -322,7 +321,7 @@
         <div id="recommendedGrid" class="grid grid-cols-2 gap-3"></div>
       </div>
 
-      <!-- Main Audio Catalog (With Pinned Track Glow Support) -->
+      <!-- Main Audio Catalog -->
       <div>
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-xs font-black flex items-center gap-2 tracking-wide uppercase text-gray-300">
@@ -733,7 +732,7 @@
     </div>
   </div>
 
-  <!-- Other Modals -->
+  <!-- Other Modals (Profile, Upload, Timer, Speed, BlueTick, Feedback, Report) -->
   <div id="editProfileModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
     <div class="glass-modal max-w-sm w-full p-6 rounded-3xl space-y-4 text-xs">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
@@ -1014,7 +1013,7 @@
     let sleepTimerInterval = null;
     let isLooping = false;
     let isShuffle = false;
-    let lastHandledNotifTime = Date.now();
+    let currentFcmToken = null;
     let officialAppConfig = { url: 'https://nestmusic.free.nf', mode: 'install' };
 
     // Web Audio Nodes
@@ -1040,75 +1039,124 @@
           onComplete: () => {
             document.getElementById('splashScreen').style.display = 'none';
             checkSharedInviteLink();
-            autoRequestNotificationPermission();
+            initCapacitorPushNotifications();
           }
         });
 
       initAudioEngine();
       listenForUsers();
       listenForData();
-      listenForBroadcastNotifications();
       listenForOfficialAppSettings();
       updateLikedUI();
       renderPlaylists();
     });
 
-    // 4. Native Mobile Device Notification System
-    function autoRequestNotificationPermission() {
-      if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission();
-      }
-    }
+    // 4. Capacitor Native Android FCM Push Notifications
+    async function initCapacitorPushNotifications() {
+      const PushNotifications = window.Capacitor?.Plugins?.PushNotifications;
+      if (!PushNotifications) return;
 
-    function requestDeviceNotificationPermission() {
-      if (!('Notification' in window)) {
-        showToast("System Notifications are not supported in this browser");
-        return;
-      }
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-          showToast("Device notifications allowed!");
-          triggerDevicePushNotification({
-            title: "Nest Music Alerts Active",
-            body: "You will receive updates directly on your mobile device!",
-            icon: "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png"
-          });
-        } else {
-          showToast("Notification permission denied");
+      try {
+        await PushNotifications.createChannel({
+          id: 'nest_music_notifications',
+          name: 'Nest Music',
+          description: 'Lossless audio and track release alerts',
+          importance: 5,
+          visibility: 1,
+          sound: 'default',
+          vibration: true
+        });
+
+        let permStatus = await PushNotifications.checkPermissions();
+        if (permStatus.receive === 'prompt') {
+          permStatus = await PushNotifications.requestPermissions();
         }
-      });
-    }
 
-    function triggerDevicePushNotification(data) {
-      if ('Notification' in window && Notification.permission === 'granted') {
-        try {
-          const options = {
-            body: data.body || "New Lossless Audio is streaming now on Nest Music!",
-            icon: data.icon || "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png",
-            badge: "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png",
-            vibrate: [200, 100, 200],
-            data: { trackId: data.trackId || null }
-          };
-          if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-            navigator.serviceWorker.ready.then(reg => reg.showNotification(data.title, options));
-          } else {
-            new Notification(data.title, options);
+        if (permStatus.receive === 'granted') {
+          await PushNotifications.register();
+        }
+
+        PushNotifications.addListener('registration', async token => {
+          currentFcmToken = token.value;
+          await saveFcmTokenToFirebase(token.value);
+        });
+
+        PushNotifications.addListener('registrationError', err => {
+          console.log('Push registration error:', err);
+        });
+
+        PushNotifications.addListener('pushNotificationReceived', notification => {
+          showToast(`🎵 ${notification.title || 'Nest Music'}`);
+        });
+
+        PushNotifications.addListener('pushNotificationActionPerformed', notification => {
+          const data = notification.notification?.data;
+          const targetSongId = data?.songId || data?.trackId;
+          if (targetSongId) {
+            handleDeepLinkToSong(targetSongId);
           }
-        } catch(e) {
-          console.log("Push trigger note:", e);
-        }
+        });
+      } catch (err) {
+        console.log('Capacitor Push setup note:', err);
       }
     }
 
-    // Realtime Listener for Mobile Device Notifications sent from Admin
-    function listenForBroadcastNotifications() {
-      db.ref('broadcast_notifications').limitToLast(1).on('child_added', snap => {
-        const notif = snap.val();
-        if (notif && notif.timestamp && notif.timestamp > lastHandledNotifTime) {
-          triggerDevicePushNotification(notif);
-          showToast(`🔔 ${notif.title}`);
+    async function requestNativeNotificationPermission() {
+      const PushNotifications = window.Capacitor?.Plugins?.PushNotifications;
+      if (PushNotifications) {
+        try {
+          const res = await PushNotifications.requestPermissions();
+          if (res.receive === 'granted') {
+            await PushNotifications.register();
+            showToast('Native Push Notifications enabled!');
+          } else {
+            showToast('Notification permission denied');
+          }
+        } catch (e) {
+          showToast('Notification setup note: ' + e.message);
         }
-      });
+      } else if ('Notification' in window) {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            showToast('Web Notifications allowed');
+          }
+        });
+      }
+    }
+
+    async function saveFcmTokenToFirebase(tokenStr) {
+      if (!tokenStr) return;
+      const sanitizedKey = tokenStr.replace(/[.#$[\]/]/g, '_');
+      const payload = {
+        token: tokenStr,
+        uid: currentUser ? currentUser.uid : 'guest',
+        username: currentUserData?.username || currentUser?.email?.split('@')[0] || 'guest',
+        platform: 'android',
+        updatedAt: firebase.database.ServerValue.TIMESTAMP
+      };
+
+      await db.ref(`fcm_tokens/${sanitizedKey}`).set(payload);
+
+      if (currentUser && currentUser.uid) {
+        await db.ref(`users/${currentUser.uid}/fcmTokens/${sanitizedKey}`).set(payload);
+      }
+    }
+
+    function handleDeepLinkToSong(songId) {
+      if (!songId) return;
+      const track = allSongs.find(t => t.id === songId);
+      if (track) {
+        playTrack(track.id);
+      } else {
+        const checkInterval = setInterval(() => {
+          const found = allSongs.find(t => t.id === songId);
+          if (found) {
+            clearInterval(checkInterval);
+            playTrack(found.id);
+          }
+        }, 300);
+        setTimeout(() => clearInterval(checkInterval), 4000);
+      }
     }
 
     // 5. Special Share Referral Landing Logic
@@ -1196,7 +1244,6 @@
         if (data) {
           Object.keys(data).forEach(key => allSongs.push({ id: key, ...data[key] }));
         }
-        // Save to offline cache
         try { localStorage.setItem('nest_offline_tracks', JSON.stringify(allSongs)); } catch(e){}
         document.getElementById('streamCountText').innerText = `${allSongs.length} Tracks`;
         renderFeeds();
@@ -1232,6 +1279,9 @@
           renderSocialBadges(currentUserData);
         }
         loadUserUploads(user.uid);
+        if (currentFcmToken) {
+          saveFcmTokenToFirebase(currentFcmToken);
+        }
       } else {
         document.getElementById('authBox').classList.remove('hidden');
         document.getElementById('profileDetailsBox').classList.add('hidden');
@@ -1258,12 +1308,11 @@
       }
     }
 
-    // 8. Render Feeds (With Pinned Track Glow Support)
+    // 8. Render Feeds
     function renderFeeds(filterList = null) {
       const list = filterList || allSongs;
       let publicTracks = list.filter(t => t.status === 'approved' || !t.status || t.status === 'public');
 
-      // Sort Pinned Tracks to Top First
       publicTracks.sort((a, b) => {
         if (a.isPinned && !b.isPinned) return -1;
         if (!a.isPinned && b.isPinned) return 1;
@@ -1732,7 +1781,7 @@
       showToast("Playlist deleted");
     }
 
-    // 13. Fast Upload Studio (With Automatic Verified Notification Trigger)
+    // 13. Fast Upload Studio (With @nestmusic Auto Push Trigger Support)
     function autoFillAudioDetails(input) {
       const file = input.files[0];
       if (!file) return;
@@ -1795,20 +1844,10 @@
             status: "approved",
             isPinned: false,
             uploaderUid: currentUser ? currentUser.uid : 'guest',
+            uploaderUsername: currentUserData?.username || currentUser?.email?.split('@')[0] || 'guest',
             createdAt: firebase.database.ServerValue.TIMESTAMP
           };
           await newRef.set(trackData);
-
-          // If uploader is verified & Admin has enabled auto-notification
-          if (currentUserData && currentUserData.isVerified && currentUserData.autoNotifyEnabled) {
-            db.ref('broadcast_notifications').push({
-              title: `New Song by ${artist || currentUserData.name}!`,
-              body: `Listen to lossless audio: "${title}" now on Nest Music.`,
-              icon: "https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png",
-              trackId: newRef.key,
-              timestamp: firebase.database.ServerValue.TIMESTAMP
-            });
-          }
 
           showToast("Sound uploaded successfully!");
           document.getElementById('uploadForm').reset();
