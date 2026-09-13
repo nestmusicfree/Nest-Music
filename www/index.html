@@ -96,8 +96,10 @@
       box-shadow: 0 0 15px rgba(29, 185, 84, 0.2);
     }
   </style>
+  <link rel="stylesheet" href="css/themes.css" />
+  <meta name="nest-app-version" content="1.3.0" />
 </head>
-<body class="pb-28 selection:bg-brand selection:text-black">
+<body data-theme="midnight" class="pb-28 selection:bg-brand selection:text-black">
 
   <!-- ==================== SPLASH SCREEN ==================== -->
   <div id="splashScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black">
@@ -186,6 +188,23 @@
           <i data-lucide="bell" class="w-5 h-5 text-white"></i>
           <span>Allow Notifications</span>
         </button>
+        
+        <button onclick="switchView('libraryView'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
+          <i data-lucide="library" class="w-5 h-5 text-white"></i>
+          <span>My Library</span>
+        </button>
+        <button onclick="switchView('downloadsView'); NestV13.renderDownloadsList(); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
+          <i data-lucide="download" class="w-5 h-5 text-white"></i>
+          <span>Downloads (<span id="drawerDownloadsCount">0</span>)</span>
+        </button>
+        <button onclick="startSmartRadio(); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
+          <i data-lucide="radio" class="w-5 h-5 text-white"></i>
+          <span>Smart Radio</span>
+        </button>
+        <button onclick="switchView('settingsView'); NestV13.applySettingsUI(); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
+          <i data-lucide="settings" class="w-5 h-5 text-white"></i>
+          <span>Settings</span>
+        </button>
         <button onclick="switchView('profileView'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
           <i data-lucide="user-check" class="w-5 h-5 text-white"></i>
           <span>Profile & Verification</span>
@@ -194,7 +213,7 @@
     </div>
 
     <div class="border-t border-white/10 pt-4 text-xs text-gray-400 flex items-center justify-between">
-      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-brand animate-ping"></span> Realtime Stream</span>
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-brand animate-ping"></span> <span data-app-version>v1.3.0</span></span>
       <button onclick="openModal('feedbackModal'); toggleDrawer(false);" class="text-white hover:text-brand transition">Feedback</button>
     </div>
   </aside>
@@ -233,6 +252,14 @@
       <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Search tracks, AI sounds, creators, handles..." class="w-full bg-cardBg border border-white/10 rounded-2xl py-3 pl-11 pr-10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand transition shadow-inner" />
       <button onclick="clearSearch()" id="clearSearchBtn" class="hidden absolute right-4 top-3 text-white hover:text-brand"><i data-lucide="x" class="w-4 h-4 text-white"></i></button>
     </div>
+    <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+      <button onclick="NestV13.enhancedSearch(document.getElementById('searchInput').value,'all')" class="px-2.5 py-1 rounded-full glass text-[10px] font-bold text-white">All</button>
+      <button onclick="NestV13.enhancedSearch(document.getElementById('searchInput').value,'artist')" class="px-2.5 py-1 rounded-full glass text-[10px] font-bold text-white">Artist</button>
+      <button onclick="NestV13.enhancedSearch(document.getElementById('searchInput').value,'album')" class="px-2.5 py-1 rounded-full glass text-[10px] font-bold text-white">Album</button>
+      <button onclick="NestV13.enhancedSearch(document.getElementById('searchInput').value,'genre')" class="px-2.5 py-1 rounded-full glass text-[10px] font-bold text-white">Genre</button>
+      <button onclick="NestV13.enhancedSearch(document.getElementById('searchInput').value,'playlist')" class="px-2.5 py-1 rounded-full glass text-[10px] font-bold text-white">Playlist</button>
+    </div>
+    <div id="searchHistoryBox" class="flex flex-wrap gap-1.5"></div>
 
     <!-- ==================== VIEW 1: HOME FEED ==================== -->
     <main id="homeView" class="view-panel space-y-5">
@@ -281,6 +308,22 @@
           <span class="text-[10px] text-brand font-bold" id="algoAgeIndicator">Curated Stream</span>
         </div>
         <div id="recommendedGrid" class="grid grid-cols-2 gap-3"></div>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-xs font-black flex items-center gap-2 tracking-wide uppercase text-gray-300 px-1"><i data-lucide="flame" class="w-4 h-4 text-brand"></i> Trending</h3>
+        <div id="trendingList" class="flex gap-3 overflow-x-auto hide-scrollbar pb-1"></div>
+      </div>
+      <div class="space-y-2">
+        <h3 class="text-xs font-black flex items-center gap-2 tracking-wide uppercase text-gray-300 px-1"><i data-lucide="sparkles" class="w-4 h-4 text-brand"></i> New Releases</h3>
+        <div id="newReleasesList" class="flex gap-3 overflow-x-auto hide-scrollbar pb-1"></div>
+      </div>
+      <div class="space-y-2">
+        <div class="flex items-center justify-between px-1">
+          <h3 class="text-xs font-black flex items-center gap-2 tracking-wide uppercase text-gray-300"><i data-lucide="brain" class="w-4 h-4 text-brand"></i> Smart Picks</h3>
+          <span class="text-[9px] text-gray-400 font-bold uppercase">Heuristic · not GPT</span>
+        </div>
+        <div id="smartRecGrid" class="grid grid-cols-2 gap-3"></div>
       </div>
 
       <!-- Main Audio Catalog -->
@@ -428,7 +471,86 @@
     </section>
 
     <!-- ==================== MINI PLAYER DOCK ==================== -->
-    <div id="miniPlayer" onclick="openFullScreenPlayer()" class="fixed bottom-4 left-4 right-4 max-w-md mx-auto glass-modal rounded-3xl p-3 shadow-2xl border border-brand/40 z-30 transform translate-y-36 transition-transform duration-300 cursor-pointer">
+    
+    <section id="libraryView" class="view-panel hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-black text-white">My Library</h2>
+        <button onclick="switchView('homeView')" class="text-xs text-brand font-bold flex items-center gap-1"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back</button>
+      </div>
+      <div id="librarySections" class="space-y-4"></div>
+    </section>
+
+    <section id="downloadsView" class="view-panel hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-black text-white">Offline Downloads</h2>
+        <button onclick="switchView('homeView')" class="text-xs text-brand font-bold flex items-center gap-1"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back</button>
+      </div>
+      <p class="text-[11px] text-gray-400">Cached in this device (IndexedDB). Works without network.</p>
+      <div id="downloadsList" class="space-y-2.5"></div>
+    </section>
+
+    <section id="settingsView" class="view-panel hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-black text-white">Settings</h2>
+        <button onclick="switchView('homeView')" class="text-xs text-brand font-bold flex items-center gap-1"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back</button>
+      </div>
+
+      <div class="glass-modal p-4 rounded-3xl space-y-3 text-xs">
+        <h3 class="text-sm font-black text-white flex items-center gap-2"><i data-lucide="palette" class="w-4 h-4 text-brand"></i> Theme <span id="settingsThemeLabel" class="text-brand font-mono text-[11px]">Midnight</span></h3>
+        <div class="flex flex-wrap gap-3">
+          <button class="theme-swatch" data-theme-id="midnight" onclick="pickTheme('midnight')" title="Midnight"></button>
+          <button class="theme-swatch" data-theme-id="aurora" onclick="pickTheme('aurora')" title="Aurora"></button>
+          <button class="theme-swatch" data-theme-id="ocean" onclick="pickTheme('ocean')" title="Ocean"></button>
+          <button class="theme-swatch" data-theme-id="sunset" onclick="pickTheme('sunset')" title="Sunset"></button>
+          <button class="theme-swatch" data-theme-id="space" onclick="pickTheme('space')" title="Space"></button>
+        </div>
+        <p class="text-[10px] text-gray-400">Midnight · Aurora · Ocean · Sunset · Space</p>
+      </div>
+
+      <div class="glass-modal p-4 rounded-3xl space-y-3 text-xs">
+        <h3 class="text-sm font-black text-white flex items-center gap-2"><i data-lucide="sliders-horizontal" class="w-4 h-4 text-brand"></i> Playback</h3>
+        <label class="flex items-center justify-between gap-3">
+          <span class="text-gray-300">Audio quality</span>
+          <select id="settingAudioQuality" onchange="NestV13.onSettingChange('audioQuality', this.value)" class="bg-black/50 border border-white/10 rounded-xl p-2 text-white">
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low (Data Saver)</option>
+          </select>
+        </label>
+        <label class="flex items-center justify-between gap-3">
+          <span class="text-gray-300">Data Saver</span>
+          <input id="settingDataSaver" type="checkbox" onchange="NestV13.onSettingChange('dataSaver', this.checked)" class="accent-brand w-5 h-5" />
+        </label>
+        <label class="flex items-center justify-between gap-3">
+          <span class="text-gray-300">Wi‑Fi only downloads</span>
+          <input id="settingWifiOnly" type="checkbox" onchange="NestV13.onSettingChange('wifiOnlyDownloads', this.checked)" class="accent-brand w-5 h-5" checked />
+        </label>
+        <label class="flex items-center justify-between gap-3">
+          <span class="text-gray-300">Crossfade (soft)</span>
+          <input id="settingCrossfade" type="checkbox" onchange="NestV13.onSettingChange('crossfade', this.checked)" class="accent-brand w-5 h-5" />
+        </label>
+        <div>
+          <div class="flex justify-between mb-1"><span class="text-gray-300">Volume</span><span id="volumeLabel" class="text-brand font-mono">100%</span></div>
+          <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="1" oninput="NestV13.setVolume(this.value)" class="w-full accent-brand" />
+        </div>
+        <p class="text-[10px] text-gray-400">Language: English</p>
+      </div>
+
+      <div class="glass-modal p-4 rounded-3xl space-y-3 text-xs">
+        <h3 class="text-sm font-black text-white flex items-center gap-2"><i data-lucide="refresh-cw" class="w-4 h-4 text-brand"></i> App Updates</h3>
+        <p id="settingsAppVersion" class="text-brand font-mono">v1.3.0</p>
+        <p id="settingsRemoteVersion" class="text-[10px] text-gray-400">Remote: —</p>
+        <button onclick="checkForUpdates(true)" class="w-full py-3 rounded-xl bg-brand text-black font-extrabold active:scale-95 transition">Check for updates</button>
+        <p class="text-[10px] text-gray-400">In-app OTA updates the web bundle without uninstalling the APK. Native shell min version may still require a store/APK bump.</p>
+      </div>
+
+      <div class="glass p-4 rounded-3xl text-[10px] text-gray-400 space-y-1">
+        <p>Nest Music · Lossless Audio Dimension</p>
+        <p>Phase 1 features are live. Some advanced creator tools show as Coming soon.</p>
+      </div>
+    </section>
+
+  <div id="miniPlayer" onclick="openFullScreenPlayer()" class="fixed bottom-4 left-4 right-4 max-w-md mx-auto glass-modal rounded-3xl p-3 shadow-2xl border border-brand/40 z-30 transform translate-y-36 transition-transform duration-300 cursor-pointer">
       <div class="flex items-center justify-between gap-3">
         <div class="flex items-center space-x-3 overflow-hidden">
           <div class="relative w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0 border border-white/10">
@@ -543,11 +665,11 @@
       <!-- Transport Controls -->
       <div class="flex items-center justify-between px-2">
         <button onclick="toggleShuffle()" id="fpShuffleBtn" class="p-2.5 text-white hover:text-brand transition"><i data-lucide="shuffle" class="w-5 h-5 text-white"></i></button>
-        <button onclick="seekStep(-10)" class="p-2.5 text-white hover:text-brand transition"><i data-lucide="rotate-ccw" class="w-6 h-6 text-white"></i></button>
+        <button onclick="playPreviousTrack()" id="fpPrevBtn" class="p-2.5 text-white hover:text-brand transition"><i data-lucide="skip-back" class="w-6 h-6 text-white"></i></button>
         <button onclick="togglePlayPause()" id="fpPlayBtn" class="w-16 h-16 rounded-3xl bg-brand text-black flex items-center justify-center shadow-xl shadow-brand/40 active:scale-90 transition hover:bg-brand-light">
           <i data-lucide="play" class="w-8 h-8 text-black fill-black"></i>
         </button>
-        <button onclick="seekStep(10)" class="p-2.5 text-white hover:text-brand transition"><i data-lucide="rotate-cw" class="w-6 h-6 text-white"></i></button>
+        <button onclick="(window.NestV13&&NestV13.playNextFromQueue())||playNextTrack()" id="fpNextBtn" class="p-2.5 text-white hover:text-brand transition"><i data-lucide="skip-forward" class="w-6 h-6 text-white"></i></button>
         <button onclick="toggleLoop()" id="fpLoopBtn" class="p-2.5 text-white hover:text-brand transition"><i data-lucide="repeat" class="w-5 h-5 text-white"></i></button>
       </div>
 
@@ -564,17 +686,25 @@
 
       <!-- Action Utilities -->
       <div class="flex items-center justify-around pt-2 text-xs">
-        <button onclick="handleDownloadCurrent()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+        <button onclick="downloadCurrentOffline()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
           <i data-lucide="download" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]">Download</span>
+          <span class="text-[10px]">Save Offline</span>
         </button>
         <button onclick="shareCurrentTrack()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
           <i data-lucide="share-2" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]">Share Track</span>
+          <span class="text-[10px]">Share</span>
         </button>
         <button onclick="openAddToPlaylistModal()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
           <i data-lucide="list-plus" class="w-4 h-4 text-white"></i>
           <span class="text-[10px]">Playlist</span>
+        </button>
+        <button onclick="openQueueModal()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+          <i data-lucide="list-ordered" class="w-4 h-4 text-white"></i>
+          <span class="text-[10px]">Queue <span id="queueCountBadge">0</span></span>
+        </button>
+        <button onclick="openComments()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+          <i data-lucide="message-circle" class="w-4 h-4 text-white"></i>
+          <span class="text-[10px]">Comments</span>
         </button>
         <button onclick="openModal('sleepTimerModal')" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
           <i data-lucide="moon" class="w-4 h-4 text-white"></i>
@@ -583,6 +713,18 @@
         <button onclick="openModal('speedModal')" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
           <i data-lucide="gauge" class="w-4 h-4 text-white"></i>
           <span class="text-[10px]" id="speedLabel">1.0x</span>
+        </button>
+        <button onclick="openCurrentArtistProfile()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+          <i data-lucide="user" class="w-4 h-4 text-white"></i>
+          <span class="text-[10px]">Artist</span>
+        </button>
+        <button onclick="followCurrentArtist()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+          <i data-lucide="user-plus" class="w-4 h-4 text-white"></i>
+          <span class="text-[10px]">Follow</span>
+        </button>
+        <button onclick="addCurrentToQueue()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+          <i data-lucide="list-plus" class="w-4 h-4 text-white"></i>
+          <span class="text-[10px]">Add Queue</span>
         </button>
         <button onclick="openModal('reportModal')" class="flex flex-col items-center gap-1 text-white hover:text-red-400 transition">
           <i data-lucide="flag" class="w-4 h-4 text-white"></i>
@@ -743,11 +885,16 @@
     <div class="glass-modal max-w-sm w-full p-6 rounded-3xl space-y-4 text-xs">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <h3 class="text-sm font-black flex items-center gap-2 text-white">
-          <i data-lucide="upload-cloud" class="w-5 h-5 text-white"></i> Fast Audio Uploader
+          <i data-lucide="upload-cloud" class="w-5 h-5 text-white"></i> Upload Studio
         </h3>
         <button onclick="closeModal('uploadModal')" class="text-white hover:text-brand"><i data-lucide="x" class="w-5 h-5 text-white"></i></button>
       </div>
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" id="uploadTabSingle" onclick="switchUploadTab('single')" class="py-2 rounded-xl bg-brand text-black text-xs font-extrabold">Single</button>
+        <button type="button" id="uploadTabAlbum" onclick="switchUploadTab('album')" class="py-2 rounded-xl glass text-white text-xs font-extrabold">Album</button>
+      </div>
 
+      <div id="singleUploadPane">
       <form id="uploadForm" onsubmit="handleTrackUpload(event)" class="space-y-3">
         <div class="border-2 border-dashed border-brand/40 rounded-2xl p-3.5 text-center bg-brand/5 hover:bg-brand/10 transition">
           <label class="cursor-pointer block">
@@ -797,6 +944,24 @@
           Publish Audio
         </button>
       </form>
+      </div>
+
+      <div id="albumUploadPane" class="hidden space-y-3 text-xs">
+        <form onsubmit="submitAlbumUpload(event)" class="space-y-3">
+          <input type="text" id="albumTitle" placeholder="Album title *" required class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand" />
+          <input type="text" id="albumArtist" placeholder="Artist name *" required class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand" />
+          <div>
+            <label class="block text-gray-300 font-semibold mb-1">Cover art *</label>
+            <input type="file" id="albumCoverInput" accept="image/*" required class="w-full text-xs text-gray-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand file:text-black glass rounded-xl cursor-pointer" />
+          </div>
+          <div>
+            <label class="block text-gray-300 font-semibold mb-1">Tracks (multi-select) *</label>
+            <input type="file" id="albumTracksInput" accept="audio/*" multiple required onchange="addAlbumTrackFiles(this.files)" class="w-full text-xs text-gray-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand file:text-black glass rounded-xl cursor-pointer" />
+          </div>
+          <div id="albumTracksPreview" class="space-y-1 max-h-32 overflow-y-auto"></div>
+          <button type="submit" class="w-full py-3 bg-brand text-black font-black text-xs rounded-xl">Publish Album</button>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -893,6 +1058,91 @@
   </div>
 
   <!-- Global Audio Element -->
+  
+  <!-- OTA Update Sheet -->
+  <div id="otaUpdateSheet" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-[70] flex items-center justify-center p-4">
+    <div class="glass-modal max-w-sm w-full p-6 rounded-3xl space-y-4 text-xs">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-brand/20 border border-brand/40 flex items-center justify-center">
+          <i data-lucide="download-cloud" class="w-6 h-6 text-brand"></i>
+        </div>
+        <div>
+          <h3 id="otaStatusText" class="text-base font-black text-white">Update available</h3>
+          <p id="otaVersionText" class="text-[11px] text-brand font-mono">v1.3.0</p>
+        </div>
+      </div>
+      <p id="otaNotesText" class="text-gray-300 leading-relaxed">Bug fixes and improvements.</p>
+      <div id="otaProgressWrap" class="hidden space-y-2">
+        <div class="ota-progress-bar"><div id="otaProgressFill" class="ota-progress-fill"></div></div>
+        <div class="flex justify-between text-[10px] font-mono text-gray-400"><span>Downloading</span><span id="otaPercentText">0%</span></div>
+      </div>
+      <div id="otaActions" class="grid grid-cols-2 gap-2 pt-1">
+        <button onclick="hideUpdateSheet()" class="py-3 rounded-xl glass text-white font-bold">Later</button>
+        <button onclick="startOtaDownload()" class="py-3 rounded-xl bg-brand text-black font-extrabold">Update now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- First-run theme picker -->
+  <div id="themeFirstRunSheet" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-[65] flex items-center justify-center p-4">
+    <div class="glass-modal max-w-sm w-full p-6 rounded-3xl space-y-4 text-xs">
+      <h3 class="text-base font-black text-white">Choose your theme</h3>
+      <p class="text-gray-400">Pick a look for Nest Music. You can change this anytime in Settings.</p>
+      <div class="flex flex-wrap gap-3 justify-center py-2">
+        <button class="theme-swatch" data-theme-id="midnight" onclick="pickTheme('midnight')" title="Midnight"></button>
+        <button class="theme-swatch" data-theme-id="aurora" onclick="pickTheme('aurora')" title="Aurora"></button>
+        <button class="theme-swatch" data-theme-id="ocean" onclick="pickTheme('ocean')" title="Ocean"></button>
+        <button class="theme-swatch" data-theme-id="sunset" onclick="pickTheme('sunset')" title="Sunset"></button>
+        <button class="theme-swatch" data-theme-id="space" onclick="pickTheme('space')" title="Space"></button>
+      </div>
+      <div class="grid grid-cols-2 gap-2 text-[10px] text-center text-gray-400">
+        <span>Midnight</span><span>Aurora</span><span>Ocean</span><span>Sunset</span><span class="col-span-2">Space</span>
+      </div>
+      <button onclick="skipThemePicker()" class="w-full py-3 rounded-xl glass text-white font-bold">Skip for now</button>
+    </div>
+  </div>
+
+  <!-- Queue modal -->
+  <div id="queueModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-modal max-w-sm w-full p-5 rounded-3xl space-y-3 text-xs">
+      <div class="flex items-center justify-between border-b border-white/10 pb-2">
+        <h3 class="text-sm font-black text-white flex items-center gap-2"><i data-lucide="list-ordered" class="w-4 h-4 text-brand"></i> Play Queue</h3>
+        <button onclick="closeModal('queueModal')" class="text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div id="queueList" class="space-y-2 max-h-72 overflow-y-auto hide-scrollbar"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="clearQueue()" class="py-2.5 rounded-xl glass text-white font-bold">Clear</button>
+        <button onclick="closeModal('queueModal')" class="py-2.5 rounded-xl bg-brand text-black font-extrabold">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comments modal -->
+  <div id="commentsModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-modal max-w-sm w-full p-5 rounded-3xl space-y-3 text-xs">
+      <div class="flex items-center justify-between border-b border-white/10 pb-2">
+        <h3 class="text-sm font-black text-white flex items-center gap-2"><i data-lucide="message-circle" class="w-4 h-4 text-brand"></i> Comments</h3>
+        <button onclick="closeModal('commentsModal')" class="text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div id="commentsList" class="space-y-2 max-h-56 overflow-y-auto hide-scrollbar"></div>
+      <form onsubmit="submitComment(event)" class="flex gap-2">
+        <input id="commentInput" maxlength="400" placeholder="Write a comment…" class="flex-1 bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand" />
+        <button type="submit" class="px-3 rounded-xl bg-brand text-black font-extrabold">Post</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Artist profile modal -->
+  <div id="artistProfileModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-modal max-w-sm w-full p-5 rounded-3xl space-y-3 text-xs">
+      <div class="flex items-center justify-between border-b border-white/10 pb-2">
+        <h3 class="text-sm font-black text-white">Artist Profile</h3>
+        <button onclick="closeModal('artistProfileModal')" class="text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div id="artistProfileBody"></div>
+    </div>
+  </div>
+
   <audio id="globalAudio" class="hidden" crossorigin="anonymous"></audio>
 
   <!-- ==================== JAVASCRIPT LOGIC ==================== -->
@@ -1528,11 +1778,13 @@
       }).join('') || '<p class="text-center text-xs text-gray-500 py-6">No tracks in this category.</p>';
 
       lucide.createIcons();
+      try { if (window.NestV13) { NestV13.renderDiscoverExtras(); NestV13.renderSmartRecs(); NestV13.renderLibraryView(); } } catch(_){}
     }
 
     function handleSearch(q) {
       const term = q.toLowerCase().trim();
       document.getElementById('clearSearchBtn').classList.toggle('hidden', !term);
+      try { if (window.NestV13 && term) NestV13.pushSearchHistory(term); NestV13.renderSearchHistory(); } catch(_){}
       if (!term) return renderFeeds();
       const filtered = allSongs.filter(t => 
         (t.title && t.title.toLowerCase().includes(term)) ||
@@ -1608,6 +1860,13 @@
     }
 
     function playNextTrack() {
+      // NestV13 queue hook
+      try {
+        if (window.NestV13) {
+          const q = JSON.parse(localStorage.getItem('nest_queue') || '[]');
+          if (q.length) { NestV13.playNextFromQueue(); return; }
+        }
+      } catch (_) {}
       if (!allSongs.length) return;
       if (isShuffle) {
         const rand = allSongs[Math.floor(Math.random() * allSongs.length)];
@@ -2502,5 +2761,6 @@
       return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m]);
     }
   </script>
+  <script src="js/nest-v13.js"></script>
 </body>
 </html>

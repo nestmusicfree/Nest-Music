@@ -24,3 +24,10 @@ mountQueue();
 mountAppDist();
 mountReports();
 refreshIcons();
+
+// Apply saved Nest theme token (shared key with user app)
+try {
+  const t = localStorage.getItem('nest_theme') || 'midnight';
+  document.documentElement.setAttribute('data-theme', t);
+  document.body.setAttribute('data-theme', t);
+} catch (_) {}

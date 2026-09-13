@@ -3,3 +3,14 @@
 body { background: #070709; color: #ffffff; min-height: 100vh; }
 .glass { background: rgba(20, 20, 26, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
 .admin-tab.hidden { display: none !important; }
+
+/* Nest admin theme tokens (v1.3) */
+:root, [data-theme="midnight"] {
+  --nm-brand: #1DB954;
+  --nm-bg: #070709;
+}
+[data-theme="aurora"] { --nm-brand: #a78bfa; --nm-bg: #0a0f1a; }
+[data-theme="ocean"] { --nm-brand: #22d3ee; --nm-bg: #061018; }
+[data-theme="sunset"] { --nm-brand: #fb923c; --nm-bg: #140a08; }
+[data-theme="space"] { --nm-brand: #818cf8; --nm-bg: #050508; }
+body { background: var(--nm-bg, #070709); }

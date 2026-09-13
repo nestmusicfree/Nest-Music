@@ -1,0 +1,161 @@
+/* Nest Music — UI Themes (CSS variables) */
+:root,
+[data-theme="midnight"] {
+  --nm-bg: #08080a;
+  --nm-bg-grad-top: #0c2b16;
+  --nm-bg-grad-mid: #08080a;
+  --nm-bg-grad-bot: #030304;
+  --nm-surface: #111116;
+  --nm-card: rgba(20, 20, 26, 0.85);
+  --nm-brand: #1DB954;
+  --nm-brand-light: #1ed760;
+  --nm-brand-dark: #14833b;
+  --nm-brand-glow: rgba(29, 185, 84, 0.4);
+  --nm-text: #ffffff;
+  --nm-text-muted: #9ca3af;
+  --nm-accent: #1DB954;
+  --nm-glow: rgba(29, 185, 84, 0.25);
+  --nm-border: rgba(255, 255, 255, 0.08);
+  --nm-glass: rgba(20, 20, 26, 0.75);
+  --nm-modal: rgba(14, 14, 18, 0.96);
+}
+
+[data-theme="aurora"] {
+  --nm-bg: #0a0f1a;
+  --nm-bg-grad-top: #1a1040;
+  --nm-bg-grad-mid: #0a1628;
+  --nm-bg-grad-bot: #050810;
+  --nm-surface: #12182a;
+  --nm-card: rgba(24, 28, 48, 0.88);
+  --nm-brand: #a78bfa;
+  --nm-brand-light: #c4b5fd;
+  --nm-brand-dark: #7c3aed;
+  --nm-brand-glow: rgba(167, 139, 250, 0.45);
+  --nm-text: #f5f3ff;
+  --nm-text-muted: #a5b4fc;
+  --nm-accent: #34d399;
+  --nm-glow: rgba(52, 211, 153, 0.3);
+  --nm-border: rgba(167, 139, 250, 0.18);
+  --nm-glass: rgba(24, 28, 48, 0.78);
+  --nm-modal: rgba(12, 14, 28, 0.96);
+}
+
+[data-theme="ocean"] {
+  --nm-bg: #061018;
+  --nm-bg-grad-top: #0c3d5c;
+  --nm-bg-grad-mid: #071820;
+  --nm-bg-grad-bot: #030a10;
+  --nm-surface: #0c1c28;
+  --nm-card: rgba(12, 32, 44, 0.88);
+  --nm-brand: #22d3ee;
+  --nm-brand-light: #67e8f9;
+  --nm-brand-dark: #0891b2;
+  --nm-brand-glow: rgba(34, 211, 238, 0.4);
+  --nm-text: #ecfeff;
+  --nm-text-muted: #94a3b8;
+  --nm-accent: #38bdf8;
+  --nm-glow: rgba(56, 189, 248, 0.28);
+  --nm-border: rgba(34, 211, 238, 0.16);
+  --nm-glass: rgba(12, 32, 44, 0.78);
+  --nm-modal: rgba(6, 16, 24, 0.96);
+}
+
+[data-theme="sunset"] {
+  --nm-bg: #140a08;
+  --nm-bg-grad-top: #4a1a0a;
+  --nm-bg-grad-mid: #1a0c0a;
+  --nm-bg-grad-bot: #0a0504;
+  --nm-surface: #221410;
+  --nm-card: rgba(40, 20, 14, 0.88);
+  --nm-brand: #fb923c;
+  --nm-brand-light: #fdba74;
+  --nm-brand-dark: #ea580c;
+  --nm-brand-glow: rgba(251, 146, 60, 0.4);
+  --nm-text: #fff7ed;
+  --nm-text-muted: #d6b8a0;
+  --nm-accent: #f43f5e;
+  --nm-glow: rgba(244, 63, 94, 0.28);
+  --nm-border: rgba(251, 146, 60, 0.18);
+  --nm-glass: rgba(40, 20, 14, 0.78);
+  --nm-modal: rgba(18, 8, 6, 0.96);
+}
+
+[data-theme="space"] {
+  --nm-bg: #050508;
+  --nm-bg-grad-top: #1a1040;
+  --nm-bg-grad-mid: #0a0818;
+  --nm-bg-grad-bot: #020208;
+  --nm-surface: #0e0e1a;
+  --nm-card: rgba(18, 18, 36, 0.9);
+  --nm-brand: #818cf8;
+  --nm-brand-light: #a5b4fc;
+  --nm-brand-dark: #4f46e5;
+  --nm-brand-glow: rgba(129, 140, 248, 0.45);
+  --nm-text: #eef2ff;
+  --nm-text-muted: #9ca3af;
+  --nm-accent: #e879f9;
+  --nm-glow: rgba(232, 121, 249, 0.3);
+  --nm-border: rgba(129, 140, 248, 0.2);
+  --nm-glass: rgba(18, 18, 36, 0.8);
+  --nm-modal: rgba(8, 8, 18, 0.97);
+}
+
+html, body {
+  background: radial-gradient(circle at 50% 0%, var(--nm-bg-grad-top) 0%, var(--nm-bg-grad-mid) 50%, var(--nm-bg-grad-bot) 100%) !important;
+  color: var(--nm-text);
+  transition: background 0.4s ease, color 0.3s ease;
+}
+
+.glass {
+  background: var(--nm-glass) !important;
+  border-color: var(--nm-border) !important;
+}
+.glass-modal {
+  background: var(--nm-modal) !important;
+  border-color: color-mix(in srgb, var(--nm-brand) 30%, transparent) !important;
+}
+
+/* Map Tailwind brand utilities to theme tokens where possible */
+.bg-brand, .bg-brand\/10, button.bg-brand { --tw-bg-opacity: 1; }
+.text-brand { color: var(--nm-brand) !important; }
+.bg-brand { background-color: var(--nm-brand) !important; }
+.bg-brand-light { background-color: var(--nm-brand-light) !important; }
+.border-brand, .border-brand\/20, .border-brand\/30, .border-brand\/40 {
+  border-color: color-mix(in srgb, var(--nm-brand) 40%, transparent) !important;
+}
+.shadow-brand\/20, .shadow-brand\/25, .shadow-brand\/30, .shadow-brand\/40 {
+  --tw-shadow-color: var(--nm-brand-glow);
+}
+.accent-brand { accent-color: var(--nm-brand); }
+.from-brand-dark { --tw-gradient-from: var(--nm-brand-dark); }
+.to-brand { --tw-gradient-to: var(--nm-brand); }
+.via-brand-light { --tw-gradient-via: var(--nm-brand-light); }
+
+input[type=range]::-webkit-slider-thumb {
+  background: var(--nm-brand) !important;
+  box-shadow: 0 0 10px var(--nm-brand) !important;
+}
+.pinned-glow {
+  border-color: color-mix(in srgb, var(--nm-brand) 60%, transparent) !important;
+  box-shadow: 0 0 15px var(--nm-glow) !important;
+}
+
+.theme-swatch {
+  width: 2.75rem; height: 2.75rem; border-radius: 1rem;
+  border: 2px solid transparent; cursor: pointer;
+  transition: transform 0.15s, border-color 0.2s;
+}
+.theme-swatch.active { border-color: var(--nm-brand); transform: scale(1.08); box-shadow: 0 0 12px var(--nm-glow); }
+.theme-swatch[data-theme-id="midnight"] { background: linear-gradient(135deg, #0c2b16, #1DB954); }
+.theme-swatch[data-theme-id="aurora"] { background: linear-gradient(135deg, #1a1040, #a78bfa, #34d399); }
+.theme-swatch[data-theme-id="ocean"] { background: linear-gradient(135deg, #0c3d5c, #22d3ee); }
+.theme-swatch[data-theme-id="sunset"] { background: linear-gradient(135deg, #4a1a0a, #fb923c, #f43f5e); }
+.theme-swatch[data-theme-id="space"] { background: linear-gradient(135deg, #1a1040, #818cf8, #e879f9); }
+
+#otaUpdateSheet .ota-progress-bar {
+  height: 8px; border-radius: 999px; background: rgba(255,255,255,0.12); overflow: hidden;
+}
+#otaUpdateSheet .ota-progress-fill {
+  height: 100%; width: 0%; background: var(--nm-brand); transition: width 0.2s ease;
+  box-shadow: 0 0 12px var(--nm-brand-glow);
+}

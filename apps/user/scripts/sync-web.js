@@ -2,19 +2,18 @@ const fs = require('fs');
 const path = require('path');
 const src = path.resolve(__dirname, '../../../www');
 const dest = path.resolve(__dirname, '../www');
-fs.mkdirSync(dest, { recursive: true });
-for (const f of ['index.html', 'manifest.json']) {
-  if (fs.existsSync(path.join(src, f))) {
-    fs.copyFileSync(path.join(src, f), path.join(dest, f));
+
+function copyDir(s, d) {
+  fs.mkdirSync(d, { recursive: true });
+  for (const entry of fs.readdirSync(s, { withFileTypes: true })) {
+    if (entry.name === 'bundles') continue;
+    const a = path.join(s, entry.name);
+    const b = path.join(d, entry.name);
+    if (entry.isDirectory()) copyDir(a, b);
+    else fs.copyFileSync(a, b);
   }
 }
-// optional icons folder
-const iconsSrc = path.join(src, 'icons');
-if (fs.existsSync(iconsSrc)) {
-  const iconsDest = path.join(dest, 'icons');
-  fs.mkdirSync(iconsDest, { recursive: true });
-  for (const f of fs.readdirSync(iconsSrc)) {
-    fs.copyFileSync(path.join(iconsSrc, f), path.join(iconsDest, f));
-  }
-}
-console.log('Synced user www from ../../www');
+
+fs.rmSync(dest, { recursive: true, force: true });
+copyDir(src, dest);
+console.log('Synced user www from ../../www (incl. css/js)');

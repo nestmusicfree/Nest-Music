@@ -18,4 +18,4 @@ Set env `FIREBASE_SERVICE_ACCOUNT` for live FCM (see `docs/FCM_SETUP.md`).
 ## GitHub
 
 Canonical repo: https://github.com/nestmusicfree/Nest-Music  
-Release APKs via `gh release create v1.2.1 dist-apks/*.apk`
+Release APKs via `gh release create v1.3.0 dist-apks/*.apk`

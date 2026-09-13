@@ -3,7 +3,11 @@
   "appName": "Nest Music",
   "webDir": "www",
   "server": {
-    "androidScheme": "https"
+    "androidScheme": "https",
+    "allowNavigation": [
+      "nest-music.vercel.app",
+      "*.vercel.app"
+    ]
   },
   "plugins": {
     "PushNotifications": {

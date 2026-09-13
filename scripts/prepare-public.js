@@ -17,11 +17,10 @@ const pub = path.join(root, 'public');
 fs.rmSync(pub, { recursive: true, force: true });
 fs.mkdirSync(pub, { recursive: true });
 
-fs.copyFileSync(path.join(root, 'www/index.html'), path.join(pub, 'index.html'));
-fs.copyFileSync(path.join(root, 'www/manifest.json'), path.join(pub, 'manifest.json'));
-if (fs.existsSync(path.join(root, 'www/icons'))) {
-  copyDir(path.join(root, 'www/icons'), path.join(pub, 'icons'));
-}
+// Full www → public root (user app)
+copyDir(path.join(root, 'www'), pub);
+// Don't nest bundles inside themselves if any
+fs.rmSync(path.join(pub, 'bundles'), { recursive: true, force: true });
 
 // Web admin with absolute /admin/ base
 execSync('npm run build', {
@@ -43,4 +42,14 @@ Redirecting to <a href="/admin/" style="color:#1DB954">/admin/</a>…
 </body></html>
 `);
 
-console.log('public/ prepared: index + admin/ + admin.html redirect');
+// Pack OTA bundles + app-version.json
+try {
+  execSync('node scripts/pack-bundle.js', { cwd: root, stdio: 'inherit' });
+} catch (e) {
+  console.warn('pack-bundle note:', e.message);
+  if (fs.existsSync(path.join(root, 'www', 'app-version.json'))) {
+    fs.copyFileSync(path.join(root, 'www', 'app-version.json'), path.join(pub, 'app-version.json'));
+  }
+}
+
+console.log('public/ prepared: index + css/js + admin/ + bundles + app-version.json');

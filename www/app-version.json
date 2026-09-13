@@ -1,0 +1,8 @@
+{
+  "version": "1.3.0",
+  "build": 130,
+  "bundleUrl": "https://nest-music.vercel.app/bundles/v1.3.0/www.zip",
+  "staticBase": "https://nest-music.vercel.app/bundles/v1.3.0/",
+  "notes": "v1.3.0 — Five UI themes, in-app OTA updates, offline downloads, play queue, Smart Radio (heuristic), comments & follow, album upload, Settings.",
+  "minNative": "1.3.0"
+}
