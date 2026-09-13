@@ -10,8 +10,14 @@ apps/**/android/local.properties
 apps/**/android/**/captures/
 apps/**/www/
 apps/**/node_modules/
+apps/admin-web/node_modules/
+apps/admin-web/dist/
 public/
 .idea/
 *.iml
 *.apk
 !dist-apks/*.apk
+apps/keystore/keystore.properties
+*firebase-adminsdk*.json
+*serviceAccount*.json
+**/service-account*.json

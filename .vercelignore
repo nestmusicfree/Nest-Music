@@ -1,0 +1,10 @@
+apps/**/android
+apps/**/node_modules
+apps/admin-web/node_modules
+apps/keystore
+dist-apks
+.git
+**/.gradle
+**/build
+**/*.apk
+**/*.aab

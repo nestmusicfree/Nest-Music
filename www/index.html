@@ -114,132 +114,7 @@
   </div>
 
   <!-- ==================== EXCLUSIVE SHARE REFERRAL LANDING SCREEN ==================== -->
-  <div id="sharedLandingModal" class="fixed inset-0 bg-black/95 z-50 hidden flex-col justify-between p-6 overflow-y-auto hide-scrollbar">
-    <div class="flex items-center justify-between border-b border-white/10 pb-4">
-      <div class="flex items-center space-x-2.5">
-        <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-10 h-10 rounded-2xl object-contain bg-black p-1 border border-brand/50 shadow-lg shadow-brand/25" />
-        <div>
-          <h2 class="text-base font-black text-white">Nest Music App</h2>
-          <span class="text-[10px] text-brand font-bold uppercase tracking-wider">Official Android Edition</span>
-        </div>
-      </div>
-      <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-brand/20 text-brand border border-brand/30">Free Lossless</span>
-    </div>
 
-    <!-- Main Invite Content -->
-    <div class="my-auto py-6 space-y-6 text-center max-w-sm mx-auto">
-      <div class="w-24 h-24 rounded-3xl p-3 bg-gradient-to-tr from-brand-dark to-brand mx-auto shadow-2xl shadow-brand/30 flex items-center justify-center">
-        <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-full h-full object-contain" />
-      </div>
-
-      <div class="space-y-2">
-        <h3 class="text-2xl font-black text-white leading-tight">Welcome to Nest Music</h3>
-        <p class="text-sm text-brand font-bold bg-brand/10 border border-brand/30 rounded-2xl p-3">
-          ⭐ Special For Rajgarh Sadulpur Public ⭐<br>
-          <span class="text-xs text-gray-200 font-medium mt-1 block">राजगढ़ सादुलपुर की जनता के लिए ख़ास तौर पर तैयार किया गया सुपरफास्ट और फ्री ऑडियो ऐप!</span>
-        </p>
-      </div>
-
-      <!-- App Statistics -->
-      <div class="grid grid-cols-3 gap-2">
-        <div class="glass p-3 rounded-2xl text-center">
-          <span class="text-base font-black text-brand block">1000+</span>
-          <span class="text-[9px] text-gray-400 font-bold uppercase">App Installs</span>
-        </div>
-        <div class="glass p-3 rounded-2xl text-center">
-          <span class="text-base font-black text-brand block">565+</span>
-          <span class="text-[9px] text-gray-400 font-bold uppercase">Daily Users</span>
-        </div>
-        <div class="glass p-3 rounded-2xl text-center">
-          <span class="text-base font-black text-brand block">100+</span>
-          <span class="text-[9px] text-gray-400 font-bold uppercase">Music & BGM</span>
-        </div>
-      </div>
-
-      <!-- Direct Actions -->
-      <div class="space-y-3 pt-2">
-        <button onclick="openApkInstallGuide()" class="w-full py-4 rounded-2xl bg-brand text-black font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-brand/30 hover:bg-brand-light active:scale-95 transition">
-          <i data-lucide="download" class="w-5 h-5 text-black"></i>
-          <span>Install Official App (APK Guide)</span>
-        </button>
-        <button onclick="dismissSharedLandingModal()" class="w-full py-3 rounded-2xl glass text-white font-bold text-xs hover:bg-white/10 transition">
-          Continue to Web Stream
-        </button>
-      </div>
-    </div>
-
-    <div class="text-center text-[10px] text-gray-500 pb-2">
-      Lossless 320kbps Audio • Native Android Push • Zero Cost Forever
-    </div>
-  </div>
-
-  <!-- ==================== OFFICIAL APK INSTALLATION GUIDE PAGE ==================== -->
-  <div id="apkInstallModal" class="fixed inset-0 bg-darkBg z-50 hidden overflow-y-auto hide-scrollbar p-5 flex-col justify-between">
-    <div class="flex items-center justify-between border-b border-white/10 pb-4">
-      <div class="flex items-center space-x-3">
-        <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-10 h-10 rounded-2xl object-contain bg-black p-1 border border-brand/40 shadow-lg shadow-brand/20" alt="Logo" />
-        <div>
-          <h2 class="text-sm font-black text-white">Nest Music Official App</h2>
-          <span class="text-[10px] text-brand font-bold uppercase tracking-wider">Direct APK Installation Guide</span>
-        </div>
-      </div>
-      <button onclick="closeApkInstallGuide()" class="p-2 rounded-full glass hover:bg-white/10 text-white">
-        <i data-lucide="x" class="w-5 h-5 text-white"></i>
-      </button>
-    </div>
-
-    <!-- Center Content -->
-    <div class="max-w-md mx-auto my-auto py-5 space-y-5 text-center">
-      <div>
-        <span class="px-3 py-1 bg-brand/20 text-brand text-[10px] font-black rounded-full border border-brand/30 uppercase tracking-widest inline-block mb-2">v1.0.0 Android Release</span>
-        <h3 class="text-xl font-black text-white">Download & Install Nest Music</h3>
-        <p class="text-xs text-gray-400 mt-1">Get the complete Lossless Audio Experience with Real Background Streaming & Native Device Notifications.</p>
-      </div>
-
-      <!-- Primary Download Button -->
-      <a href="https://github.com/nestmusicfree/Nest-Music/releases/download/v1.1.0/NestMusic-user-debug.apk" download class="w-full py-4 px-6 rounded-2xl bg-brand text-black font-black text-sm flex items-center justify-center gap-2.5 shadow-xl shadow-brand/40 hover:bg-brand-light active:scale-95 transition">
-        <i data-lucide="download" class="w-5 h-5 text-black"></i>
-        <span>Download Official APK (Direct)</span>
-      </a>
-
-      <!-- Step-by-Step Animated Video / GIF Guide -->
-      <div class="glass-modal p-4 rounded-3xl text-left space-y-3">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-black text-white flex items-center gap-1.5">
-            <i data-lucide="play-circle" class="w-4 h-4 text-brand"></i> Installation Tutorial (Watch & Learn)
-          </span>
-          <span class="text-[9px] text-brand font-mono font-bold bg-brand/10 px-2 py-0.5 rounded-full">Loop Guide</span>
-        </div>
-
-        <!-- Looping GIF container -->
-        <div class="relative w-full rounded-2xl overflow-hidden border border-brand/30 shadow-2xl bg-black aspect-video flex items-center justify-center">
-          <img src="https://www.image2url.com/r2/default/gifs/1787317672842-fac69417-2c6d-440b-8f5e-813a61eb729d.gif" class="w-full h-full object-contain" alt="How to Install Guide GIF" />
-        </div>
-
-        <!-- Steps explanation -->
-        <div class="space-y-1.5 text-[11px] text-gray-300 pt-2 border-t border-white/10">
-          <div class="flex items-start gap-2">
-            <span class="w-4 h-4 rounded-full bg-brand text-black font-black flex items-center justify-center text-[9px] flex-shrink-0 mt-0.5">1</span>
-            <span>Click <strong>"Download Official APK"</strong> above to start downloading.</span>
-          </div>
-          <div class="flex items-start gap-2">
-            <span class="w-4 h-4 rounded-full bg-brand text-black font-black flex items-center justify-center text-[9px] flex-shrink-0 mt-0.5">2</span>
-            <span>If prompted by Chrome/Browser, tap <strong>"Download anyway"</strong>.</span>
-          </div>
-          <div class="flex items-start gap-2">
-            <span class="w-4 h-4 rounded-full bg-brand text-black font-black flex items-center justify-center text-[9px] flex-shrink-0 mt-0.5">3</span>
-            <span>Open the downloaded APK and tap <strong>"Install"</strong> to enjoy!</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="text-center pt-2">
-      <button onclick="closeApkInstallGuide()" class="text-xs text-gray-400 hover:text-white transition underline">
-        Close and return to player
-      </button>
-    </div>
-  </div>
 
   <!-- ==================== TOAST NOTIFICATION ENGINE ==================== -->
   <div id="toastContainer" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-sm pointer-events-none"></div>
@@ -284,10 +159,6 @@
         <button onclick="openModal('uploadModal'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
           <i data-lucide="cloud-upload" class="w-5 h-5 text-white"></i>
           <span>Upload Audio File</span>
-        </button>
-        <button onclick="openApkInstallGuide(); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-brand transition">
-          <i data-lucide="download" class="w-5 h-5 text-brand"></i>
-          <span>Install Official APK</span>
         </button>
         <button onclick="requestNativeNotificationPermission(); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-white transition">
           <i data-lucide="bell" class="w-5 h-5 text-white"></i>
@@ -364,11 +235,9 @@
         
         <!-- Action Row -->
         <div class="flex flex-wrap items-center gap-2 mt-4">
-          <button onclick="openApkInstallGuide()" id="heroOfficialAppBtn" class="px-3.5 py-2.5 rounded-xl bg-white text-black text-xs font-black flex items-center gap-2 shadow-lg active:scale-95 transition hover:bg-gray-100">
-            <span class="w-5 h-5 rounded-full overflow-hidden bg-black p-0.5 flex-shrink-0 border border-brand">
-              <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-full h-full object-contain" alt="Nest Logo" />
-            </span>
-            <span id="heroOfficialAppBtnText">Install Official App</span>
+          <button onclick="requestNativeNotificationPermission()" id="heroOfficialAppBtn" class="px-3.5 py-2.5 rounded-xl bg-white text-black text-xs font-black flex items-center gap-2 shadow-lg active:scale-95 transition hover:bg-gray-100">
+            <i data-lucide="bell" class="w-4 h-4 text-black"></i>
+            <span id="heroOfficialAppBtnText">Enable Notifications</span>
           </button>
 
           <button onclick="openModal('uploadModal')" class="px-3.5 py-2.5 rounded-xl bg-brand text-black text-xs font-extrabold flex items-center gap-1.5 hover:bg-brand-light active:scale-95 transition">
@@ -704,7 +573,7 @@
         <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-8 h-8 rounded-xl object-contain bg-black p-0.5 border border-brand/40" />
         <div>
           <h3 class="text-sm font-black text-white">Nest App Share Suite</h3>
-          <span class="text-[10px] text-brand font-mono font-bold">Official App Referral Link</span>
+          <span class="text-[10px] text-brand font-mono font-bold">Share Nest Music</span>
         </div>
       </div>
       <button onclick="closeShareCenter()" class="p-2 rounded-full glass hover:bg-white/10 text-white">
@@ -720,12 +589,12 @@
 
       <div class="text-center space-y-1">
         <h4 class="text-lg font-black text-white">Share Nest Music With Friends</h4>
-        <p class="text-xs text-gray-400 max-w-xs">Send the link directly so anyone can stream or install the official app in 1-click!</p>
+        <p class="text-xs text-gray-400 max-w-xs">Send the link so friends can open Nest Music and stream instantly.</p>
       </div>
 
       <!-- App URL Box & Copy -->
       <div class="w-full max-w-sm glass p-3 rounded-2xl flex items-center justify-between border border-brand/30">
-        <span class="text-xs font-mono text-brand truncate mr-2" id="displayAppShareUrl">https://nest-music.vercel.app?invite=app</span>
+        <span class="text-xs font-mono text-brand truncate mr-2" id="displayAppShareUrl">https://nest-music.vercel.app</span>
         <button onclick="copyShareSuiteLink()" class="px-3 py-1.5 bg-brand text-black font-extrabold rounded-xl text-xs flex items-center gap-1 active:scale-95 transition">
           <i data-lucide="copy" class="w-3.5 h-3.5 text-black"></i> Copy
         </button>
@@ -1067,8 +936,7 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
-    const APP_SHARE_URL = "https://nest-music.vercel.app?invite=app";
-    const OFFICIAL_APK_URL = "https://github.com/nestmusicfree/Nest-Music/releases/download/v1.1.0/NestMusic-user-debug.apk";
+    const APP_SHARE_URL = "https://nest-music.vercel.app";
 
     // State Variables
     let currentUser = null;
@@ -1084,8 +952,7 @@
     let isLooping = false;
     let isShuffle = false;
     let currentFcmToken = null;
-    let officialAppConfig = { url: OFFICIAL_APK_URL, mode: 'install' };
-
+    
     // Web Audio Nodes
     let audioCtx, analyser, sourceNode, bassFilter, midFilter, trebleFilter, canvas, canvasCtx;
     const globalAudio = document.getElementById('globalAudio');
@@ -1109,16 +976,15 @@
           onComplete: () => {
             document.getElementById('splashScreen').style.display = 'none';
             checkSharedInviteLink();
-            initCapacitorPushNotifications();
-            initNativeMediaSessionBridge();
-            listenForNotificationRequests();
+            try { initCapacitorPushNotifications(); } catch (e) { console.warn('push init soft-fail', e); }
+            try { initNativeMediaSessionBridge(); } catch (e) { console.warn('media init soft-fail', e); }
+            try { listenForNotificationRequests(); } catch (e) { console.warn('notif listen soft-fail', e); }
           }
         });
 
       initAudioEngine();
       listenForUsers();
       listenForData();
-      listenForOfficialAppSettings();
       updateLikedUI();
       renderPlaylists();
     });
@@ -1290,50 +1156,14 @@
       }
     }
 
-    // 5. Official App APK Guide & Referral Logic
-    function openApkInstallGuide() {
-      const modal = document.getElementById('apkInstallModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      gsap.fromTo(modal, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.35 });
-      lucide.createIcons();
-    }
-
-    function closeApkInstallGuide() {
-      const modal = document.getElementById('apkInstallModal');
-      gsap.to(modal, { opacity: 0, y: 50, duration: 0.25, onComplete: () => {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-      }});
-    }
-
+    // 5. Deep-link open-to-play only (no APK install prompts)
     function checkSharedInviteLink() {
       const urlParams = new URLSearchParams(window.location.search);
       const hashParams = new URLSearchParams((window.location.hash || '').replace(/^#/, '').replace(/^\?/, ''));
       const trackId = urlParams.get('track') || urlParams.get('song') || urlParams.get('id') || hashParams.get('track');
-      const invite = urlParams.get('invite') === 'app' || urlParams.get('ref') === 'share';
-
-      // Opening a shared track link: show install/update banner (web) and open track in player
-      if (invite || trackId) {
-        const landing = document.getElementById('sharedLandingModal');
-        if (landing && !window.Capacitor?.isNativePlatform?.()) {
-          landing.classList.remove('hidden');
-          landing.classList.add('flex');
-          lucide.createIcons();
-        }
-      }
       if (trackId) {
-        // Delay until catalog loads
         setTimeout(() => handleDeepLinkToSong(trackId), 400);
       }
-    }
-
-    function dismissSharedLandingModal() {
-      const landing = document.getElementById('sharedLandingModal');
-      gsap.to(landing, { opacity: 0, scale: 0.95, duration: 0.25, onComplete: () => {
-        landing.classList.add('hidden');
-        landing.classList.remove('flex');
-      }});
     }
 
     function triggerDirectPwaInstall() {
@@ -1341,28 +1171,13 @@
         deferredInstallPrompt.prompt();
         deferredInstallPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
-            showToast("Installing Nest Music App...");
+            showToast("Adding Nest Music...");
           }
           deferredInstallPrompt = null;
         });
       } else {
-        openApkInstallGuide();
+        showToast("Open Nest Music from your home screen or Android app.");
       }
-    }
-
-    function listenForOfficialAppSettings() {
-      db.ref('app_settings/officialApp').on('value', snap => {
-        const val = snap.val();
-        if (val) {
-          officialAppConfig = val;
-          const btnText = document.getElementById('heroOfficialAppBtnText');
-          if (val.mode === 'update') {
-            btnText.innerText = 'Update App Available';
-          } else {
-            btnText.innerText = 'Install Official App';
-          }
-        }
-      });
     }
 
     // 6. Navigation & View Handlers
@@ -1599,7 +1414,7 @@
         await plugin.updateNowPlaying({
           title: currentPlayingTrack.title || 'Nest Music',
           artist,
-          cover: currentPlayingTrack.coverBase64 || '',
+          cover: (typeof currentPlayingTrack.coverBase64 === 'string' && currentPlayingTrack.coverBase64.startsWith('data:') && currentPlayingTrack.coverBase64.length < 1500000) ? currentPlayingTrack.coverBase64 : (typeof currentPlayingTrack.coverUrl === 'string' ? currentPlayingTrack.coverUrl : ''),
           isPlaying: playing,
           position: globalAudio.currentTime || 0,
           duration: globalAudio.duration || 0

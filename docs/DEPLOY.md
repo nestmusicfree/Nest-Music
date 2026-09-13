@@ -2,20 +2,20 @@
 
 ## Web (Vercel)
 
-- Scope: `king-e545b6c2` (team **king**)
 - Project: `nest-music`
 - Production URL: https://nest-music.vercel.app
-- Admin: https://nest-music.vercel.app/admin.html
+- Admin: https://nest-music.vercel.app/admin/
 
 ```bash
 npm run build
-vercel pull --yes --environment production --scope king-e545b6c2
-vercel build --yes --prod --scope king-e545b6c2
-vercel deploy --prebuilt --prod --scope king-e545b6c2
+vercel pull --yes --environment production
+vercel build --yes --prod
+vercel deploy --prebuilt --prod
 ```
 
-Firebase web config in HTML stays on project **jokefi**.
+Set env `FIREBASE_SERVICE_ACCOUNT` for live FCM (see `docs/FCM_SETUP.md`).
 
 ## GitHub
 
-Canonical repo: https://github.com/nestmusicfree/Nest-Music
+Canonical repo: https://github.com/nestmusicfree/Nest-Music  
+Release APKs via `gh release create v1.2.0 dist-apks/*.apk`

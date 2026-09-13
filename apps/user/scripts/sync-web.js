@@ -4,7 +4,17 @@ const src = path.resolve(__dirname, '../../../www');
 const dest = path.resolve(__dirname, '../www');
 fs.mkdirSync(dest, { recursive: true });
 for (const f of ['index.html', 'manifest.json']) {
-  fs.copyFileSync(path.join(src, f), path.join(dest, f));
+  if (fs.existsSync(path.join(src, f))) {
+    fs.copyFileSync(path.join(src, f), path.join(dest, f));
+  }
 }
-// Capacitor needs a simple local asset; admin not included
+// optional icons folder
+const iconsSrc = path.join(src, 'icons');
+if (fs.existsSync(iconsSrc)) {
+  const iconsDest = path.join(dest, 'icons');
+  fs.mkdirSync(iconsDest, { recursive: true });
+  for (const f of fs.readdirSync(iconsSrc)) {
+    fs.copyFileSync(path.join(iconsSrc, f), path.join(iconsDest, f));
+  }
+}
 console.log('Synced user www from ../../www');

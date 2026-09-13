@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "968982416863",
+    "firebase_url": "https://jokefi-default-rtdb.firebaseio.com",
+    "project_id": "jokefi",
+    "storage_bucket": "jokefi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968982416863:android:2691d26af0d276d81a086a",
+        "android_client_info": {
+          "package_name": "com.nestmusic.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLJJEmavT1GPHAYPMGIjRIs89EgYpjwnI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968982416863:android:169e6806eebaa0891a086a",
+        "android_client_info": {
+          "package_name": "com.nestmusic.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLJJEmavT1GPHAYPMGIjRIs89EgYpjwnI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

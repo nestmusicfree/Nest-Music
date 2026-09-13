@@ -1,25 +1,42 @@
 # Nest Music
 
-Lossless audio streaming — web + dual Android apps.
+Lossless audio streaming — web + dual Android apps (v1.2.0).
 
 **Repo:** https://github.com/nestmusicfree/Nest-Music  
 **Live web:** https://nest-music.vercel.app  
-**Admin console:** https://nest-music.vercel.app/admin.html
+**Admin console:** https://nest-music.vercel.app/admin/  
+**Releases:** https://github.com/nestmusicfree/Nest-Music/releases
 
 ## Structure
 
 ```
-www/           # Web UI (index + admin)
-public/        # Vercel static sync from www/
-apps/user/     # Capacitor user app (com.nestmusic.app)
-apps/admin/    # Capacitor admin app (com.nestmusic.admin)
-dist-apks/     # NestMusic-user-debug.apk, NestMusic-admin-debug.apk
+www/                 # User web UI (index.html)
+apps/admin-web/      # Multi-file Admin (Vite + TS) — source of truth
+apps/user/           # Capacitor user app (com.nestmusic.app)
+apps/admin/          # Capacitor admin app (com.nestmusic.admin) wraps admin-web
+api/                 # Vercel FCM sender (/api/fcm-send, /api/fcm-drain)
+icons/               # Brand logo + generated launcher assets
+dist-apks/           # Built APKs
+docs/                # ANDROID / FCM / SIGNING / DEPLOY
 ```
 
-## Firebase
+## Firebase (jokefi)
 
-- Project: `jokefi`
 - RTDB: `https://jokefi-default-rtdb.firebaseio.com`
-- Same web config kept in HTML.
+- FCM: see `docs/FCM_SETUP.md` (needs `google-services.json` + `FIREBASE_SERVICE_ACCOUNT`)
 
-See `docs/ANDROID.md` and `docs/DEPLOY.md`.
+## Build web
+
+```bash
+npm run build
+```
+
+## Build Android (release)
+
+```bash
+export ANDROID_HOME=/path/to/android-sdk JAVA_HOME=/path/to/jdk-17-or-21
+cd apps/user && npm i && npm run cap:sync && cd android && ./gradlew assembleRelease
+cd apps/admin && npm i && npm run cap:sync && cd android && ./gradlew assembleRelease
+```
+
+APKs land under `android/app/build/outputs/apk/release/` and are copied to `dist-apks/`.
