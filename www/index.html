@@ -120,7 +120,7 @@
         <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-10 h-10 rounded-2xl object-contain bg-black p-1 border border-brand/50 shadow-lg shadow-brand/25" />
         <div>
           <h2 class="text-base font-black text-white">Nest Music App</h2>
-          <span class="text-[10px] text-brand font-bold uppercase tracking-wider">Official Android & Web Edition</span>
+          <span class="text-[10px] text-brand font-bold uppercase tracking-wider">Official Android Edition</span>
         </div>
       </div>
       <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-brand/20 text-brand border border-brand/30">Free Lossless</span>
@@ -134,14 +134,13 @@
 
       <div class="space-y-2">
         <h3 class="text-2xl font-black text-white leading-tight">Welcome to Nest Music</h3>
-        <!-- Hindi Regional Tagline -->
         <p class="text-sm text-brand font-bold bg-brand/10 border border-brand/30 rounded-2xl p-3">
           ⭐ Special For Rajgarh Sadulpur Public ⭐<br>
           <span class="text-xs text-gray-200 font-medium mt-1 block">राजगढ़ सादुलपुर की जनता के लिए ख़ास तौर पर तैयार किया गया सुपरफास्ट और फ्री ऑडियो ऐप!</span>
         </p>
       </div>
 
-      <!-- App Real Statistics -->
+      <!-- App Statistics -->
       <div class="grid grid-cols-3 gap-2">
         <div class="glass p-3 rounded-2xl text-center">
           <span class="text-base font-black text-brand block">1000+</span>
@@ -157,11 +156,11 @@
         </div>
       </div>
 
-      <!-- Direct Install / Open Actions -->
+      <!-- Direct Actions -->
       <div class="space-y-3 pt-2">
-        <button onclick="triggerDirectPwaInstall()" class="w-full py-4 rounded-2xl bg-brand text-black font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-brand/30 hover:bg-brand-light active:scale-95 transition">
+        <button onclick="openApkInstallGuide()" class="w-full py-4 rounded-2xl bg-brand text-black font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-brand/30 hover:bg-brand-light active:scale-95 transition">
           <i data-lucide="download" class="w-5 h-5 text-black"></i>
-          <span>Install Official App (1-Click)</span>
+          <span>Install Official App (APK Guide)</span>
         </button>
         <button onclick="dismissSharedLandingModal()" class="w-full py-3 rounded-2xl glass text-white font-bold text-xs hover:bg-white/10 transition">
           Continue to Web Stream
@@ -171,6 +170,74 @@
 
     <div class="text-center text-[10px] text-gray-500 pb-2">
       Lossless 320kbps Audio • Native Android Push • Zero Cost Forever
+    </div>
+  </div>
+
+  <!-- ==================== OFFICIAL APK INSTALLATION GUIDE PAGE ==================== -->
+  <div id="apkInstallModal" class="fixed inset-0 bg-darkBg z-50 hidden overflow-y-auto hide-scrollbar p-5 flex-col justify-between">
+    <div class="flex items-center justify-between border-b border-white/10 pb-4">
+      <div class="flex items-center space-x-3">
+        <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-10 h-10 rounded-2xl object-contain bg-black p-1 border border-brand/40 shadow-lg shadow-brand/20" alt="Logo" />
+        <div>
+          <h2 class="text-sm font-black text-white">Nest Music Official App</h2>
+          <span class="text-[10px] text-brand font-bold uppercase tracking-wider">Direct APK Installation Guide</span>
+        </div>
+      </div>
+      <button onclick="closeApkInstallGuide()" class="p-2 rounded-full glass hover:bg-white/10 text-white">
+        <i data-lucide="x" class="w-5 h-5 text-white"></i>
+      </button>
+    </div>
+
+    <!-- Center Content -->
+    <div class="max-w-md mx-auto my-auto py-5 space-y-5 text-center">
+      <div>
+        <span class="px-3 py-1 bg-brand/20 text-brand text-[10px] font-black rounded-full border border-brand/30 uppercase tracking-widest inline-block mb-2">v1.0.0 Android Release</span>
+        <h3 class="text-xl font-black text-white">Download & Install Nest Music</h3>
+        <p class="text-xs text-gray-400 mt-1">Get the complete Lossless Audio Experience with Real Background Streaming & Native Device Notifications.</p>
+      </div>
+
+      <!-- Primary Download Button -->
+      <a href="https://github.com/nestmusicfree/Nest-Music/releases/download/v1.1.0/NestMusic-user-debug.apk" download class="w-full py-4 px-6 rounded-2xl bg-brand text-black font-black text-sm flex items-center justify-center gap-2.5 shadow-xl shadow-brand/40 hover:bg-brand-light active:scale-95 transition">
+        <i data-lucide="download" class="w-5 h-5 text-black"></i>
+        <span>Download Official APK (Direct)</span>
+      </a>
+
+      <!-- Step-by-Step Animated Video / GIF Guide -->
+      <div class="glass-modal p-4 rounded-3xl text-left space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-black text-white flex items-center gap-1.5">
+            <i data-lucide="play-circle" class="w-4 h-4 text-brand"></i> Installation Tutorial (Watch & Learn)
+          </span>
+          <span class="text-[9px] text-brand font-mono font-bold bg-brand/10 px-2 py-0.5 rounded-full">Loop Guide</span>
+        </div>
+
+        <!-- Looping GIF container -->
+        <div class="relative w-full rounded-2xl overflow-hidden border border-brand/30 shadow-2xl bg-black aspect-video flex items-center justify-center">
+          <img src="https://www.image2url.com/r2/default/gifs/1787317672842-fac69417-2c6d-440b-8f5e-813a61eb729d.gif" class="w-full h-full object-contain" alt="How to Install Guide GIF" />
+        </div>
+
+        <!-- Steps explanation -->
+        <div class="space-y-1.5 text-[11px] text-gray-300 pt-2 border-t border-white/10">
+          <div class="flex items-start gap-2">
+            <span class="w-4 h-4 rounded-full bg-brand text-black font-black flex items-center justify-center text-[9px] flex-shrink-0 mt-0.5">1</span>
+            <span>Click <strong>"Download Official APK"</strong> above to start downloading.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="w-4 h-4 rounded-full bg-brand text-black font-black flex items-center justify-center text-[9px] flex-shrink-0 mt-0.5">2</span>
+            <span>If prompted by Chrome/Browser, tap <strong>"Download anyway"</strong>.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="w-4 h-4 rounded-full bg-brand text-black font-black flex items-center justify-center text-[9px] flex-shrink-0 mt-0.5">3</span>
+            <span>Open the downloaded APK and tap <strong>"Install"</strong> to enjoy!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center pt-2">
+      <button onclick="closeApkInstallGuide()" class="text-xs text-gray-400 hover:text-white transition underline">
+        Close and return to player
+      </button>
     </div>
   </div>
 
@@ -218,8 +285,12 @@
           <i data-lucide="cloud-upload" class="w-5 h-5 text-white"></i>
           <span>Upload Audio File</span>
         </button>
-        <button onclick="requestNativeNotificationPermission(); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-brand transition">
-          <i data-lucide="bell" class="w-5 h-5 text-brand"></i>
+        <button onclick="openApkInstallGuide(); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-brand transition">
+          <i data-lucide="download" class="w-5 h-5 text-brand"></i>
+          <span>Install Official APK</span>
+        </button>
+        <button onclick="requestNativeNotificationPermission(); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-white transition">
+          <i data-lucide="bell" class="w-5 h-5 text-white"></i>
           <span>Enable Native Push</span>
         </button>
         <button onclick="switchView('profileView'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
@@ -281,7 +352,7 @@
         <button onclick="filterCategory('18plus')" class="cat-pill px-4 py-2 rounded-xl glass text-red-400 whitespace-nowrap hover:border-red-500/50 transition">Explicit 18+</button>
       </div>
 
-      <!-- Hero Banner With Native PWA Install Action -->
+      <!-- Hero Banner With Native APK Guide Action -->
       <div class="relative overflow-hidden rounded-3xl p-5 bg-gradient-to-br from-emerald-950 via-zinc-900 to-black border border-brand/30 shadow-2xl">
         <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-brand/20 rounded-full blur-3xl"></div>
         <div class="flex items-center gap-2">
@@ -293,7 +364,7 @@
         
         <!-- Action Row -->
         <div class="flex flex-wrap items-center gap-2 mt-4">
-          <button onclick="triggerDirectPwaInstall()" id="heroOfficialAppBtn" class="px-3.5 py-2.5 rounded-xl bg-white text-black text-xs font-black flex items-center gap-2 shadow-lg active:scale-95 transition hover:bg-gray-100">
+          <button onclick="openApkInstallGuide()" id="heroOfficialAppBtn" class="px-3.5 py-2.5 rounded-xl bg-white text-black text-xs font-black flex items-center gap-2 shadow-lg active:scale-95 transition hover:bg-gray-100">
             <span class="w-5 h-5 rounded-full overflow-hidden bg-black p-0.5 flex-shrink-0 border border-brand">
               <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-full h-full object-contain" alt="Nest Logo" />
             </span>
@@ -626,8 +697,8 @@
     </div>
   </div>
 
-  <!-- ==================== CLEAN SHARE SUITE ==================== -->
-  <div id="shareSuiteModal" class="fixed inset-0 bg-darkBg z-50 transform translate-y-full transition-transform duration-500 overflow-y-auto hide-scrollbar p-6 flex flex-col justify-between">
+  <!-- ==================== CLEAN SHARE SUITE (MULTI-OPEN FIXED) ==================== -->
+  <div id="shareSuiteModal" class="fixed inset-0 bg-darkBg z-50 hidden translate-y-full transition-transform duration-300 overflow-y-auto hide-scrollbar p-6 flex-col justify-between">
     <div class="flex items-center justify-between border-b border-white/10 pb-4">
       <div class="flex items-center space-x-2">
         <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-8 h-8 rounded-xl object-contain bg-black p-0.5 border border-brand/40" />
@@ -636,7 +707,9 @@
           <span class="text-[10px] text-brand font-mono font-bold">Official App Referral Link</span>
         </div>
       </div>
-      <button onclick="closeModal('shareSuiteModal')" class="p-2 rounded-full glass hover:bg-white/10 text-white"><i data-lucide="x" class="w-5 h-5 text-white"></i></button>
+      <button onclick="closeShareCenter()" class="p-2 rounded-full glass hover:bg-white/10 text-white">
+        <i data-lucide="x" class="w-5 h-5 text-white"></i>
+      </button>
     </div>
 
     <!-- Center App Card -->
@@ -652,7 +725,7 @@
 
       <!-- App URL Box & Copy -->
       <div class="w-full max-w-sm glass p-3 rounded-2xl flex items-center justify-between border border-brand/30">
-        <span class="text-xs font-mono text-brand truncate mr-2" id="displayAppShareUrl">https://nestmusic.free.nf?invite=app</span>
+        <span class="text-xs font-mono text-brand truncate mr-2" id="displayAppShareUrl">https://nest-music.vercel.app?invite=app</span>
         <button onclick="copyShareSuiteLink()" class="px-3 py-1.5 bg-brand text-black font-extrabold rounded-xl text-xs flex items-center gap-1 active:scale-95 transition">
           <i data-lucide="copy" class="w-3.5 h-3.5 text-black"></i> Copy
         </button>
@@ -663,22 +736,18 @@
     <div class="space-y-3">
       <span class="text-[11px] font-bold text-gray-400 uppercase tracking-wider block text-center">Share Directly via Social Apps</span>
       <div class="grid grid-cols-4 gap-2 text-xs font-bold text-center">
-        <!-- WhatsApp -->
         <button onclick="directSocialShare('whatsapp')" class="p-3 rounded-2xl glass hover:border-brand/40 flex flex-col items-center gap-1 active:scale-90 transition">
           <i data-lucide="message-circle" class="w-5 h-5 text-emerald-400"></i>
           <span class="text-[10px] text-white">WhatsApp</span>
         </button>
-        <!-- Telegram -->
         <button onclick="directSocialShare('telegram')" class="p-3 rounded-2xl glass hover:border-brand/40 flex flex-col items-center gap-1 active:scale-90 transition">
           <i data-lucide="send" class="w-5 h-5 text-sky-400"></i>
           <span class="text-[10px] text-white">Telegram</span>
         </button>
-        <!-- Facebook -->
         <button onclick="directSocialShare('facebook')" class="p-3 rounded-2xl glass hover:border-brand/40 flex flex-col items-center gap-1 active:scale-90 transition">
           <i data-lucide="facebook" class="w-5 h-5 text-blue-400"></i>
           <span class="text-[10px] text-white">Facebook</span>
         </button>
-        <!-- Instagram -->
         <button onclick="directSocialShare('instagram')" class="p-3 rounded-2xl glass hover:border-brand/40 flex flex-col items-center gap-1 active:scale-90 transition">
           <i data-lucide="camera" class="w-5 h-5 text-pink-400"></i>
           <span class="text-[10px] text-white">Instagram</span>
@@ -998,7 +1067,8 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
-    const APP_SHARE_URL = "https://nestmusic.free.nf?invite=app";
+    const APP_SHARE_URL = "https://nest-music.vercel.app?invite=app";
+    const OFFICIAL_APK_URL = "https://github.com/nestmusicfree/Nest-Music/releases/download/v1.1.0/NestMusic-user-debug.apk";
 
     // State Variables
     let currentUser = null;
@@ -1014,7 +1084,7 @@
     let isLooping = false;
     let isShuffle = false;
     let currentFcmToken = null;
-    let officialAppConfig = { url: 'https://nestmusic.free.nf', mode: 'install' };
+    let officialAppConfig = { url: OFFICIAL_APK_URL, mode: 'install' };
 
     // Web Audio Nodes
     let audioCtx, analyser, sourceNode, bassFilter, midFilter, trebleFilter, canvas, canvasCtx;
@@ -1040,6 +1110,8 @@
             document.getElementById('splashScreen').style.display = 'none';
             checkSharedInviteLink();
             initCapacitorPushNotifications();
+            initNativeMediaSessionBridge();
+            listenForNotificationRequests();
           }
         });
 
@@ -1053,19 +1125,26 @@
 
     // 4. Capacitor Native Android FCM Push Notifications
     async function initCapacitorPushNotifications() {
-      const PushNotifications = window.Capacitor?.Plugins?.PushNotifications;
-      if (!PushNotifications) return;
+      const PushNotifications = window.Capacitor?.Plugins?.PushNotifications || window.PushNotifications;
+      if (!PushNotifications) {
+        console.warn("Capacitor Push Notifications plugin is not available in this environment.");
+        return;
+      }
 
       try {
-        await PushNotifications.createChannel({
-          id: 'nest_music_notifications',
-          name: 'Nest Music',
-          description: 'Lossless audio and track release alerts',
-          importance: 5,
-          visibility: 1,
-          sound: 'default',
-          vibration: true
-        });
+        try {
+          await PushNotifications.createChannel({
+            id: 'nest_music_notifications',
+            name: 'Nest Music',
+            description: 'Lossless audio and track release alerts',
+            importance: 5,
+            visibility: 1,
+            sound: 'default',
+            vibration: true
+          });
+        } catch (channelErr) {
+          console.warn("Notification channel setup notice:", channelErr);
+        }
 
         let permStatus = await PushNotifications.checkPermissions();
         if (permStatus.receive === 'prompt') {
@@ -1074,35 +1153,45 @@
 
         if (permStatus.receive === 'granted') {
           await PushNotifications.register();
+        } else {
+          console.warn("Push notification permission denied by user.");
         }
 
         PushNotifications.addListener('registration', async token => {
+          if (!token || !token.value) {
+            console.error("Token registration failure: FCM token payload is empty.");
+            return;
+          }
           currentFcmToken = token.value;
           await saveFcmTokenToFirebase(token.value);
         });
 
         PushNotifications.addListener('registrationError', err => {
-          console.log('Push registration error:', err);
+          console.error('Registration failure in Capacitor Push Notifications:', err);
         });
 
         PushNotifications.addListener('pushNotificationReceived', notification => {
-          showToast(`🎵 ${notification.title || 'Nest Music'}`);
+          const title = notification.title || notification.data?.title || 'Nest Music';
+          const body = notification.body || notification.data?.body || notification.data?.message || '';
+          showToast(`🎵 ${title}${body ? ': ' + body : ''}`);
         });
 
         PushNotifications.addListener('pushNotificationActionPerformed', notification => {
-          const data = notification.notification?.data;
-          const targetSongId = data?.songId || data?.trackId;
-          if (targetSongId) {
-            handleDeepLinkToSong(targetSongId);
+          const data = notification.notification?.data || {};
+          const songId = data.songId || data.trackId || data.id;
+          if (songId) {
+            handleDeepLinkToSong(songId);
+          } else if (data.url) {
+            window.location.href = data.url;
           }
         });
       } catch (err) {
-        console.log('Capacitor Push setup note:', err);
+        console.error("Capacitor Push Notifications initialization failure:", err);
       }
     }
 
     async function requestNativeNotificationPermission() {
-      const PushNotifications = window.Capacitor?.Plugins?.PushNotifications;
+      const PushNotifications = window.Capacitor?.Plugins?.PushNotifications || window.PushNotifications;
       if (PushNotifications) {
         try {
           const res = await PushNotifications.requestPermissions();
@@ -1110,9 +1199,11 @@
             await PushNotifications.register();
             showToast('Native Push Notifications enabled!');
           } else {
+            console.warn('Push notification permission denied.');
             showToast('Notification permission denied');
           }
         } catch (e) {
+          console.error('Permission request failure:', e);
           showToast('Notification setup note: ' + e.message);
         }
       } else if ('Notification' in window) {
@@ -1124,49 +1215,116 @@
       }
     }
 
-    async function saveFcmTokenToFirebase(tokenStr) {
+    async function saveFcmTokenToFirebase(tokenStr, targetUid) {
       if (!tokenStr) return;
-      const sanitizedKey = tokenStr.replace(/[.#$[\]/]/g, '_');
-      const payload = {
-        token: tokenStr,
-        uid: currentUser ? currentUser.uid : 'guest',
-        username: currentUserData?.username || currentUser?.email?.split('@')[0] || 'guest',
-        platform: 'android',
-        updatedAt: firebase.database.ServerValue.TIMESTAMP
-      };
+      const uid = targetUid || (currentUser ? currentUser.uid : null);
+      const tokenId = tokenStr.replace(/[.#$[\]/]/g, '_');
 
-      await db.ref(`fcm_tokens/${sanitizedKey}`).set(payload);
-
-      if (currentUser && currentUser.uid) {
-        await db.ref(`users/${currentUser.uid}/fcmTokens/${sanitizedKey}`).set(payload);
+      try {
+        if (uid) {
+          const tokenRef = db.ref(`device_tokens/${uid}/${tokenId}`);
+          const snap = await tokenRef.once('value');
+          if (snap.exists()) {
+            await tokenRef.update({
+              token: tokenStr,
+              uid: uid,
+              platform: "android",
+              app: "Nest Music",
+              updatedAt: firebase.database.ServerValue.TIMESTAMP
+            });
+          } else {
+            await tokenRef.set({
+              token: tokenStr,
+              uid: uid,
+              platform: "android",
+              app: "Nest Music",
+              createdAt: firebase.database.ServerValue.TIMESTAMP,
+              updatedAt: firebase.database.ServerValue.TIMESTAMP
+            });
+          }
+        } else {
+          const guestRef = db.ref(`device_tokens/guest/${tokenId}`);
+          const snap = await guestRef.once('value');
+          if (snap.exists()) {
+            await guestRef.update({
+              token: tokenStr,
+              platform: "android",
+              app: "Nest Music",
+              updatedAt: firebase.database.ServerValue.TIMESTAMP
+            });
+          } else {
+            await guestRef.set({
+              token: tokenStr,
+              uid: 'guest',
+              platform: "android",
+              app: "Nest Music",
+              createdAt: firebase.database.ServerValue.TIMESTAMP,
+              updatedAt: firebase.database.ServerValue.TIMESTAMP
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Firebase token database failure:", err);
       }
     }
 
     function handleDeepLinkToSong(songId) {
       if (!songId) return;
-      const track = allSongs.find(t => t.id === songId);
+      const targetId = String(songId);
+      const track = allSongs.find(t => t.id === targetId);
       if (track) {
         playTrack(track.id);
       } else {
+        let retries = 0;
         const checkInterval = setInterval(() => {
-          const found = allSongs.find(t => t.id === songId);
+          retries++;
+          const found = allSongs.find(t => t.id === targetId);
           if (found) {
             clearInterval(checkInterval);
             playTrack(found.id);
+          } else if (retries > 15) {
+            clearInterval(checkInterval);
+            console.warn("Could not find track with ID:", targetId);
           }
         }, 300);
-        setTimeout(() => clearInterval(checkInterval), 4000);
       }
     }
 
-    // 5. Special Share Referral Landing Logic
+    // 5. Official App APK Guide & Referral Logic
+    function openApkInstallGuide() {
+      const modal = document.getElementById('apkInstallModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      gsap.fromTo(modal, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.35 });
+      lucide.createIcons();
+    }
+
+    function closeApkInstallGuide() {
+      const modal = document.getElementById('apkInstallModal');
+      gsap.to(modal, { opacity: 0, y: 50, duration: 0.25, onComplete: () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }});
+    }
+
     function checkSharedInviteLink() {
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('invite') === 'app' || urlParams.get('ref') === 'share') {
+      const hashParams = new URLSearchParams((window.location.hash || '').replace(/^#/, '').replace(/^\?/, ''));
+      const trackId = urlParams.get('track') || urlParams.get('song') || urlParams.get('id') || hashParams.get('track');
+      const invite = urlParams.get('invite') === 'app' || urlParams.get('ref') === 'share';
+
+      // Opening a shared track link: show install/update banner (web) and open track in player
+      if (invite || trackId) {
         const landing = document.getElementById('sharedLandingModal');
-        landing.classList.remove('hidden');
-        landing.classList.add('flex');
-        gsap.fromTo(landing, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.35 });
+        if (landing && !window.Capacitor?.isNativePlatform?.()) {
+          landing.classList.remove('hidden');
+          landing.classList.add('flex');
+          lucide.createIcons();
+        }
+      }
+      if (trackId) {
+        // Delay until catalog loads
+        setTimeout(() => handleDeepLinkToSong(trackId), 400);
       }
     }
 
@@ -1187,10 +1345,8 @@
           }
           deferredInstallPrompt = null;
         });
-      } else if (officialAppConfig && officialAppConfig.url && officialAppConfig.url !== 'https://nestmusic.free.nf') {
-        window.open(officialAppConfig.url, '_blank');
       } else {
-        showToast("Tap browser menu (⋮) -> 'Install App' / 'Add to Home Screen'");
+        openApkInstallGuide();
       }
     }
 
@@ -1279,8 +1435,9 @@
           renderSocialBadges(currentUserData);
         }
         loadUserUploads(user.uid);
+
         if (currentFcmToken) {
-          saveFcmTokenToFirebase(currentFcmToken);
+          saveFcmTokenToFirebase(currentFcmToken, user.uid);
         }
       } else {
         document.getElementById('authBox').classList.remove('hidden');
@@ -1426,6 +1583,120 @@
       renderFeeds();
     }
 
+
+    // Native MediaSession / MediaStyle now-playing bridge (Capacitor NestMediaSession plugin)
+    function getNestMediaSession() {
+      return window.Capacitor?.Plugins?.NestMediaSession || null;
+    }
+
+    async function syncNativeNowPlaying(isPlayingOverride) {
+      const plugin = getNestMediaSession();
+      if (!plugin || !currentPlayingTrack) return;
+      try {
+        const uploader = usersMap[currentPlayingTrack.uploaderUid] || {};
+        const artist = uploader.username ? `@${uploader.username}` : (currentPlayingTrack.artist || 'Nest Music');
+        const playing = typeof isPlayingOverride === 'boolean' ? isPlayingOverride : !globalAudio.paused;
+        await plugin.updateNowPlaying({
+          title: currentPlayingTrack.title || 'Nest Music',
+          artist,
+          cover: currentPlayingTrack.coverBase64 || '',
+          isPlaying: playing,
+          position: globalAudio.currentTime || 0,
+          duration: globalAudio.duration || 0
+        });
+        // Browser / lock-screen Media Session API fallback
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: currentPlayingTrack.title || 'Nest Music',
+            artist,
+            album: 'Nest Music',
+            artwork: currentPlayingTrack.coverBase64 ? [
+              { src: currentPlayingTrack.coverBase64, sizes: '512x512', type: 'image/png' }
+            ] : []
+          });
+          navigator.mediaSession.playbackState = playing ? 'playing' : 'paused';
+          try {
+            navigator.mediaSession.setActionHandler('play', () => { globalAudio.play(); updatePlayIcons(true); syncNativeNowPlaying(true); });
+            navigator.mediaSession.setActionHandler('pause', () => { globalAudio.pause(); updatePlayIcons(false); syncNativeNowPlaying(false); });
+            navigator.mediaSession.setActionHandler('nexttrack', () => playNextTrack());
+            navigator.mediaSession.setActionHandler('previoustrack', () => playPreviousTrack());
+          } catch (_) {}
+        }
+      } catch (e) {
+        console.warn('MediaSession sync note:', e);
+      }
+    }
+
+    function playNextTrack() {
+      if (!allSongs.length) return;
+      if (isShuffle) {
+        const rand = allSongs[Math.floor(Math.random() * allSongs.length)];
+        if (rand) playTrack(rand.id);
+        return;
+      }
+      if (!currentPlayingTrack) {
+        playTrack(allSongs[0].id);
+        return;
+      }
+      const idx = allSongs.findIndex(t => t.id === currentPlayingTrack.id);
+      const next = allSongs[(idx + 1) % allSongs.length];
+      if (next) playTrack(next.id);
+    }
+
+    function playPreviousTrack() {
+      if (!allSongs.length) return;
+      if (!currentPlayingTrack) {
+        playTrack(allSongs[0].id);
+        return;
+      }
+      if (globalAudio.currentTime > 3) {
+        globalAudio.currentTime = 0;
+        return;
+      }
+      const idx = allSongs.findIndex(t => t.id === currentPlayingTrack.id);
+      const prev = allSongs[(idx - 1 + allSongs.length) % allSongs.length];
+      if (prev) playTrack(prev.id);
+    }
+
+    function initNativeMediaSessionBridge() {
+      const plugin = getNestMediaSession();
+      if (!plugin) return;
+      try {
+        plugin.addListener('mediaAction', (ev) => {
+          const action = ev?.action;
+          if (action === 'play') {
+            if (globalAudio.src) { globalAudio.play(); updatePlayIcons(true); syncNativeNowPlaying(true); }
+          } else if (action === 'pause') {
+            globalAudio.pause(); updatePlayIcons(false); syncNativeNowPlaying(false);
+          } else if (action === 'next') {
+            playNextTrack();
+          } else if (action === 'previous') {
+            playPreviousTrack();
+          }
+        });
+      } catch (e) {
+        console.warn('MediaSession listener note:', e);
+      }
+    }
+
+    // Auto toast when admin queues notification_requests (FCM delivery still needs server/Cloud Function)
+    function listenForNotificationRequests() {
+      try {
+        db.ref('notification_requests').limitToLast(1).on('child_added', snap => {
+          const req = snap.val();
+          if (!req) return;
+          const title = req.title || 'New Nest Music Drop';
+          const body = req.body || req.message || req.trackTitle || '';
+          showToast(`🔔 ${title}${body ? ' — ' + body : ''}`);
+          if (req.trackId || req.songId) {
+            // optional: do not auto-play, just toast
+          }
+        });
+      } catch (e) {
+        console.warn('notification_requests listener note:', e);
+      }
+    }
+
     // 9. Audio Engine & Cinema Player
     function initAudioEngine() {
       globalAudio.addEventListener('timeupdate', () => {
@@ -1435,6 +1706,18 @@
           document.getElementById('fpCurrentTime').innerText = formatTime(globalAudio.currentTime);
           document.getElementById('fpTotalTime').innerText = formatTime(globalAudio.duration);
           document.getElementById('miniProgressLine').style.width = `${progress}%`;
+          // Throttled native MediaSession position sync (~every 2s)
+          if (!window._lastMediaSync || Date.now() - window._lastMediaSync > 2000) {
+            window._lastMediaSync = Date.now();
+            const plugin = getNestMediaSession();
+            if (plugin && currentPlayingTrack) {
+              plugin.setPlaybackState({
+                isPlaying: !globalAudio.paused,
+                position: globalAudio.currentTime || 0,
+                duration: globalAudio.duration || 0
+              }).catch(() => {});
+            }
+          }
         }
       });
 
@@ -1478,6 +1761,7 @@
       globalAudio.play().then(() => {
         updatePlayIcons(true);
         setupWebAudioVisualizerAndEQ();
+        syncNativeNowPlaying(true);
       }).catch(e => console.log("Play note:", e));
 
       updateLikedUI();
@@ -1489,9 +1773,11 @@
       if (globalAudio.paused) {
         globalAudio.play();
         updatePlayIcons(true);
+        syncNativeNowPlaying(true);
       } else {
         globalAudio.pause();
         updatePlayIcons(false);
+        syncNativeNowPlaying(false);
       }
     }
 
@@ -1654,11 +1940,23 @@
       }
     }
 
-    // 11. Clean Share Suite
+    // 11. Multi-Open Clean Share Suite
     function openShareCenter() {
       const modal = document.getElementById('shareSuiteModal');
+      modal.classList.remove('hidden');
       modal.classList.remove('translate-y-full');
-      gsap.fromTo(modal, { opacity: 0.8 }, { opacity: 1, duration: 0.3 });
+      modal.classList.add('flex');
+      gsap.fromTo(modal, { opacity: 0, y: '100%' }, { opacity: 1, y: '0%', duration: 0.35, ease: 'power2.out' });
+      lucide.createIcons();
+    }
+
+    function closeShareCenter() {
+      const modal = document.getElementById('shareSuiteModal');
+      gsap.to(modal, { y: '100%', opacity: 0, duration: 0.25, ease: 'power2.in', onComplete: () => {
+        modal.classList.add('translate-y-full');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }});
     }
 
     function copyShareSuiteLink() {
@@ -1781,7 +2079,7 @@
       showToast("Playlist deleted");
     }
 
-    // 13. Fast Upload Studio (With @nestmusic Auto Push Trigger Support)
+    // 13. Fast Upload Studio
     function autoFillAudioDetails(input) {
       const file = input.files[0];
       if (!file) return;

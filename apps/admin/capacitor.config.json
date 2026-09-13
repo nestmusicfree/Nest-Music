@@ -1,0 +1,8 @@
+{
+  "appId": "com.nestmusic.admin",
+  "appName": "Nest Music Admin",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}

@@ -1,0 +1,17 @@
+node_modules/
+.vercel/
+.env*
+!.env.example
+*.local
+.DS_Store
+apps/**/android/.gradle/
+apps/**/android/**/build/
+apps/**/android/local.properties
+apps/**/android/**/captures/
+apps/**/www/
+apps/**/node_modules/
+public/
+.idea/
+*.iml
+*.apk
+!dist-apks/*.apk
