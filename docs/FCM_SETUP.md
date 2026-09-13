@@ -9,7 +9,7 @@
 - Vercel `/api/fcm-send` + `/api/fcm-drain` use **firebase-admin** + `FIREBASE_SERVICE_ACCOUNT`
 - High-priority Android payload: channel `nest_music_notifications`, visibility public, `click_action` OPEN, default white tray icon `ic_stat_nest`
 - Admin UI / track approve / user upload write `notification_requests` then POST `/api/fcm-send` with `requestId`
-- Vercel Cron hits `/api/fcm-drain` every 5 minutes so queued pushes still deliver if the app is closed
+- Immediate POST `/api/fcm-send` after every queue (primary). Vercel Hobby Cron hits `/api/fcm-drain` once daily as a backup; upgrade to Pro for 1–5 minute drain
 - Stale `NotRegistered` tokens are removed from `device_tokens`
 - User app registers FCM tokens via Capacitor PushNotifications + first-launch **Allow Notifications** English prompt (`POST_NOTIFICATIONS`)
 

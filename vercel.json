@@ -7,7 +7,7 @@
     { "source": "/admin/", "destination": "/admin/index.html" }
   ],
   "crons": [
-    { "path": "/api/fcm-drain", "schedule": "*/5 * * * *" }
+    { "path": "/api/fcm-drain", "schedule": "0 12 * * *" }
   ],
   "headers": [
     {
