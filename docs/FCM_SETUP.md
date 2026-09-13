@@ -1,14 +1,17 @@
 # Nest Music — Real FCM (project jokefi)
 
-## Working now
+## Working now (v1.2.1)
 
 - Client `google-services.json` on disk (gitignored) for:
   - `apps/user/android/app/google-services.json` → `com.nestmusic.app`
   - `apps/admin/android/app/google-services.json` → `com.nestmusic.admin` (+ app)
 - Sender ID: `968982416863`
 - Vercel `/api/fcm-send` + `/api/fcm-drain` use **firebase-admin** + `FIREBASE_SERVICE_ACCOUNT`
-- Admin UI / track approve write `notification_requests`; sender delivers to `device_tokens`
-- User app registers FCM tokens via Capacitor PushNotifications + `POST_NOTIFICATIONS`
+- High-priority Android payload: channel `nest_music_notifications`, visibility public, `click_action` OPEN, default white tray icon `ic_stat_nest`
+- Admin UI / track approve / user upload write `notification_requests` then POST `/api/fcm-send` with `requestId`
+- Vercel Cron hits `/api/fcm-drain` every 5 minutes so queued pushes still deliver if the app is closed
+- Stale `NotRegistered` tokens are removed from `device_tokens`
+- User app registers FCM tokens via Capacitor PushNotifications + first-launch **Allow Notifications** English prompt (`POST_NOTIFICATIONS`)
 
 ## Local / CI rebuild notes
 
@@ -23,10 +26,11 @@ Keep `google-services.json` files on disk (not in git). Admin SDK JSON lives out
 ```
 
 Test:
+
 ```bash
 curl -X POST https://nest-music.vercel.app/api/fcm-send \
   -H 'Content-Type: application/json' \
   -d '{"title":"Nest Music","body":"hello","type":"system"}'
 ```
 
-Stale tokens return `NotRegistered` and can be pruned later.
+Expect `{ ok: true, tokenCount, sent, failed }`.

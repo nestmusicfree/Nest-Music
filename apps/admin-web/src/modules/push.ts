@@ -1,4 +1,5 @@
 import { db, escapeHtml, serverTimestamp, type Track } from '../lib/firebase';
+import { sendFcmByRequestId, formatFcmResult } from '../lib/fcm';
 import { refreshIcons } from '../lib/ui';
 import { getAdminTracks, setTracksListener } from './tracks';
 
@@ -10,9 +11,9 @@ export function mountPush() {
         <h3 class="text-base font-bold flex items-center gap-2 text-white">
           <i data-lucide="bell-ring" class="w-5 h-5 text-brand"></i> Send Song Push Notification
         </h3>
-        <span class="text-[10px] text-brand font-mono uppercase font-bold">Native FCM Broadcast</span>
+        <span class="text-[10px] text-brand font-mono uppercase font-bold">Android System Tray FCM</span>
       </div>
-      <p class="text-gray-300">Select any uploaded song and queue a real FCM push to all registered Android devices. Delivery uses the Nest Music FCM sender API + device_tokens.</p>
+      <p class="text-gray-300">Select any uploaded song and send a real Android system-tray notification to every registered Nest Music device — including apps that are closed or in the background.</p>
       <form id="pushForm" class="space-y-3">
         <div>
           <label class="block text-gray-300 font-semibold mb-1">Select Song *</label>
@@ -22,7 +23,7 @@ export function mountPush() {
         </div>
         <div>
           <label class="block text-gray-300 font-semibold mb-1">Notification Title *</label>
-          <input type="text" id="notifTitle" required placeholder="🎵 New Song on Nest Music" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white focus:border-brand outline-none" />
+          <input type="text" id="notifTitle" required placeholder="New Song on Nest Music" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white focus:border-brand outline-none" />
         </div>
         <div>
           <label class="block text-gray-300 font-semibold mb-1">Notification Message *</label>
@@ -39,7 +40,7 @@ export function mountPush() {
   sel.addEventListener('change', () => {
     const track = getAdminTracks().find(t => t.id === sel.value);
     if (track) {
-      (document.getElementById('notifTitle') as HTMLInputElement).value = '🎵 New Song on Nest Music';
+      (document.getElementById('notifTitle') as HTMLInputElement).value = 'New Song on Nest Music';
       (document.getElementById('notifBody') as HTMLTextAreaElement).value =
         `Listen to "${track.title}" by ${track.artist || '@nestmusic'} on Nest Music.`;
     }
@@ -55,12 +56,12 @@ export function mountPush() {
     const sendBtn = document.getElementById('sendNotifBtn') as HTMLButtonElement;
     const status = document.getElementById('pushStatus')!;
     if (!songId || !title || !body) {
-      alert('Please select a song and fill title and message.');
+      alert('Please select a song and fill in the title and message.');
       return;
     }
     const selectedSong = getAdminTracks().find(t => t.id === songId);
     sendBtn.disabled = true;
-    sendBtn.innerText = 'Dispatching Push Notification...';
+    sendBtn.innerText = 'Sending system-tray push...';
     status.textContent = '';
     try {
       const ref = await db.ref('notification_requests').push({
@@ -71,27 +72,21 @@ export function mountPush() {
         uploader: String(selectedSong?.uploaderUsername || selectedSong?.artist || '@nestmusic'),
         title: String(title),
         body: String(body),
-        requestedAt: serverTimestamp()
+        status: 'pending',
+        requestedAt: serverTimestamp(),
+        source: 'admin-push'
       });
-      // Best-effort kick the Vercel FCM sender (works once FIREBASE_SERVICE_ACCOUNT is set)
-      try {
-        const res = await fetch('/api/fcm-send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ requestId: ref.key })
-        });
-        const j = await res.json().catch(() => ({}));
-        status.textContent = res.ok
-          ? `Queued + sender: ${j.sent ?? 0} delivered, ${j.failed ?? 0} failed.`
-          : `Queued in RTDB. Sender note: ${j.error || res.statusText}. Add FIREBASE_SERVICE_ACCOUNT if needed.`;
-      } catch {
-        status.textContent = 'Queued in notification_requests. FCM sender will process when credentials are configured.';
-      }
-      alert(`✅ Push notification queued for "${selectedSong?.title || songId}"!`);
+      const result = await sendFcmByRequestId(String(ref.key));
+      const line = formatFcmResult(result);
+      status.textContent = line;
+      alert(result.ok
+        ? `Success. "${selectedSong?.title || songId}" — ${result.sent ?? 0} sent, ${result.failed ?? 0} failed (${result.tokenCount ?? 0} tokens).`
+        : `Queued, but FCM send failed: ${result.error || 'unknown error'}. Drain will retry automatically.`);
       sel.value = '';
       (document.getElementById('notifTitle') as HTMLInputElement).value = '';
       (document.getElementById('notifBody') as HTMLTextAreaElement).value = '';
     } catch (err: any) {
+      status.textContent = 'Error: ' + (err?.message || err);
       alert('Error sending push notification: ' + (err?.message || err));
     } finally {
       sendBtn.disabled = false;

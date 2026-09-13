@@ -116,6 +116,28 @@
   <!-- ==================== EXCLUSIVE SHARE REFERRAL LANDING SCREEN ==================== -->
 
 
+
+  <!-- ==================== FIRST-LAUNCH NOTIFICATION PERMISSION ==================== -->
+  <div id="notifPermissionSheet" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-[60] flex items-center justify-center p-4">
+    <div class="glass-modal max-w-sm w-full p-6 rounded-3xl space-y-4 text-xs">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-brand/20 border border-brand/40 flex items-center justify-center">
+          <i data-lucide="bell" class="w-6 h-6 text-brand"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-black text-white">Allow Notifications</h3>
+          <p class="text-[11px] text-gray-400">Android system tray alerts</p>
+        </div>
+      </div>
+      <p class="text-gray-300 leading-relaxed">Nest Music can show song alerts in your Android notification tray — even when the app is closed or in the background. This is a real system notification, not only an in-app toast.</p>
+      <p class="text-[11px] text-gray-400">Tap Allow, then choose Allow on the Android permission dialog.</p>
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button onclick="dismissNotificationPrompt()" class="py-3 rounded-xl glass text-white font-bold">Not now</button>
+        <button onclick="acceptNotificationPrompt()" class="py-3 rounded-xl bg-brand text-black font-extrabold">Allow Notifications</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== TOAST NOTIFICATION ENGINE ==================== -->
   <div id="toastContainer" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-sm pointer-events-none"></div>
 
@@ -162,7 +184,7 @@
         </button>
         <button onclick="requestNativeNotificationPermission(); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-white transition">
           <i data-lucide="bell" class="w-5 h-5 text-white"></i>
-          <span>Enable Native Push</span>
+          <span>Allow Notifications</span>
         </button>
         <button onclick="switchView('profileView'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
           <i data-lucide="user-check" class="w-5 h-5 text-white"></i>
@@ -216,11 +238,11 @@
     <main id="homeView" class="view-panel space-y-5">
       <!-- Categories Filter Tabs -->
       <div class="flex space-x-2 overflow-x-auto hide-scrollbar pb-1 text-xs font-bold">
-        <button onclick="filterCategory('all')" class="cat-pill active px-4 py-2 rounded-xl bg-brand text-black whitespace-nowrap transition">All Catalog</button>
-        <button onclick="filterCategory('music')" class="cat-pill px-4 py-2 rounded-xl glass text-white whitespace-nowrap hover:border-brand/50 transition">Music & AI</button>
-        <button onclick="filterCategory('bgm')" class="cat-pill px-4 py-2 rounded-xl glass text-white whitespace-nowrap hover:border-brand/50 transition">BGM & Loops</button>
-        <button onclick="filterCategory('sfx')" class="cat-pill px-4 py-2 rounded-xl glass text-white whitespace-nowrap hover:border-brand/50 transition">SFX Effects</button>
-        <button onclick="filterCategory('18plus')" class="cat-pill px-4 py-2 rounded-xl glass text-red-400 whitespace-nowrap hover:border-red-500/50 transition">Explicit 18+</button>
+        <button onclick="filterCategory('all', this)" class="cat-pill active px-4 py-2 rounded-xl bg-brand text-black whitespace-nowrap transition">All Catalog</button>
+        <button onclick="filterCategory('music', this)" class="cat-pill px-4 py-2 rounded-xl glass text-white whitespace-nowrap hover:border-brand/50 transition">Music & AI</button>
+        <button onclick="filterCategory('bgm', this)" class="cat-pill px-4 py-2 rounded-xl glass text-white whitespace-nowrap hover:border-brand/50 transition">BGM & Loops</button>
+        <button onclick="filterCategory('sfx', this)" class="cat-pill px-4 py-2 rounded-xl glass text-white whitespace-nowrap hover:border-brand/50 transition">SFX Effects</button>
+        <button onclick="filterCategory('18plus', this)" class="cat-pill px-4 py-2 rounded-xl glass text-red-400 whitespace-nowrap hover:border-red-500/50 transition">Explicit 18+</button>
       </div>
 
       <!-- Hero Banner With Native APK Guide Action -->
@@ -379,7 +401,7 @@
 
           <!-- Profile Actions -->
           <div class="grid grid-cols-3 gap-2 mt-5 pt-4 border-t border-white/10 text-xs">
-            <button onclick="openModal('editProfileModal')" class="py-2.5 rounded-xl glass border-white/10 text-white font-bold flex items-center justify-center gap-1 hover:border-brand/40 transition">
+            <button onclick="openEditProfile()" class="py-2.5 rounded-xl glass border-white/10 text-white font-bold flex items-center justify-center gap-1 hover:border-brand/40 transition">
               <i data-lucide="edit-3" class="w-3.5 h-3.5 text-white"></i> Edit Info
             </button>
             <button onclick="openModal('blueTickModal')" class="py-2.5 rounded-xl bg-brand/10 border border-brand/40 text-brand font-bold flex items-center justify-center gap-1 hover:bg-brand/20 transition">
@@ -546,9 +568,13 @@
           <i data-lucide="download" class="w-4 h-4 text-white"></i>
           <span class="text-[10px]">Download</span>
         </button>
-        <button onclick="openShareCenter()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+        <button onclick="shareCurrentTrack()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
           <i data-lucide="share-2" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]">Share App</span>
+          <span class="text-[10px]">Share Track</span>
+        </button>
+        <button onclick="openAddToPlaylistModal()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+          <i data-lucide="list-plus" class="w-4 h-4 text-white"></i>
+          <span class="text-[10px]">Playlist</span>
         </button>
         <button onclick="openModal('sleepTimerModal')" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
           <i data-lucide="moon" class="w-4 h-4 text-white"></i>
@@ -853,6 +879,19 @@
     </div>
   </div>
 
+
+  <div id="addToPlaylistModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-modal max-w-sm w-full p-5 rounded-3xl space-y-3 text-xs">
+      <div class="flex items-center justify-between border-b border-white/10 pb-2">
+        <h3 class="text-sm font-bold text-white flex items-center gap-1.5"><i data-lucide="list-plus" class="w-4 h-4 text-brand"></i> Add To Playlist</h3>
+        <button onclick="closeModal('addToPlaylistModal')" class="text-white hover:text-brand"><i data-lucide="x" class="w-4 h-4 text-white"></i></button>
+      </div>
+      <p class="text-gray-400 text-[11px]">Choose a playlist for the current track, or create a new one.</p>
+      <div id="addToPlaylistList" class="space-y-2 max-h-56 overflow-y-auto hide-scrollbar"></div>
+      <button onclick="createCustomPlaylist(); openAddToPlaylistModal();" class="w-full py-2.5 bg-brand text-black font-bold rounded-xl active:scale-95 transition">New Playlist</button>
+    </div>
+  </div>
+
   <!-- Global Audio Element -->
   <audio id="globalAudio" class="hidden" crossorigin="anonymous"></audio>
 
@@ -979,6 +1018,7 @@
             try { initCapacitorPushNotifications(); } catch (e) { console.warn('push init soft-fail', e); }
             try { initNativeMediaSessionBridge(); } catch (e) { console.warn('media init soft-fail', e); }
             try { listenForNotificationRequests(); } catch (e) { console.warn('notif listen soft-fail', e); }
+            try { maybeShowNotificationPrompt(); } catch (e) { console.warn('notif prompt soft-fail', e); }
           }
         });
 
@@ -988,6 +1028,41 @@
       updateLikedUI();
       renderPlaylists();
     });
+
+    function isNativeCapacitor() {
+      try {
+        return !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
+      } catch (e) {
+        return !!(window.Capacitor && window.Capacitor.Plugins);
+      }
+    }
+
+    function fcmSendUrl() {
+      if (isNativeCapacitor()) return 'https://nest-music.vercel.app/api/fcm-send';
+      if (location.origin && location.origin.startsWith('http') && !/localhost|127\.0\.0\.1/.test(location.hostname)) {
+        return location.origin + '/api/fcm-send';
+      }
+      return 'https://nest-music.vercel.app/api/fcm-send';
+    }
+
+    async function queueAndSendFcm(payload) {
+      const ref = await db.ref('notification_requests').push({
+        ...payload,
+        status: 'pending',
+        requestedAt: firebase.database.ServerValue.TIMESTAMP
+      });
+      try {
+        const res = await fetch(fcmSendUrl(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ requestId: ref.key })
+        });
+        const j = await res.json().catch(() => ({}));
+        return { ok: res.ok && j.ok !== false, sent: j.sent ?? 0, failed: j.failed ?? 0, tokenCount: j.tokenCount ?? 0, error: j.error };
+      } catch (e) {
+        return { ok: false, error: e.message || String(e) };
+      }
+    }
 
     // 4. Capacitor Native Android FCM Push Notifications
     async function initCapacitorPushNotifications() {
@@ -1002,7 +1077,7 @@
           await PushNotifications.createChannel({
             id: 'nest_music_notifications',
             name: 'Nest Music',
-            description: 'Lossless audio and track release alerts',
+            description: 'Song releases and Nest Music alerts',
             importance: 5,
             visibility: 1,
             sound: 'default',
@@ -1012,15 +1087,13 @@
           console.warn("Notification channel setup notice:", channelErr);
         }
 
+        // Do not auto-prompt here — first launch uses the English Allow Notifications sheet.
         let permStatus = await PushNotifications.checkPermissions();
-        if (permStatus.receive === 'prompt') {
-          permStatus = await PushNotifications.requestPermissions();
-        }
-
         if (permStatus.receive === 'granted') {
           await PushNotifications.register();
+          updateNotificationCta(true);
         } else {
-          console.warn("Push notification permission denied by user.");
+          updateNotificationCta(false);
         }
 
         PushNotifications.addListener('registration', async token => {
@@ -1036,10 +1109,11 @@
           console.error('Registration failure in Capacitor Push Notifications:', err);
         });
 
+        // Foreground only: system tray still appears when the app is killed/backgrounded.
         PushNotifications.addListener('pushNotificationReceived', notification => {
           const title = notification.title || notification.data?.title || 'Nest Music';
           const body = notification.body || notification.data?.body || notification.data?.message || '';
-          showToast(`🎵 ${title}${body ? ': ' + body : ''}`);
+          showToast(`${title}${body ? ': ' + body : ''}`);
         });
 
         PushNotifications.addListener('pushNotificationActionPerformed', notification => {
@@ -1048,7 +1122,7 @@
           if (songId) {
             handleDeepLinkToSong(songId);
           } else if (data.url) {
-            window.location.href = data.url;
+            parseDeepLinkUrl(data.url);
           }
         });
       } catch (err) {
@@ -1056,28 +1130,83 @@
       }
     }
 
+    function updateNotificationCta(granted) {
+      const label = document.getElementById('heroOfficialAppBtnText');
+      if (label) label.innerText = granted ? 'Notifications On' : 'Allow Notifications';
+    }
+
+    async function maybeShowNotificationPrompt() {
+      const PushNotifications = window.Capacitor?.Plugins?.PushNotifications || window.PushNotifications;
+      if (!PushNotifications) return;
+      try {
+        const perm = await PushNotifications.checkPermissions();
+        if (perm.receive === 'granted') {
+          localStorage.setItem('nest_notif_prompted', '1');
+          updateNotificationCta(true);
+          return;
+        }
+        if (localStorage.getItem('nest_notif_prompted') === '1') return;
+        const sheet = document.getElementById('notifPermissionSheet');
+        if (sheet) {
+          sheet.classList.remove('hidden');
+          try { lucide.createIcons(); } catch (e) {}
+        }
+      } catch (e) {
+        console.warn('Notification prompt note:', e);
+      }
+    }
+
+    async function acceptNotificationPrompt() {
+      localStorage.setItem('nest_notif_prompted', '1');
+      const sheet = document.getElementById('notifPermissionSheet');
+      if (sheet) sheet.classList.add('hidden');
+      await requestNativeNotificationPermission();
+    }
+
+    function dismissNotificationPrompt() {
+      localStorage.setItem('nest_notif_prompted', '1');
+      const sheet = document.getElementById('notifPermissionSheet');
+      if (sheet) sheet.classList.add('hidden');
+      showToast('You can enable notifications later from the menu.');
+    }
+
     async function requestNativeNotificationPermission() {
       const PushNotifications = window.Capacitor?.Plugins?.PushNotifications || window.PushNotifications;
       if (PushNotifications) {
         try {
+          try {
+            await PushNotifications.createChannel({
+              id: 'nest_music_notifications',
+              name: 'Nest Music',
+              description: 'Song releases and Nest Music alerts',
+              importance: 5,
+              visibility: 1,
+              sound: 'default',
+              vibration: true
+            });
+          } catch (channelErr) {}
           const res = await PushNotifications.requestPermissions();
           if (res.receive === 'granted') {
             await PushNotifications.register();
-            showToast('Native Push Notifications enabled!');
+            updateNotificationCta(true);
+            showToast('Notifications allowed. You will see Android tray alerts when the app is closed.');
           } else {
             console.warn('Push notification permission denied.');
-            showToast('Notification permission denied');
+            updateNotificationCta(false);
+            showToast('Notification permission denied. Enable it in Android Settings > Apps > Nest Music > Notifications.');
           }
         } catch (e) {
           console.error('Permission request failure:', e);
-          showToast('Notification setup note: ' + e.message);
+          showToast('Could not request notification permission: ' + e.message);
         }
       } else if ('Notification' in window) {
         Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
-            showToast('Web Notifications allowed');
+            showToast('Browser notifications allowed');
           }
         });
+      } else {
+        showToast('Install the Nest Music Android app to receive system-tray alerts.');
       }
     }
 
@@ -1156,6 +1285,26 @@
       }
     }
 
+    function parseDeepLinkUrl(raw) {
+      if (!raw) return;
+      try {
+        const u = new URL(raw, location.origin);
+        let trackId = u.searchParams.get('track') || u.searchParams.get('song') || u.searchParams.get('id');
+        if (!trackId) {
+          if (u.protocol === 'nestmusic:' && (u.host === 'track' || u.hostname === 'track')) {
+            trackId = (u.pathname || '').replace(/^\/+/, '').split('/')[0];
+          } else {
+            const parts = (u.pathname || '').split('/').filter(Boolean);
+            if (parts[0] === 'track' && parts[1]) trackId = parts[1];
+          }
+        }
+        if (trackId) handleDeepLinkToSong(trackId);
+      } catch (e) {
+        const m = String(raw).match(/track[=/]([A-Za-z0-9_-]+)/);
+        if (m) handleDeepLinkToSong(m[1]);
+      }
+    }
+
     // 5. Deep-link open-to-play only (no APK install prompts)
     function checkSharedInviteLink() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -1163,6 +1312,19 @@
       const trackId = urlParams.get('track') || urlParams.get('song') || urlParams.get('id') || hashParams.get('track');
       if (trackId) {
         setTimeout(() => handleDeepLinkToSong(trackId), 400);
+      }
+      try {
+        const App = window.Capacitor?.Plugins?.App;
+        if (App && App.getLaunchUrl) {
+          App.getLaunchUrl().then((info) => {
+            if (info && info.url) parseDeepLinkUrl(info.url);
+          }).catch(() => {});
+        }
+        if (App && App.addListener) {
+          App.addListener('appUrlOpen', (ev) => parseDeepLinkUrl(ev && ev.url));
+        }
+      } catch (e) {
+        console.warn('Deep link listener note:', e);
       }
     }
 
@@ -1387,14 +1549,17 @@
       renderFeeds();
     }
 
-    function filterCategory(cat) {
+    function filterCategory(cat, el) {
       currentCategory = cat;
       document.querySelectorAll('.cat-pill').forEach(btn => {
         btn.classList.remove('bg-brand', 'text-black');
         btn.classList.add('glass', 'text-white');
       });
-      event.target.classList.add('bg-brand', 'text-black');
-      event.target.classList.remove('glass', 'text-white');
+      const target = el || (typeof event !== 'undefined' ? event.target : null);
+      if (target) {
+        target.classList.add('bg-brand', 'text-black');
+        target.classList.remove('glass', 'text-white');
+      }
       renderFeeds();
     }
 
@@ -1494,18 +1659,19 @@
       }
     }
 
-    // Auto toast when admin queues notification_requests (FCM delivery still needs server/Cloud Function)
+    // Web-only: in-app toast for notification_requests.
+    // Native Capacitor uses real FCM system-tray delivery (this listener cannot run when the app is killed).
     function listenForNotificationRequests() {
+      if (isNativeCapacitor()) {
+        return;
+      }
       try {
         db.ref('notification_requests').limitToLast(1).on('child_added', snap => {
           const req = snap.val();
           if (!req) return;
           const title = req.title || 'New Nest Music Drop';
           const body = req.body || req.message || req.trackTitle || '';
-          showToast(`🔔 ${title}${body ? ' — ' + body : ''}`);
-          if (req.trackId || req.songId) {
-            // optional: do not auto-play, just toast
-          }
+          showToast(`${title}${body ? ' — ' + body : ''}`);
         });
       } catch (e) {
         console.warn('notification_requests listener note:', e);
@@ -1544,7 +1710,7 @@
           const rand = allSongs[Math.floor(Math.random() * allSongs.length)];
           if (rand) playTrack(rand.id);
         } else {
-          updatePlayIcons(false);
+          playNextTrack();
         }
       });
     }
@@ -1562,7 +1728,7 @@
       document.getElementById('fpArtistHandle').innerText = handle;
       document.getElementById('fpGreenTick').style.display = isVerified ? 'inline-block' : 'none';
       document.getElementById('fpCoverImg').src = track.coverBase64;
-      document.getElementById('fpAlbumTitle').innerText = track.category.toUpperCase();
+      document.getElementById('fpAlbumTitle').innerText = (track.category || 'music').toUpperCase();
       document.getElementById('fpRatingScore').innerText = `${track.rating || '5.0'} ★`;
       document.getElementById('fpDownloadCount').innerText = track.downloadsCount || 0;
 
@@ -1775,8 +1941,46 @@
     }
 
     function copyShareSuiteLink() {
-      navigator.clipboard.writeText(APP_SHARE_URL);
-      showToast("App Invite Link Copied to Clipboard!");
+      const url = currentPlayingTrack
+        ? `${APP_SHARE_URL}/?track=${encodeURIComponent(currentPlayingTrack.id)}`
+        : APP_SHARE_URL;
+      navigator.clipboard.writeText(url);
+      showToast(currentPlayingTrack ? "Track link copied to clipboard" : "App invite link copied to clipboard");
+    }
+
+    function trackShareUrl(track) {
+      const id = (track && track.id) || (currentPlayingTrack && currentPlayingTrack.id);
+      if (!id) return APP_SHARE_URL;
+      return `${APP_SHARE_URL}/?track=${encodeURIComponent(id)}`;
+    }
+
+    async function shareCurrentTrack() {
+      if (!currentPlayingTrack) {
+        openShareCenter();
+        return;
+      }
+      const url = trackShareUrl(currentPlayingTrack);
+      const title = currentPlayingTrack.title || 'Nest Music';
+      const text = `Listen to "${title}" by ${currentPlayingTrack.artist || 'Nest Music'} on Nest Music`;
+      try {
+        const Share = window.Capacitor?.Plugins?.Share;
+        if (Share && Share.share) {
+          await Share.share({ title, text, url, dialogTitle: 'Share track' });
+          return;
+        }
+        if (navigator.share) {
+          await navigator.share({ title, text, url });
+          return;
+        }
+      } catch (e) {
+        console.warn('Share note:', e);
+      }
+      try {
+        await navigator.clipboard.writeText(url);
+        showToast('Track link copied. Friends can open it in Nest Music.');
+      } catch (e) {
+        showToast(url);
+      }
     }
 
     function directSocialShare(platform) {
@@ -1830,7 +2034,7 @@
         return `
           <div onclick="playTrack('${t.id}')" class="glass p-2.5 rounded-2xl flex items-center justify-between cursor-pointer hover:border-brand/40">
             <div class="flex items-center space-x-3 truncate">
-              <img src="${t.coverBase64}" class="w-10 h-10 rounded-xl object-cover" />
+              <img src="${t.coverBase64 || 'https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png'}" class="w-10 h-10 rounded-xl object-cover" />
               <div class="truncate">
                 <h5 class="text-xs font-bold text-white truncate">${escapeHtml(t.title)}</h5>
                 <div class="flex items-center space-x-1">
@@ -1858,38 +2062,89 @@
       lucide.createIcons();
     }
 
-    function createCustomPlaylist() {
-      const name = prompt("Enter new playlist name:");
-      if (!name) return;
-      const playlist = { id: 'pl_' + Date.now(), name, trackIds: [] };
-      userPlaylists.push(playlist);
+    function persistPlaylists() {
       localStorage.setItem('nest_playlists', JSON.stringify(userPlaylists));
+    }
+
+    function createCustomPlaylist() {
+      const name = prompt("Enter a name for the new playlist:");
+      if (!name) return;
+      const playlist = { id: 'pl_' + Date.now(), name: name.trim(), trackIds: [] };
+      userPlaylists.push(playlist);
+      persistPlaylists();
       renderPlaylists();
-      showToast(`Playlist '${name}' created!`);
+      showToast(`Playlist "${playlist.name}" created`);
     }
 
     function renderPlaylists() {
       document.getElementById('drawerPlaylistCount').innerText = userPlaylists.length;
       document.getElementById('playlistsList').innerHTML = userPlaylists.map(pl => `
         <div class="glass p-3 rounded-2xl flex items-center justify-between">
-          <div class="flex items-center space-x-3">
+          <button onclick="openPlaylist('${pl.id}')" class="flex items-center space-x-3 text-left flex-1 min-w-0">
             <div class="w-10 h-10 rounded-xl bg-brand/20 border border-brand/40 flex items-center justify-center">
               <i data-lucide="list-music" class="w-5 h-5 text-brand"></i>
             </div>
-            <div>
-              <h4 class="text-xs font-bold text-white">${escapeHtml(pl.name)}</h4>
-              <p class="text-[10px] text-gray-400">${pl.trackIds.length} Tracks</p>
+            <div class="truncate">
+              <h4 class="text-xs font-bold text-white truncate">${escapeHtml(pl.name)}</h4>
+              <p class="text-[10px] text-gray-400">${(pl.trackIds || []).length} Tracks — tap to play</p>
             </div>
-          </div>
-          <button onclick="deletePlaylist('${pl.id}')" class="text-gray-400 hover:text-red-400 p-1.5"><i data-lucide="trash-2" class="w-4 h-4 text-white"></i></button>
+          </button>
+          <button onclick="event.stopPropagation(); deletePlaylist('${pl.id}')" class="text-gray-400 hover:text-red-400 p-1.5"><i data-lucide="trash-2" class="w-4 h-4 text-white"></i></button>
         </div>
       `).join('') || '<p class="text-center text-xs text-gray-500 py-6">No custom playlists yet. Tap "New Playlist" to start.</p>';
       lucide.createIcons();
     }
 
+    function openPlaylist(id) {
+      const pl = userPlaylists.find(p => p.id === id);
+      if (!pl) return;
+      const ids = pl.trackIds || [];
+      const tracks = allSongs.filter(t => ids.includes(t.id));
+      if (!tracks.length) {
+        showToast('This playlist is empty. Add tracks from the player.');
+        return;
+      }
+      playTrack(tracks[0].id);
+    }
+
+    function openAddToPlaylistModal() {
+      if (!currentPlayingTrack) {
+        showToast('Play a track first, then add it to a playlist.');
+        return;
+      }
+      const box = document.getElementById('addToPlaylistList');
+      if (box) {
+        box.innerHTML = userPlaylists.map(pl => {
+          const has = (pl.trackIds || []).includes(currentPlayingTrack.id);
+          return `<button onclick="addTrackToPlaylist('${pl.id}')" class="w-full glass p-3 rounded-xl flex items-center justify-between hover:border-brand/40">
+            <span class="font-bold text-white truncate">${escapeHtml(pl.name)}</span>
+            <span class="text-[10px] ${has ? 'text-brand' : 'text-gray-400'}">${has ? 'Added' : (pl.trackIds || []).length + ' tracks'}</span>
+          </button>`;
+        }).join('') || '<p class="text-center text-gray-500 py-3">No playlists yet. Create one below.</p>';
+      }
+      openModal('addToPlaylistModal');
+      lucide.createIcons();
+    }
+
+    function addTrackToPlaylist(plId) {
+      if (!currentPlayingTrack) return;
+      const pl = userPlaylists.find(p => p.id === plId);
+      if (!pl) return;
+      pl.trackIds = pl.trackIds || [];
+      if (!pl.trackIds.includes(currentPlayingTrack.id)) {
+        pl.trackIds.push(currentPlayingTrack.id);
+        persistPlaylists();
+        renderPlaylists();
+        showToast(`Added "${currentPlayingTrack.title}" to ${pl.name}`);
+      } else {
+        showToast('This track is already in that playlist');
+      }
+      closeModal('addToPlaylistModal');
+    }
+
     function deletePlaylist(id) {
       userPlaylists = userPlaylists.filter(p => p.id !== id);
-      localStorage.setItem('nest_playlists', JSON.stringify(userPlaylists));
+      persistPlaylists();
       renderPlaylists();
       showToast("Playlist deleted");
     }
@@ -1962,7 +2217,26 @@
           };
           await newRef.set(trackData);
 
-          showToast("Sound uploaded successfully!");
+          try {
+            const fcm = await queueAndSendFcm({
+              type: 'song',
+              songId: String(newRef.key),
+              songTitle: String(title),
+              artist: String(artist || '@nestmusic'),
+              uploader: String(trackData.uploaderUsername || artist || 'guest'),
+              title: 'New Song on Nest Music',
+              body: `Listen to "${title}" by ${artist || '@nestmusic'} on Nest Music.`,
+              source: 'upload'
+            });
+            if (fcm.ok) {
+              showToast(`Track published. Push sent to ${fcm.sent} device${fcm.sent === 1 ? '' : 's'}.`);
+            } else {
+              showToast('Track published. System-tray push will retry automatically.');
+            }
+          } catch (pushErr) {
+            console.warn('FCM after upload note:', pushErr);
+            showToast("Track published successfully.");
+          }
           document.getElementById('uploadForm').reset();
           progressBox.classList.add('hidden');
           closeModal('uploadModal');
@@ -2201,10 +2475,24 @@
       closeModal('reportModal');
     }
 
+    function openEditProfile() {
+      if (currentUserData) {
+        document.getElementById('editDisplayName').value = currentUserData.name || '';
+        document.getElementById('editUsername').value = currentUserData.username || '';
+        document.getElementById('editInstaHandle').value = currentUserData.instaHandle || '';
+        document.getElementById('editYtHandle').value = currentUserData.ytHandle || '';
+        document.getElementById('editXHandle').value = currentUserData.xHandle || '';
+      }
+      openModal('editProfileModal');
+    }
+
     function openModal(id) {
       const m = document.getElementById(id);
+      if (!m) return;
       m.classList.remove('hidden');
-      gsap.fromTo(m.children[0], { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(1.5)" });
+      if (m.children[0]) {
+        gsap.fromTo(m.children[0], { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(1.5)" });
+      }
     }
     function closeModal(id) {
       document.getElementById(id).classList.add('hidden');

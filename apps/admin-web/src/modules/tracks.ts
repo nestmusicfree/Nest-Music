@@ -1,4 +1,5 @@
 import { db, escapeHtml, serverTimestamp, type Track } from '../lib/firebase';
+import { sendFcmByRequestId, formatFcmResult } from '../lib/fcm';
 import { refreshIcons, switchTab } from '../lib/ui';
 
 let adminTracks: Track[] = [];
@@ -40,17 +41,22 @@ export function mountTracks() {
     if (status === 'approved') {
       const t = adminTracks.find(x => x.id === id);
       if (t) {
-        await db.ref('notification_requests').push({
+        const ref = await db.ref('notification_requests').push({
           type: 'song',
           songId: String(id),
           songTitle: String(t.title || 'New Song'),
           artist: String(t.artist || t.creator || '@nestmusic'),
           uploader: String(t.uploaderUsername || t.artist || '@nestmusic'),
-          title: '🎵 New Song on Nest Music',
+          title: 'New Song on Nest Music',
           body: `Listen to "${t.title}" by ${t.artist || '@nestmusic'} on Nest Music.`,
+          status: 'pending',
           requestedAt: serverTimestamp(),
           source: 'approve'
         });
+        const result = await sendFcmByRequestId(String(ref.key));
+        alert(result.ok
+          ? `Track is live. ${formatFcmResult(result)}`
+          : `Track is live. ${formatFcmResult(result)}`);
       }
     }
   };

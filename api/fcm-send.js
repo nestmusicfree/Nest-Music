@@ -10,6 +10,11 @@
 const admin = require('firebase-admin');
 
 const DB_URL = process.env.FIREBASE_DATABASE_URL || 'https://jokefi-default-rtdb.firebaseio.com';
+const CHANNEL_ID = 'nest_music_notifications';
+const STALE_CODES = new Set([
+  'messaging/registration-token-not-registered',
+  'messaging/invalid-registration-token'
+]);
 
 function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -38,55 +43,112 @@ function initAdmin() {
   });
 }
 
-function collectTokens(tree) {
-  const tokens = new Set();
-  if (!tree || typeof tree !== 'object') return [];
+function collectTokenEntries(tree) {
+  const entries = [];
+  if (!tree || typeof tree !== 'object') return entries;
   for (const uid of Object.keys(tree)) {
     const bucket = tree[uid];
     if (!bucket || typeof bucket !== 'object') continue;
     for (const tid of Object.keys(bucket)) {
       const entry = bucket[tid];
       const token = typeof entry === 'string' ? entry : (entry && (entry.token || entry.value));
-      if (token && typeof token === 'string' && token.length > 20) tokens.add(token);
+      if (token && typeof token === 'string' && token.length > 20) {
+        entries.push({ token, path: `device_tokens/${uid}/${tid}` });
+      }
     }
   }
-  return [...tokens];
+  return entries;
+}
+
+function isStaleTokenError(err) {
+  const code = (err && err.errorInfo && err.errorInfo.code) || (err && err.code) || '';
+  const msg = String((err && err.message) || err || '');
+  if (STALE_CODES.has(code)) return true;
+  return /NotRegistered|UNREGISTERED|registration-token-not-registered|Requested entity was not found/i.test(msg);
+}
+
+function buildMessage(token, payload) {
+  const songId = String(payload.songId || '');
+  const type = String(payload.type || 'song');
+  const title = payload.title || 'Nest Music';
+  const body = payload.body || '';
+  const deepLink = songId ? `nestmusic://track/${songId}` : 'nestmusic://open';
+  return {
+    token,
+    notification: { title, body },
+    data: {
+      songId,
+      type,
+      title,
+      body,
+      click_action: 'OPEN',
+      url: deepLink
+    },
+    android: {
+      priority: 'high',
+      ttl: 3600 * 1000,
+      notification: {
+        channelId: CHANNEL_ID,
+        sound: 'default',
+        defaultSound: true,
+        defaultVibrateTimings: true,
+        visibility: 'public',
+        notificationCount: 1,
+        clickAction: 'OPEN',
+        icon: 'ic_stat_nest',
+        color: '#1DB954',
+        tag: songId ? `nest-track-${songId}` : 'nest-music'
+      }
+    }
+  };
 }
 
 async function deliver(payload) {
   const db = admin.database();
   const snap = await db.ref('device_tokens').once('value');
-  const tokens = collectTokens(snap.val());
-  let sent = 0, failed = 0;
+  const entries = collectTokenEntries(snap.val());
+  const seen = new Set();
+  const unique = entries.filter((e) => {
+    if (seen.has(e.token)) return false;
+    seen.add(e.token);
+    return true;
+  });
+
+  let sent = 0;
+  let failed = 0;
+  let cleaned = 0;
   const errors = [];
 
-  for (const token of tokens) {
+  for (const { token, path } of unique) {
     try {
-      await admin.messaging().send({
-        token,
-        notification: {
-          title: payload.title || 'Nest Music',
-          body: payload.body || ''
-        },
-        data: {
-          songId: String(payload.songId || ''),
-          type: String(payload.type || 'song')
-        },
-        android: {
-          priority: 'high',
-          notification: {
-            channelId: 'nest_music_notifications',
-            sound: 'default'
-          }
-        }
-      });
+      await admin.messaging().send(buildMessage(token, payload));
       sent++;
     } catch (e) {
       failed++;
-      if (errors.length < 5) errors.push(String(e && e.message || e));
+      if (isStaleTokenError(e)) {
+        try {
+          await db.ref(path).remove();
+          cleaned++;
+        } catch (_) { /* ignore prune failure */ }
+      }
+      if (errors.length < 8) errors.push(String(e && e.message || e));
     }
   }
-  return { sent, failed, tokenCount: tokens.length, errors };
+  return { sent, failed, cleaned, tokenCount: unique.length, errors };
+}
+
+function payloadFromRequest(reqData, fallback) {
+  const src = reqData || fallback || {};
+  return {
+    title: src.title || 'Nest Music',
+    body: src.body || '',
+    songId: src.songId || src.trackId || '',
+    type: src.type || 'song'
+  };
+}
+
+function isCronOrGet(req) {
+  return req.method === 'GET' || req.headers['x-vercel-cron'] === '1';
 }
 
 module.exports = async function handler(req, res) {
@@ -102,7 +164,8 @@ module.exports = async function handler(req, res) {
   }
 
   const secret = process.env.FCM_SEND_SECRET;
-  if (secret) {
+  // Cron / GET drain must work without a Bearer token. POST is protected when a secret is set.
+  if (secret && !isCronOrGet(req)) {
     const auth = req.headers.authorization || '';
     if (auth !== `Bearer ${secret}`) {
       return res.status(401).json({ ok: false, error: 'Unauthorized' });
@@ -115,23 +178,13 @@ module.exports = async function handler(req, res) {
 
     if (req.method === 'POST') {
       const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
-      let payload = {
-        title: body.title || 'Nest Music',
-        body: body.body || '',
-        songId: body.songId || '',
-        type: body.type || 'song'
-      };
+      let payload = payloadFromRequest(null, body);
       const requestId = body.requestId || null;
       if (requestId) {
         const snap = await db.ref(`notification_requests/${requestId}`).once('value');
         const reqData = snap.val();
         if (!reqData) return res.status(404).json({ ok: false, error: 'notification request not found' });
-        payload = {
-          title: reqData.title || 'Nest Music',
-          body: reqData.body || '',
-          songId: reqData.songId || reqData.trackId || '',
-          type: reqData.type || 'song'
-        };
+        payload = payloadFromRequest(reqData);
       }
       const result = await deliver(payload);
       if (requestId) {
@@ -139,33 +192,32 @@ module.exports = async function handler(req, res) {
           status: 'sent',
           sentAt: Date.now(),
           sentCount: result.sent,
-          failedCount: result.failed
+          failedCount: result.failed,
+          cleanedCount: result.cleaned,
+          tokenCount: result.tokenCount
         });
       }
       return res.status(200).json({ ok: true, ...result });
     }
 
-    // GET — drain pending
+    // GET / cron — drain pending
     const allSnap = await db.ref('notification_requests').once('value');
     const all = allSnap.val();
     if (!all) return res.status(200).json({ ok: true, processed: 0 });
     const pending = Object.entries(all)
       .filter(([, v]) => v && v.status !== 'sent')
-      .slice(-10);
+      .slice(-20);
     let processed = 0;
     const results = [];
     for (const [id, reqData] of pending) {
-      const result = await deliver({
-        title: reqData.title || 'Nest Music',
-        body: reqData.body || '',
-        songId: reqData.songId || reqData.trackId || '',
-        type: reqData.type || 'song'
-      });
+      const result = await deliver(payloadFromRequest(reqData));
       await db.ref(`notification_requests/${id}`).update({
         status: 'sent',
         sentAt: Date.now(),
         sentCount: result.sent,
-        failedCount: result.failed
+        failedCount: result.failed,
+        cleanedCount: result.cleaned,
+        tokenCount: result.tokenCount
       });
       processed++;
       results.push({ id, ...result });

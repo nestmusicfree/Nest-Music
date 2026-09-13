@@ -23,6 +23,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!-- FCM notification tap (click_action OPEN) -->
+            <intent-filter>
+                <action android:name="OPEN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
             <!-- App deep links / shared track links -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -55,6 +61,12 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="nest_music_notifications" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_nest" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/nest_brand" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

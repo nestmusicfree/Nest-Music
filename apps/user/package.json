@@ -1,6 +1,6 @@
 {
   "name": "nest-music-user",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "description": "Nest Music user Android app",
   "scripts": {

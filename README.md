@@ -1,6 +1,6 @@
 # Nest Music
 
-Lossless audio streaming — web + dual Android apps (v1.2.0).
+Lossless audio streaming — web + dual Android apps (v1.2.1).
 
 **Repo:** https://github.com/nestmusicfree/Nest-Music  
 **Live web:** https://nest-music.vercel.app  

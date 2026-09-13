@@ -19,7 +19,7 @@ export function mountAppDist() {
         </div>
         <div>
           <label class="block text-gray-300 font-semibold mb-1">Latest Release Tag</label>
-          <input type="text" id="appDistRelease" placeholder="v1.2.0" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white focus:border-brand outline-none" />
+          <input type="text" id="appDistRelease" placeholder="v1.2.1" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white focus:border-brand outline-none" />
         </div>
         <div>
           <label class="block text-gray-300 font-semibold mb-1">Notes (optional)</label>

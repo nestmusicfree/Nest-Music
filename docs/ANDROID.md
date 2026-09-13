@@ -4,8 +4,8 @@
 
 | App | applicationId | Web entry | Version |
 |-----|---------------|-----------|---------|
-| Nest Music (user) | `com.nestmusic.app` | `www/index.html` | 1.2.0 |
-| Nest Music Admin | `com.nestmusic.admin` | `apps/admin-web` build | 1.2.0 |
+| Nest Music (user) | `com.nestmusic.app` | `www/index.html` | 1.2.1 |
+| Nest Music Admin | `com.nestmusic.admin` | `apps/admin-web` build | 1.2.1 |
 
 ## Features (user app)
 
@@ -29,3 +29,9 @@ export ANDROID_HOME=... JAVA_HOME=...
 cd apps/user && npm i && npm run cap:sync && cd android && ./gradlew assembleRelease
 cd apps/admin && npm i && npm run cap:sync && cd android && ./gradlew assembleRelease
 ```
+
+## System tray notifications (v1.2.1)
+
+- Default FCM icon: `ic_stat_nest` + channel `nest_music_notifications` created in `MainActivity`
+- First launch shows an English Allow Notifications sheet, then Android `POST_NOTIFICATIONS`
+- Native in-app RTDB toasts are gated so they do not replace real FCM tray alerts
