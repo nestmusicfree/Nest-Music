@@ -1,5 +1,5 @@
 /**
- * Nest Music v1.3.1 — Real device downloads (MediaStore + ID3 + cover badge),
+ * Nest Music v1.4.0 — Real device downloads (MediaStore + ID3 + cover badge),
  * lyrics (Firebase multi-lang / LRC), rating stars, install-or-open helpers.
  * English UI only. No emoji characters in UI strings.
  */

@@ -34,3 +34,11 @@ curl -X POST https://nest-music.vercel.app/api/fcm-send \
 ```
 
 Expect `{ ok: true, tokenCount, sent, failed }`.
+
+## Image notifications (v1.4.0)
+
+`/api/fcm-send` sets `notification.imageUrl` and `android.notification.imageUrl`.
+
+- Song pushes: track `coverUrl` if it is `https://`, otherwise the Nest Music logo.
+- Manual admin messages: pasted image URL, or uploaded file stored on `announcements/{id}` and served at `/api/announce-image?id=`.
+- `notification_requests.type` may be `song` or `message` (no song required).

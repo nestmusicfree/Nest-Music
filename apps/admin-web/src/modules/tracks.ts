@@ -41,6 +41,10 @@ export function mountTracks() {
     if (status === 'approved') {
       const t = adminTracks.find(x => x.id === id);
       if (t) {
+        const cover = (t as any).coverUrl || '';
+        const imageUrl = (typeof cover === 'string' && /^https?:\/\//i.test(cover))
+          ? cover
+          : 'https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png';
         const ref = await db.ref('notification_requests').push({
           type: 'song',
           songId: String(id),
@@ -49,6 +53,8 @@ export function mountTracks() {
           uploader: String(t.uploaderUsername || t.artist || '@nestmusic'),
           title: 'New Song on Nest Music',
           body: `Listen to "${t.title}" by ${t.artist || '@nestmusic'} on Nest Music.`,
+          imageUrl,
+          coverUrl: imageUrl,
           status: 'pending',
           requestedAt: serverTimestamp(),
           source: 'approve'

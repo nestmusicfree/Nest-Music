@@ -39,6 +39,8 @@ export type Track = {
   downloadsCount?: number;
   isExplicit?: boolean | string;
   coverBase64?: string;
+  coverUrl?: string;
+  imageUrl?: string;
   uploaderUsername?: string;
   uploaderUid?: string;
   lyrics?: Record<string, string> | string;

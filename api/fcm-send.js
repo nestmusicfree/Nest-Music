@@ -67,20 +67,32 @@ function isStaleTokenError(err) {
   return /NotRegistered|UNREGISTERED|registration-token-not-registered|Requested entity was not found/i.test(msg);
 }
 
+const DEFAULT_IMAGE = 'https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png';
+
+function publicImageUrl(payload) {
+  const raw = payload.imageUrl || payload.image || payload.coverUrl || payload.cover || '';
+  if (typeof raw === 'string' && /^https?:\/\//i.test(raw)) return raw;
+  const aid = payload.announcementId || payload.imageId || payload.requestId || '';
+  if (aid) return `https://nest-music.vercel.app/api/announce-image?id=${encodeURIComponent(aid)}`;
+  return DEFAULT_IMAGE;
+}
+
 function buildMessage(token, payload) {
   const songId = String(payload.songId || '');
   const type = String(payload.type || 'song');
   const title = payload.title || 'Nest Music';
   const body = payload.body || '';
+  const imageUrl = publicImageUrl(payload);
   const deepLink = songId ? `nestmusic://track/${songId}` : 'nestmusic://open';
   return {
     token,
-    notification: { title, body },
+    notification: { title, body, imageUrl },
     data: {
       songId,
       type,
       title,
       body,
+      imageUrl,
       click_action: 'OPEN',
       url: deepLink
     },
@@ -97,7 +109,8 @@ function buildMessage(token, payload) {
         clickAction: 'OPEN',
         icon: 'ic_stat_nest',
         color: '#1DB954',
-        tag: songId ? `nest-track-${songId}` : 'nest-music'
+        imageUrl,
+        tag: songId ? `nest-track-${songId}` : (type === 'message' ? 'nest-message' : 'nest-music')
       }
     }
   };
@@ -143,7 +156,10 @@ function payloadFromRequest(reqData, fallback) {
     title: src.title || 'Nest Music',
     body: src.body || '',
     songId: src.songId || src.trackId || '',
-    type: src.type || 'song'
+    type: src.type || 'song',
+    imageUrl: src.imageUrl || src.image || src.coverUrl || '',
+    announcementId: src.announcementId || src.imageId || '',
+    requestId: src.requestId || ''
   };
 }
 
@@ -184,7 +200,7 @@ module.exports = async function handler(req, res) {
         const snap = await db.ref(`notification_requests/${requestId}`).once('value');
         const reqData = snap.val();
         if (!reqData) return res.status(404).json({ ok: false, error: 'notification request not found' });
-        payload = payloadFromRequest(reqData);
+        payload = payloadFromRequest({ ...reqData, requestId, announcementId: reqData.announcementId || requestId });
       }
       const result = await deliver(payload);
       if (requestId) {
@@ -210,7 +226,7 @@ module.exports = async function handler(req, res) {
     let processed = 0;
     const results = [];
     for (const [id, reqData] of pending) {
-      const result = await deliver(payloadFromRequest(reqData));
+      const result = await deliver(payloadFromRequest({ ...reqData, requestId: id, announcementId: reqData.announcementId || id }));
       await db.ref(`notification_requests/${id}`).update({
         status: 'sent',
         sentAt: Date.now(),

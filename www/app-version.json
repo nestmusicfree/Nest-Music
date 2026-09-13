@@ -1,9 +1,9 @@
 {
-  "version": "1.3.1",
-  "build": 131,
-  "bundleUrl": "https://nest-music.vercel.app/bundles/v1.3.1/www.zip",
-  "staticBase": "https://nest-music.vercel.app/bundles/v1.3.1/",
-  "notes": "v1.3.1 \u2014 Compact professional UI, real device downloads with Nest Music metadata, lyrics with language picker, install-or-open share links, player overflow menu, filled rating stars. YouTube Content ID requires a partner account (metadata + cover badge only).",
-  "minNative": "1.3.1",
+  "version": "1.4.0",
+  "build": 140,
+  "bundleUrl": "https://nest-music.vercel.app/bundles/v1.4.0/www.zip",
+  "staticBase": "https://nest-music.vercel.app/bundles/v1.4.0/",
+  "notes": "v1.4.0 — Spotify-like Home, Search, Your Library, Create sheet, Now Playing scroll/sticky, image notifications, admin manual messages, device downloads.",
+  "minNative": "1.4.0",
   "apkUrl": "https://github.com/nestmusicfree/Nest-Music/releases/latest/download/NestMusic-user.apk"
 }

@@ -33,11 +33,11 @@ module.exports = async function handler(req, res) {
 
   // Fallback inline (kept in sync with www/app-version.json)
   return res.status(200).json({
-    version: '1.3.1',
-    build: 131,
-    bundleUrl: 'https://nest-music.vercel.app/bundles/v1.3.1/www.zip',
-    staticBase: 'https://nest-music.vercel.app/bundles/v1.3.1/',
+    version: '1.4.0',
+    build: 140,
+    bundleUrl: 'https://nest-music.vercel.app/bundles/v1.4.0/www.zip',
+    staticBase: 'https://nest-music.vercel.app/bundles/v1.4.0/',
     notes: 'Themes, in-app OTA, offline downloads, queue, Smart Radio, social lite.',
-    minNative: '1.3.1'
+    minNative: '1.4.0'
   });
 };
