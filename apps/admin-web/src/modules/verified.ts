@@ -59,7 +59,7 @@ function render() {
         <div class="flex items-center space-x-2">
           <span class="text-gray-300 font-semibold text-[11px]">Auto-Push Upload:</span>
           <button onclick="toggleCreatorAutoNotify('${u.uid}', ${u.autoNotifyEnabled === false ? 'true' : 'false'})" class="px-3 py-1.5 rounded-xl font-bold transition ${u.autoNotifyEnabled !== false ? 'bg-brand text-black' : 'bg-neutral-800 text-gray-400 border border-white/10'}">
-            ${u.autoNotifyEnabled !== false ? '🔔 ON' : '🔕 OFF'}
+            ${u.autoNotifyEnabled !== false ? 'ON' : 'OFF'}
           </button>
         </div>
         <button onclick="removeGreenTick('${u.uid}')" class="px-3 py-1.5 bg-red-600/20 text-red-400 border border-red-500/30 rounded-xl hover:bg-red-600 hover:text-white transition">Revoke Tick</button>

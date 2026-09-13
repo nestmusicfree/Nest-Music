@@ -28,6 +28,11 @@ public class MainActivity extends BridgeActivity {
             Log.e(TAG, "NestMediaSession register failed (fail-soft)", t);
         }
         try {
+            registerPlugin(MediaStorePlugin.class);
+        } catch (Throwable t) {
+            Log.e(TAG, "NestMediaStore register failed (fail-soft)", t);
+        }
+        try {
             super.onCreate(savedInstanceState);
         } catch (Throwable t) {
             Log.e(TAG, "BridgeActivity onCreate failed", t);
@@ -69,6 +74,7 @@ public class MainActivity extends BridgeActivity {
         if (intent == null) return;
         Uri data = intent.getData();
         if (data == null) return;
-        // Capacitor App plugin getLaunchUrl covers this; keep intent data intact.
+        // Capacitor App plugin getLaunchUrl / appUrlOpen covers routing into JS.
+        Log.i(TAG, "deep link: " + data.toString());
     }
 }

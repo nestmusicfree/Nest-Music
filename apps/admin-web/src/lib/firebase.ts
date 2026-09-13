@@ -41,6 +41,7 @@ export type Track = {
   coverBase64?: string;
   uploaderUsername?: string;
   uploaderUid?: string;
+  lyrics?: Record<string, string> | string;
 };
 
 export type NestUser = {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Nest Music — Lossless Audio Dimension</title>
+  <title>Nest Music — Nest Music</title>
   
   <meta name="theme-color" content="#1DB954" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -97,7 +97,7 @@
     }
   </style>
   <link rel="stylesheet" href="css/themes.css" />
-  <meta name="nest-app-version" content="1.3.0" />
+  <meta name="nest-app-version" content="1.3.1" />
 </head>
 <body data-theme="midnight" class="pb-28 selection:bg-brand selection:text-black">
 
@@ -112,32 +112,7 @@
     <h1 id="splashText" class="mt-6 text-3xl font-black tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-white via-brand-light to-brand opacity-0 transform translate-y-4">
       NEST MUSIC
     </h1>
-    <p id="splashTagline" class="text-[11px] text-gray-400 mt-2 tracking-widest uppercase opacity-0 font-bold">The Lossless Audio Dimension</p>
-  </div>
-
-  <!-- ==================== EXCLUSIVE SHARE REFERRAL LANDING SCREEN ==================== -->
-
-
-
-  <!-- ==================== FIRST-LAUNCH NOTIFICATION PERMISSION ==================== -->
-  <div id="notifPermissionSheet" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-[60] flex items-center justify-center p-4">
-    <div class="glass-modal max-w-sm w-full p-6 rounded-3xl space-y-4 text-xs">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-brand/20 border border-brand/40 flex items-center justify-center">
-          <i data-lucide="bell" class="w-6 h-6 text-brand"></i>
-        </div>
-        <div>
-          <h3 class="text-base font-black text-white">Allow Notifications</h3>
-          <p class="text-[11px] text-gray-400">Android system tray alerts</p>
-        </div>
-      </div>
-      <p class="text-gray-300 leading-relaxed">Nest Music can show song alerts in your Android notification tray — even when the app is closed or in the background. This is a real system notification, not only an in-app toast.</p>
-      <p class="text-[11px] text-gray-400">Tap Allow, then choose Allow on the Android permission dialog.</p>
-      <div class="grid grid-cols-2 gap-2 pt-1">
-        <button onclick="dismissNotificationPrompt()" class="py-3 rounded-xl glass text-white font-bold">Not now</button>
-        <button onclick="acceptNotificationPrompt()" class="py-3 rounded-xl bg-brand text-black font-extrabold">Allow Notifications</button>
-      </div>
-    </div>
+    <p id="splashTagline" class="text-[11px] text-gray-400 mt-2 tracking-widest uppercase opacity-0 font-bold">Music for everyone</p>
   </div>
 
   <!-- ==================== TOAST NOTIFICATION ENGINE ==================== -->
@@ -157,7 +132,7 @@
           <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-10 h-10 rounded-2xl object-contain bg-black p-1 border border-brand/40 shadow-lg shadow-brand/20" alt="Logo" />
           <div>
             <h3 class="font-extrabold text-base leading-tight text-white">Nest Music</h3>
-            <span class="text-[10px] text-brand uppercase font-bold tracking-wider">Cloud Audio Studio</span>
+            <span class="text-[10px] text-brand uppercase font-bold tracking-wider">Music</span>
           </div>
         </div>
         <button onclick="toggleDrawer(false)" class="p-1.5 rounded-full hover:bg-white/10 text-white"><i data-lucide="x" class="w-5 h-5 text-white"></i></button>
@@ -184,10 +159,6 @@
           <i data-lucide="cloud-upload" class="w-5 h-5 text-white"></i>
           <span>Upload Audio File</span>
         </button>
-        <button onclick="requestNativeNotificationPermission(); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-white transition">
-          <i data-lucide="bell" class="w-5 h-5 text-white"></i>
-          <span>Allow Notifications</span>
-        </button>
         
         <button onclick="switchView('libraryView'); toggleDrawer(false);" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 hover:text-white transition">
           <i data-lucide="library" class="w-5 h-5 text-white"></i>
@@ -213,7 +184,7 @@
     </div>
 
     <div class="border-t border-white/10 pt-4 text-xs text-gray-400 flex items-center justify-between">
-      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-brand animate-ping"></span> <span data-app-version>v1.3.0</span></span>
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-brand animate-ping"></span> <span data-app-version>v1.3.1</span></span>
       <button onclick="openModal('feedbackModal'); toggleDrawer(false);" class="text-white hover:text-brand transition">Feedback</button>
     </div>
   </aside>
@@ -265,37 +236,26 @@
     <main id="homeView" class="view-panel space-y-5">
       <!-- Categories Filter Tabs -->
       <div class="flex space-x-2 overflow-x-auto hide-scrollbar pb-1 text-xs font-bold">
-        <button onclick="filterCategory('all', this)" class="cat-pill active px-4 py-2 rounded-xl bg-brand text-black whitespace-nowrap transition">All Catalog</button>
+        <button onclick="filterCategory('all', this)" class="cat-pill active px-4 py-2 rounded-xl bg-brand text-black whitespace-nowrap transition">All</button>
         <button onclick="filterCategory('music', this)" class="cat-pill px-4 py-2 rounded-xl glass text-white whitespace-nowrap hover:border-brand/50 transition">Music & AI</button>
         <button onclick="filterCategory('bgm', this)" class="cat-pill px-4 py-2 rounded-xl glass text-white whitespace-nowrap hover:border-brand/50 transition">BGM & Loops</button>
         <button onclick="filterCategory('sfx', this)" class="cat-pill px-4 py-2 rounded-xl glass text-white whitespace-nowrap hover:border-brand/50 transition">SFX Effects</button>
         <button onclick="filterCategory('18plus', this)" class="cat-pill px-4 py-2 rounded-xl glass text-red-400 whitespace-nowrap hover:border-red-500/50 transition">Explicit 18+</button>
       </div>
 
-      <!-- Hero Banner With Native APK Guide Action -->
-      <div class="relative overflow-hidden rounded-3xl p-5 bg-gradient-to-br from-emerald-950 via-zinc-900 to-black border border-brand/30 shadow-2xl">
-        <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-brand/20 rounded-full blur-3xl"></div>
-        <div class="flex items-center gap-2">
-          <span class="text-[9px] font-black uppercase tracking-widest bg-brand/20 text-brand px-2.5 py-0.5 rounded-full border border-brand/30">Lossless 320kbps</span>
-          <span class="text-[9px] font-bold text-gray-400">Offline & Online Stream</span>
+      <!-- Compact home header -->
+      <div class="rounded-2xl px-4 py-3 glass border border-white/10 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 mb-0.5">
+            <span class="text-[9px] font-bold uppercase tracking-wider text-brand">Lossless</span>
+            <span class="text-[9px] text-gray-500">Stream &amp; offline</span>
+          </div>
+          <h3 class="text-sm font-bold text-white truncate">Discover Nest Music</h3>
+          <p class="text-[11px] text-gray-400 truncate">Music, BGM, and SFX from verified creators</p>
         </div>
-        <h3 class="text-xl font-black mt-2 leading-tight text-white">Stream, Upload & Share Lossless Waves</h3>
-        <p class="text-xs text-gray-400 mt-1 max-w-[240px]">Listen to AI generation, BGMs, and sound effects with verified creator badges & full cinema view.</p>
-        
-        <!-- Action Row -->
-        <div class="flex flex-wrap items-center gap-2 mt-4">
-          <button onclick="requestNativeNotificationPermission()" id="heroOfficialAppBtn" class="px-3.5 py-2.5 rounded-xl bg-white text-black text-xs font-black flex items-center gap-2 shadow-lg active:scale-95 transition hover:bg-gray-100">
-            <i data-lucide="bell" class="w-4 h-4 text-black"></i>
-            <span id="heroOfficialAppBtnText">Enable Notifications</span>
-          </button>
-
-          <button onclick="openModal('uploadModal')" class="px-3.5 py-2.5 rounded-xl bg-brand text-black text-xs font-extrabold flex items-center gap-1.5 hover:bg-brand-light active:scale-95 transition">
-            <i data-lucide="zap" class="w-4 h-4 text-black fill-black"></i> Fast Upload
-          </button>
-          
-          <button onclick="openShareCenter()" class="px-3.5 py-2.5 rounded-xl glass text-white text-xs font-bold hover:bg-white/10 transition flex items-center gap-1.5">
-            <i data-lucide="share-2" class="w-4 h-4 text-white"></i> Share App
-          </button>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button onclick="openModal('uploadModal')" class="px-3 py-2 rounded-xl bg-brand text-black text-[11px] font-bold active:scale-95 transition">Upload</button>
+          <button onclick="openShareCenter()" class="px-3 py-2 rounded-xl glass text-white text-[11px] font-bold hover:bg-white/10 transition">Share</button>
         </div>
       </div>
 
@@ -538,15 +498,15 @@
 
       <div class="glass-modal p-4 rounded-3xl space-y-3 text-xs">
         <h3 class="text-sm font-black text-white flex items-center gap-2"><i data-lucide="refresh-cw" class="w-4 h-4 text-brand"></i> App Updates</h3>
-        <p id="settingsAppVersion" class="text-brand font-mono">v1.3.0</p>
+        <p id="settingsAppVersion" class="text-brand font-mono">v1.3.1</p>
         <p id="settingsRemoteVersion" class="text-[10px] text-gray-400">Remote: —</p>
         <button onclick="checkForUpdates(true)" class="w-full py-3 rounded-xl bg-brand text-black font-extrabold active:scale-95 transition">Check for updates</button>
         <p class="text-[10px] text-gray-400">In-app OTA updates the web bundle without uninstalling the APK. Native shell min version may still require a store/APK bump.</p>
       </div>
 
       <div class="glass p-4 rounded-3xl text-[10px] text-gray-400 space-y-1">
-        <p>Nest Music · Lossless Audio Dimension</p>
-        <p>Phase 1 features are live. Some advanced creator tools show as Coming soon.</p>
+        <p>Nest Music</p>
+        <p>Stream, download to your device, and share tracks. English UI.</p>
       </div>
     </section>
 
@@ -566,7 +526,7 @@
           <button onclick="toggleLikeCurrent()" id="miniLikeBtn" class="p-2 rounded-full glass text-white hover:text-red-500 transition">
             <i data-lucide="heart" class="w-4 h-4 text-white"></i>
           </button>
-          <button onclick="togglePlayPause()" id="miniPlayBtn" class="w-10 h-10 rounded-2xl bg-brand text-black flex items-center justify-center hover:bg-brand-light active:scale-90 transition shadow-lg shadow-brand/30">
+          <button onclick="togglePlayPause()" id="miniPlayBtn" class="w-10 h-10 rounded-2xl bg-brand text-black flex items-center justify-center hover:bg-brand-light active:scale-90 transition shadow-md">
             <i data-lucide="play" class="w-5 h-5 text-black fill-black"></i>
           </button>
         </div>
@@ -579,7 +539,7 @@
 
   <!-- ==================== FULL-SCREEN CINEMA PLAYER ==================== -->
   <div id="fullPlayerModal" class="fixed inset-0 bg-darkBg z-50 transform translate-y-full transition-transform duration-500 overflow-y-auto hide-scrollbar flex flex-col justify-between p-6">
-    <div id="playerAmbientGlow" class="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-brand/20 blur-3xl pointer-events-none transition-all duration-700"></div>
+    <div id="playerAmbientGlow" class="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full bg-brand/10 blur-3xl pointer-events-none transition-all duration-700"></div>
 
     <!-- Header Controls -->
     <div class="relative z-10 flex items-center justify-between">
@@ -607,23 +567,19 @@
         <div id="cardArtwork" onclick="switchCarouselCard('lyrics')" class="carousel-card absolute inset-0 rounded-3xl overflow-hidden shadow-2xl border border-brand/30 bg-black cursor-pointer">
           <img id="fpCoverImg" src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-full h-full object-cover" />
           <div class="absolute bottom-2 right-2 px-2 py-1 bg-black/70 rounded-xl text-[9px] font-bold text-brand flex items-center gap-1">
-            <i data-lucide="align-left" class="w-3 h-3 text-white"></i> Tap for Lyrics
+            <i data-lucide="align-left" class="w-3 h-3 text-white"></i> Lyrics
           </div>
         </div>
 
-        <!-- Card 2: Synchronized Lyrics View -->
-        <div id="cardLyrics" onclick="switchCarouselCard('art')" class="carousel-card absolute inset-0 rounded-3xl p-5 glass-modal border border-brand/40 overflow-y-auto hide-scrollbar space-y-3 text-center cursor-pointer transform translate-x-full opacity-0 pointer-events-none">
-          <div class="flex items-center justify-between border-b border-white/10 pb-2">
-            <span class="text-[10px] font-mono text-brand uppercase font-bold">Synchronized Lyrics</span>
-            <span class="text-[9px] text-gray-400">Tap to view Artwork</span>
+        <!-- Card 2: Lyrics View -->
+        <div id="cardLyrics" class="carousel-card absolute inset-0 rounded-3xl p-4 glass-modal border border-white/10 overflow-hidden flex flex-col transform translate-x-full opacity-0 pointer-events-none">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2 mb-2 flex-shrink-0">
+            <span class="text-[10px] font-bold uppercase tracking-wide text-brand">Lyrics</span>
+            <button type="button" onclick="switchCarouselCard('art')" class="text-[9px] text-gray-400 hover:text-white">Artwork</button>
           </div>
-          <div id="lyricsContentBox" class="space-y-2.5 text-xs text-gray-300 font-medium py-2">
-            <p class="text-brand font-bold text-sm">♪ [Lossless Audio Stream Started] ♪</p>
-            <p>Rhythms pulsating deep in the night</p>
-            <p class="text-white font-extrabold text-sm scale-105">Nest Music elevating every byte</p>
-            <p>AI generation, lossless and pure</p>
-            <p>Vibrations designed to endure</p>
-            <p class="text-brand font-mono">♪ [Bass Drop & Spatial Waves] ♪</p>
+          <div id="lyricsLangPicker" class="hidden flex flex-wrap gap-1.5 mb-2 flex-shrink-0"></div>
+          <div id="lyricsContentBox" class="flex-1 overflow-y-auto hide-scrollbar space-y-2 text-xs text-gray-300 font-medium text-center py-2">
+            <p class="text-gray-400 text-sm py-8">No lyrics available for this track.</p>
           </div>
         </div>
       </div>
@@ -666,7 +622,7 @@
       <div class="flex items-center justify-between px-2">
         <button onclick="toggleShuffle()" id="fpShuffleBtn" class="p-2.5 text-white hover:text-brand transition"><i data-lucide="shuffle" class="w-5 h-5 text-white"></i></button>
         <button onclick="playPreviousTrack()" id="fpPrevBtn" class="p-2.5 text-white hover:text-brand transition"><i data-lucide="skip-back" class="w-6 h-6 text-white"></i></button>
-        <button onclick="togglePlayPause()" id="fpPlayBtn" class="w-16 h-16 rounded-3xl bg-brand text-black flex items-center justify-center shadow-xl shadow-brand/40 active:scale-90 transition hover:bg-brand-light">
+        <button onclick="togglePlayPause()" id="fpPlayBtn" class="w-16 h-16 rounded-3xl bg-brand text-black flex items-center justify-center shadow-lg active:scale-90 transition hover:bg-brand-light">
           <i data-lucide="play" class="w-8 h-8 text-black fill-black"></i>
         </button>
         <button onclick="(window.NestV13&&NestV13.playNextFromQueue())||playNextTrack()" id="fpNextBtn" class="p-2.5 text-white hover:text-brand transition"><i data-lucide="skip-forward" class="w-6 h-6 text-white"></i></button>
@@ -674,62 +630,50 @@
       </div>
 
       <!-- 5-Star Track Rating -->
-      <div class="flex items-center justify-center space-x-1.5 pt-2 border-t border-white/10 text-xs">
+      <div class="flex items-center justify-center space-x-1.5 pt-2 border-t border-white/10 text-xs" id="fpRatingStars">
         <span class="text-gray-400 mr-1 text-[11px]">Rate:</span>
-        <button onclick="rateTrack(1)" class="p-1 text-white hover:text-brand"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
-        <button onclick="rateTrack(2)" class="p-1 text-white hover:text-brand"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
-        <button onclick="rateTrack(3)" class="p-1 text-white hover:text-brand"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
-        <button onclick="rateTrack(4)" class="p-1 text-white hover:text-brand"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
-        <button onclick="rateTrack(5)" class="p-1 text-white hover:text-brand"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
-        <span id="fpRatingScore" class="text-brand font-bold font-mono ml-1.5">5.0 ★</span>
+        <button type="button" data-star="1" onclick="rateTrack(1)" class="p-1 text-white hover:text-brand" aria-label="1 star"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
+        <button type="button" data-star="2" onclick="rateTrack(2)" class="p-1 text-white hover:text-brand" aria-label="2 stars"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
+        <button type="button" data-star="3" onclick="rateTrack(3)" class="p-1 text-white hover:text-brand" aria-label="3 stars"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
+        <button type="button" data-star="4" onclick="rateTrack(4)" class="p-1 text-white hover:text-brand" aria-label="4 stars"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
+        <button type="button" data-star="5" onclick="rateTrack(5)" class="p-1 text-white hover:text-brand" aria-label="5 stars"><i data-lucide="star" class="w-4 h-4 text-white"></i></button>
+        <span id="fpRatingScore" class="text-brand font-bold font-mono ml-1.5">5.0</span>
       </div>
 
-      <!-- Action Utilities -->
-      <div class="flex items-center justify-around pt-2 text-xs">
-        <button onclick="downloadCurrentOffline()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
-          <i data-lucide="download" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]">Save Offline</span>
-        </button>
-        <button onclick="shareCurrentTrack()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
-          <i data-lucide="share-2" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]">Share</span>
-        </button>
-        <button onclick="openAddToPlaylistModal()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
-          <i data-lucide="list-plus" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]">Playlist</span>
-        </button>
-        <button onclick="openQueueModal()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
-          <i data-lucide="list-ordered" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]">Queue <span id="queueCountBadge">0</span></span>
-        </button>
-        <button onclick="openComments()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
-          <i data-lucide="message-circle" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]">Comments</span>
-        </button>
-        <button onclick="openModal('sleepTimerModal')" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
-          <i data-lucide="moon" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]" id="sleepTimerLabel">Timer</span>
-        </button>
-        <button onclick="openModal('speedModal')" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
-          <i data-lucide="gauge" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]" id="speedLabel">1.0x</span>
-        </button>
-        <button onclick="openCurrentArtistProfile()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
-          <i data-lucide="user" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]">Artist</span>
-        </button>
-        <button onclick="followCurrentArtist()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
-          <i data-lucide="user-plus" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]">Follow</span>
-        </button>
-        <button onclick="addCurrentToQueue()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
-          <i data-lucide="list-plus" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]">Add Queue</span>
-        </button>
-        <button onclick="openModal('reportModal')" class="flex flex-col items-center gap-1 text-white hover:text-red-400 transition">
-          <i data-lucide="flag" class="w-4 h-4 text-white"></i>
-          <span class="text-[10px]">Report</span>
-        </button>
+      <!-- Primary actions: Comment, Share, Download, Add to playlist + overflow -->
+      <div class="relative pt-2">
+        <div class="flex items-center justify-around text-xs">
+          <button onclick="openComments()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+            <i data-lucide="message-circle" class="w-5 h-5 text-white"></i>
+            <span class="text-[10px]">Comment</span>
+          </button>
+          <button onclick="shareCurrentTrack()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+            <i data-lucide="share-2" class="w-5 h-5 text-white"></i>
+            <span class="text-[10px]">Share</span>
+          </button>
+          <button onclick="downloadCurrentToDevice()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+            <i data-lucide="download" class="w-5 h-5 text-white"></i>
+            <span class="text-[10px]">Download</span>
+          </button>
+          <button onclick="openAddToPlaylistModal()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition">
+            <i data-lucide="list-plus" class="w-5 h-5 text-white"></i>
+            <span class="text-[10px]">Add to playlist</span>
+          </button>
+          <button onclick="NestMedia.togglePlayerOverflow()" class="flex flex-col items-center gap-1 text-white hover:text-brand transition" aria-label="More">
+            <i data-lucide="more-vertical" class="w-5 h-5 text-white"></i>
+            <span class="text-[10px]">More</span>
+          </button>
+        </div>
+        <div id="playerOverflowMenu" class="hidden absolute bottom-14 right-0 w-56 glass-modal border border-white/10 rounded-2xl p-2 shadow-2xl z-20 space-y-0.5">
+          <button onclick="openQueueModal(); NestMedia.closePlayerOverflow();" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-white/5 text-left text-white text-[11px] font-bold"><i data-lucide="list-ordered" class="w-4 h-4"></i> Queue <span id="queueCountBadge" class="text-brand ml-auto">0</span></button>
+          <button onclick="addCurrentToQueue(); NestMedia.closePlayerOverflow();" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-white/5 text-left text-white text-[11px] font-bold"><i data-lucide="list-plus" class="w-4 h-4"></i> Add to queue</button>
+          <button onclick="openModal('sleepTimerModal'); NestMedia.closePlayerOverflow();" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-white/5 text-left text-white text-[11px] font-bold"><i data-lucide="moon" class="w-4 h-4"></i> Sleep timer <span id="sleepTimerLabel" class="text-gray-400 ml-auto">Off</span></button>
+          <button onclick="openModal('speedModal'); NestMedia.closePlayerOverflow();" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-white/5 text-left text-white text-[11px] font-bold"><i data-lucide="gauge" class="w-4 h-4"></i> Speed <span id="speedLabel" class="text-gray-400 ml-auto">1.0x</span></button>
+          <button onclick="openModal('equalizerModal'); NestMedia.closePlayerOverflow();" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-white/5 text-left text-white text-[11px] font-bold"><i data-lucide="sliders" class="w-4 h-4"></i> Equalizer</button>
+          <button onclick="openCurrentArtistProfile(); NestMedia.closePlayerOverflow();" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-white/5 text-left text-white text-[11px] font-bold"><i data-lucide="user" class="w-4 h-4"></i> Artist profile</button>
+          <button onclick="followCurrentArtist(); NestMedia.closePlayerOverflow();" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-white/5 text-left text-white text-[11px] font-bold"><i data-lucide="user-plus" class="w-4 h-4"></i> Follow artist</button>
+          <button onclick="openModal('reportModal'); NestMedia.closePlayerOverflow();" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-white/5 text-left text-red-400 text-[11px] font-bold"><i data-lucide="flag" class="w-4 h-4"></i> Report</button>
+        </div>
       </div>
     </div>
   </div>
@@ -740,7 +684,7 @@
       <div class="flex items-center space-x-2">
         <img src="https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png" class="w-8 h-8 rounded-xl object-contain bg-black p-0.5 border border-brand/40" />
         <div>
-          <h3 class="text-sm font-black text-white">Nest App Share Suite</h3>
+          <h3 class="text-sm font-black text-white">Share Nest Music</h3>
           <span class="text-[10px] text-brand font-mono font-bold">Share Nest Music</span>
         </div>
       </div>
@@ -767,6 +711,11 @@
           <i data-lucide="copy" class="w-3.5 h-3.5 text-black"></i> Copy
         </button>
       </div>
+      <div class="flex gap-2 w-full max-w-sm">
+        <button type="button" onclick="NestMedia.tryOpenApp()" class="flex-1 py-2.5 rounded-xl bg-brand text-black text-xs font-extrabold">Open app</button>
+        <button type="button" onclick="NestMedia.startApkDownload()" class="flex-1 py-2.5 rounded-xl glass text-white text-xs font-bold">Get APK</button>
+      </div>
+      <p class="text-[10px] text-gray-500 text-center max-w-xs">If Nest Music is installed, Open app launches it. Otherwise Get APK downloads the latest release.</p>
     </div>
 
     <!-- Social Apps Share Grid -->
@@ -930,6 +879,12 @@
           </select>
         </div>
 
+        <div>
+          <label class="block text-gray-300 font-semibold mb-1">Lyrics (optional)</label>
+          <textarea id="trackLyrics" rows="3" placeholder="English lyrics or LRC timestamps. Other languages can be added in Admin." class="w-full bg-black/50 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-brand text-[11px]"></textarea>
+          <p class="text-[9px] text-gray-500 mt-1">Stored as tracks/{id}/lyrics.en — add more languages in Admin.</p>
+        </div>
+
         <div id="uploadProgressBox" class="hidden space-y-1.5 pt-2">
           <div class="flex justify-between text-[10px] text-gray-400 font-mono">
             <span id="uploadStatusText">Encoding Base64...</span>
@@ -1068,7 +1023,7 @@
         </div>
         <div>
           <h3 id="otaStatusText" class="text-base font-black text-white">Update available</h3>
-          <p id="otaVersionText" class="text-[11px] text-brand font-mono">v1.3.0</p>
+          <p id="otaVersionText" class="text-[11px] text-brand font-mono">v1.3.1</p>
         </div>
       </div>
       <p id="otaNotesText" class="text-gray-300 leading-relaxed">Bug fixes and improvements.</p>
@@ -1149,7 +1104,7 @@
   <script>
     // 1. PWA Dynamic Manifest & Inline Offline Service Worker
     const manifestData = {
-      name: "Nest Music — Lossless Audio Dimension",
+      name: "Nest Music — Nest Music",
       short_name: "Nest Music",
       start_url: "/?mode=standalone",
       display: "standalone",
@@ -1268,7 +1223,7 @@
             try { initCapacitorPushNotifications(); } catch (e) { console.warn('push init soft-fail', e); }
             try { initNativeMediaSessionBridge(); } catch (e) { console.warn('media init soft-fail', e); }
             try { listenForNotificationRequests(); } catch (e) { console.warn('notif listen soft-fail', e); }
-            try { maybeShowNotificationPrompt(); } catch (e) { console.warn('notif prompt soft-fail', e); }
+            /* notification permission sheet removed from UI; system FCM still works */
           }
         });
 
@@ -1337,7 +1292,7 @@
           console.warn("Notification channel setup notice:", channelErr);
         }
 
-        // Do not auto-prompt here — first launch uses the English Allow Notifications sheet.
+        // Do not auto-prompt here — notification UI sheets removed; FCM stays system-level.
         let permStatus = await PushNotifications.checkPermissions();
         if (permStatus.receive === 'granted') {
           await PushNotifications.register();
@@ -1381,29 +1336,13 @@
     }
 
     function updateNotificationCta(granted) {
-      const label = document.getElementById('heroOfficialAppBtnText');
-      if (label) label.innerText = granted ? 'Notifications On' : 'Allow Notifications';
+      /* hero notification CTA removed */
     }
 
     async function maybeShowNotificationPrompt() {
-      const PushNotifications = window.Capacitor?.Plugins?.PushNotifications || window.PushNotifications;
-      if (!PushNotifications) return;
-      try {
-        const perm = await PushNotifications.checkPermissions();
-        if (perm.receive === 'granted') {
-          localStorage.setItem('nest_notif_prompted', '1');
-          updateNotificationCta(true);
-          return;
-        }
-        if (localStorage.getItem('nest_notif_prompted') === '1') return;
-        const sheet = document.getElementById('notifPermissionSheet');
-        if (sheet) {
-          sheet.classList.remove('hidden');
-          try { lucide.createIcons(); } catch (e) {}
-        }
-      } catch (e) {
-        console.warn('Notification prompt note:', e);
-      }
+      // Per-screen notification toggles/sheets removed from UI.
+      // FCM still registers quietly via initCapacitorPushNotifications.
+      return;
     }
 
     async function acceptNotificationPrompt() {
@@ -1415,9 +1354,6 @@
 
     function dismissNotificationPrompt() {
       localStorage.setItem('nest_notif_prompted', '1');
-      const sheet = document.getElementById('notifPermissionSheet');
-      if (sheet) sheet.classList.add('hidden');
-      showToast('You can enable notifications later from the menu.');
     }
 
     async function requestNativeNotificationPermission() {
@@ -1439,11 +1375,11 @@
           if (res.receive === 'granted') {
             await PushNotifications.register();
             updateNotificationCta(true);
-            showToast('Notifications allowed. You will see Android tray alerts when the app is closed.');
+            showToast('Notifications enabled.');
           } else {
             console.warn('Push notification permission denied.');
             updateNotificationCta(false);
-            showToast('Notification permission denied. Enable it in Android Settings > Apps > Nest Music > Notifications.');
+            showToast('Notification permission denied. You can enable it in Android system settings.');
           }
         } catch (e) {
           console.error('Permission request failure:', e);
@@ -1452,11 +1388,11 @@
       } else if ('Notification' in window) {
         Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
-            showToast('Browser notifications allowed');
+            showToast('Browser notifications enabled');
           }
         });
       } else {
-        showToast('Install the Nest Music Android app to receive system-tray alerts.');
+        showToast('Install the Nest Music Android app for system alerts.');
       }
     }
 
@@ -1726,11 +1662,11 @@
           <div onclick="playTrack('${t.id}')" class="glass p-3 rounded-2xl cursor-pointer hover:border-brand/40 transition group active:scale-95 ${t.isPinned ? 'pinned-glow' : ''}">
             <div class="relative rounded-xl overflow-hidden aspect-square mb-2 bg-neutral-900">
               <img src="${t.coverBase64 || 'https://i.postimg.cc/sg287hck/thinkogic-sharpen-image-209299.png'}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-              <span class="absolute top-1.5 right-1.5 text-[9px] px-1.5 py-0.5 rounded bg-black/80 font-mono text-brand font-bold">★ ${t.rating || '5.0'}</span>
+              <span class="absolute top-1.5 right-1.5 text-[9px] px-1.5 py-0.5 rounded bg-black/80 font-mono text-brand font-bold">${t.rating || '5.0'}</span>
               <div class="absolute bottom-1.5 right-1.5 text-[9px] px-1.5 py-0.5 rounded bg-black/80 font-mono text-white flex items-center gap-1">
                 <i data-lucide="download" class="w-3 h-3 text-white"></i> ${t.downloadsCount || 0}
               </div>
-              ${t.isPinned ? '<span class="absolute top-1.5 left-1.5 text-[8px] bg-brand text-black font-black px-1.5 py-0.5 rounded shadow">📌 PINNED</span>' : ''}
+              ${t.isPinned ? '<span class="absolute top-1.5 left-1.5 text-[8px] bg-brand text-black font-black px-1.5 py-0.5 rounded shadow">PINNED</span>' : ''}
               ${t.isExplicit === 'true' || t.isExplicit === true ? '<span class="absolute bottom-1.5 left-1.5 text-[8px] bg-red-600 font-bold px-1 rounded">18+</span>' : ''}
             </div>
             <h4 class="text-xs font-black truncate text-white">${escapeHtml(t.title)}</h4>
@@ -1988,7 +1924,8 @@
       document.getElementById('fpGreenTick').style.display = isVerified ? 'inline-block' : 'none';
       document.getElementById('fpCoverImg').src = track.coverBase64;
       document.getElementById('fpAlbumTitle').innerText = (track.category || 'music').toUpperCase();
-      document.getElementById('fpRatingScore').innerText = `${track.rating || '5.0'} ★`;
+      document.getElementById('fpRatingScore').innerText = `${track.rating || '5.0'}`;
+      try { if (window.NestMedia) { NestMedia.restoreUserRating(track.id); NestMedia.loadLyricsForTrack(track); } } catch (e) {}
       document.getElementById('fpDownloadCount').innerText = track.downloadsCount || 0;
 
       document.getElementById('miniTitle').innerText = track.title;
@@ -2243,7 +2180,7 @@
     }
 
     function directSocialShare(platform) {
-      const shareTitle = `Install & Stream on Nest Music App — Lossless Audio Dimension`;
+      const shareTitle = `Install & Stream on Nest Music App — Nest Music`;
       const shareText = `${shareTitle}\n${APP_SHARE_URL}`;
 
       if (platform === 'whatsapp') {
@@ -2456,6 +2393,7 @@
         if (p >= 100) {
           clearInterval(interval);
           const newRef = db.ref('tracks').push();
+          const lyricsRaw = (document.getElementById('trackLyrics')?.value || '').trim();
           const trackData = {
             id: newRef.key,
             title,
@@ -2474,6 +2412,9 @@
             uploaderUsername: currentUserData?.username || currentUser?.email?.split('@')[0] || 'guest',
             createdAt: firebase.database.ServerValue.TIMESTAMP
           };
+          if (lyricsRaw) {
+            trackData.lyrics = { en: lyricsRaw };
+          }
           await newRef.set(trackData);
 
           try {
@@ -2576,10 +2517,13 @@
       }
       if (!currentPlayingTrack) return;
       const trackRef = db.ref(`tracks/${currentPlayingTrack.id}`);
-      const newRating = ((parseFloat(currentPlayingTrack.rating || 5) + stars) / 2).toFixed(1);
+      const prev = parseFloat(currentPlayingTrack.rating || 5);
+      const newRating = ((prev + stars) / 2).toFixed(1);
       await trackRef.update({ rating: newRating });
-      document.getElementById('fpRatingScore').innerText = `${newRating} ★`;
-      showToast(`Rated ${stars} Stars!`);
+      currentPlayingTrack.rating = newRating;
+      document.getElementById('fpRatingScore').innerText = newRating;
+      try { if (window.NestMedia) NestMedia.paintRatingStars(stars); } catch (e) {}
+      showToast('Rated ' + stars + ' of 5');
     }
 
     function setSleepTimer(mins) {
@@ -2762,5 +2706,6 @@
     }
   </script>
   <script src="js/nest-v13.js"></script>
+  <script src="js/nest-media.js"></script>
 </body>
 </html>

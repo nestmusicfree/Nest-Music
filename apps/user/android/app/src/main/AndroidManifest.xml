@@ -29,22 +29,23 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
-            <!-- App deep links / shared track links -->
+            <!-- Android App Links: https://nest-music.vercel.app/... -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="nest-music.vercel.app" />
-                <data android:scheme="https" android:host="nestmusic.vercel.app" />
-                <data android:scheme="https" android:host="nestmusic.free.nf" />
+                <data android:scheme="https" android:host="nest-music.vercel.app" android:pathPrefix="/" />
+                <data android:scheme="https" android:host="nestmusic.vercel.app" android:pathPrefix="/" />
             </intent-filter>
 
+            <!-- Custom scheme: nestmusic://track/ID , nestmusic://open -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="nestmusic" android:host="track" />
                 <data android:scheme="nestmusic" android:host="open" />
+                <data android:scheme="nestmusic" android:host="home" />
             </intent-filter>
         </activity>
 
@@ -75,4 +76,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 </manifest>

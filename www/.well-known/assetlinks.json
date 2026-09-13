@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.nestmusic.app",
+      "sha256_cert_fingerprints": [
+        "b0c490122ad21aa2b58f27007dd47b426457c30778dcc63189c267671c715b05"
+      ]
+    }
+  }
+]

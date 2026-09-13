@@ -10,12 +10,12 @@ Nest Music Capacitor apps ship a native shell (APK) plus a web bundle (`www`).
 
 ```json
 {
-  "version": "1.3.0",
+  "version": "1.3.1",
   "build": 130,
-  "bundleUrl": "https://nest-music.vercel.app/bundles/v1.3.0/www.zip",
-  "staticBase": "https://nest-music.vercel.app/bundles/v1.3.0/",
+  "bundleUrl": "https://nest-music.vercel.app/bundles/v1.3.1/www.zip",
+  "staticBase": "https://nest-music.vercel.app/bundles/v1.3.1/",
   "notes": "…",
-  "minNative": "1.3.0"
+  "minNative": "1.3.1"
 }
 ```
 
@@ -35,7 +35,7 @@ node scripts/pack-bundle.js
 ## Client flow
 
 1. On launch and via **Settings → Check for updates**, the app fetches the remote manifest.
-2. Compares `version` / `build` to local `APP_VERSION` (`1.3.0` / `130` in `www/js/nest-v13.js`).
+2. Compares `version` / `build` to local `APP_VERSION` (`1.3.1` / `130` in `www/js/nest-v13.js`).
 3. If newer: shows English **Update available** sheet.
 4. User taps **Update now** → download progress → store zip / cache static mirror (Filesystem + Preferences on native; Cache API + localStorage on web).
 5. App reloads / reopens onto the new bundle.
@@ -48,8 +48,8 @@ node scripts/pack-bundle.js
 
 ## Test steps
 
-1. Install user APK `1.3.0`.
-2. Confirm Settings shows `v1.3.0`.
+1. Install user APK `1.3.1`.
+2. Confirm Settings shows `v1.3.1`.
 3. Temporarily raise remote `app-version.json` to `1.3.1` and upload `/bundles/v1.3.1/`.
 4. Open app → sheet appears → Update now → progress → reload.
 5. Confirm Settings shows the new version string from the updated bundle.

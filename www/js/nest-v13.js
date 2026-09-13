@@ -1,14 +1,14 @@
 /**
- * Nest Music v1.3.0 — Themes, OTA updater, Downloads/Offline, Queue,
+ * Nest Music v1.3.1 — Themes, OTA updater, Downloads/Offline, Queue,
  * Settings, Social lite, Smart recommendations, Search history, Album upload helpers.
  * Loaded after the main inline app script hooks; extends window globals.
  */
 (function (global) {
   'use strict';
 
-  const APP_VERSION = '1.3.0';
-  const APP_BUILD = 130;
-  const APP_MIN_NATIVE = '1.3.0';
+  const APP_VERSION = '1.3.1';
+  const APP_BUILD = 131;
+  const APP_MIN_NATIVE = '1.3.1';
   const VERSION_URLS = [
     '/app-version.json',
     '/api/app-version',
@@ -16,10 +16,10 @@
   ];
   const THEMES = [
     { id: 'midnight', label: 'Midnight', desc: 'Classic green night' },
-    { id: 'aurora', label: 'Aurora', desc: 'Violet & mint glow' },
+    { id: 'aurora', label: 'Aurora', desc: 'Soft violet' },
     { id: 'ocean', label: 'Ocean', desc: 'Cyan deep sea' },
     { id: 'sunset', label: 'Sunset', desc: 'Warm orange rose' },
-    { id: 'space', label: 'Space', desc: 'Indigo & magenta' }
+    { id: 'space', label: 'Space', desc: 'Calm indigo' }
   ];
 
   global.APP_VERSION = APP_VERSION;

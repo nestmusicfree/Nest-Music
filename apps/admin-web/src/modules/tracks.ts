@@ -65,6 +65,26 @@ export function mountTracks() {
       await db.ref(`tracks/${id}`).remove();
     }
   };
+  (window as any).editTrackLyrics = async (id: string) => {
+    const t = adminTracks.find(x => x.id === id);
+    const lyr = t ? (t as any).lyrics : null;
+    const existing = lyr
+      ? (typeof lyr === 'string' ? lyr : JSON.stringify(lyr, null, 2))
+      : '{\n  "en": ""\n}';
+    const raw = prompt(
+      'Paste lyrics JSON map (e.g. {"en":"...","hi":"..."}) or plain English text. LRC timestamps supported.',
+      existing
+    );
+    if (raw == null) return;
+    let payload: any = raw.trim();
+    try {
+      payload = JSON.parse(raw);
+    } catch {
+      payload = { en: raw };
+    }
+    await db.ref(`tracks/${id}/lyrics`).set(payload);
+    alert('Lyrics saved for this track.');
+  };
   (window as any).selectTrackForPush = (trackId: string) => {
     switchTab('pushNotifTab');
     const sel = document.getElementById('notifTrackSelect') as HTMLSelectElement | null;
@@ -95,7 +115,7 @@ function render(tracks: Track[]) {
         <div class="truncate">
           <div class="flex items-center gap-2 flex-wrap">
             <h4 class="font-bold text-white text-sm">${escapeHtml(t.title)}</h4>
-            ${t.isPinned ? '<span class="text-[9px] px-2 py-0.5 rounded font-black uppercase bg-brand text-black">📌 PINNED ON TOP</span>' : ''}
+            ${t.isPinned ? '<span class="text-[9px] px-2 py-0.5 rounded font-black uppercase bg-brand text-black">PINNED</span>' : ''}
             <span class="text-[9px] px-2 py-0.5 rounded font-bold uppercase ${t.status === 'hold' ? 'bg-amber-500/20 text-amber-400' : 'bg-brand/20 text-brand'}">${t.status || 'approved'}</span>
             <span class="text-[9px] px-2 py-0.5 rounded font-bold bg-white/10 text-brand font-mono">Downloads: ${t.downloadsCount || 0}</span>
             ${t.isExplicit === 'true' || t.isExplicit === true ? '<span class="text-[8px] bg-red-600 font-bold px-1 rounded">18+</span>' : ''}
@@ -104,8 +124,9 @@ function render(tracks: Track[]) {
         </div>
       </div>
       <div class="flex items-center space-x-2 self-end md:self-center flex-wrap gap-1">
-        <button onclick="togglePinTrack('${t.id}', ${t.isPinned ? 'false' : 'true'})" class="px-3 py-1.5 rounded-xl font-bold transition ${t.isPinned ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' : 'bg-white/10 text-white hover:bg-white/20'}">${t.isPinned ? 'Unpin' : '📌 Pin to Dashboard'}</button>
-        <button onclick="selectTrackForPush('${t.id}')" class="px-3 py-1.5 bg-brand/20 border border-brand/40 text-brand font-bold rounded-xl hover:bg-brand hover:text-black transition">🔔 Send Push</button>
+        <button onclick="togglePinTrack('${t.id}', ${t.isPinned ? 'false' : 'true'})" class="px-3 py-1.5 rounded-xl font-bold transition ${t.isPinned ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' : 'bg-white/10 text-white hover:bg-white/20'}">${t.isPinned ? 'Unpin' : 'Pin to Dashboard'}</button>
+        <button onclick="editTrackLyrics('${t.id}')" class="px-3 py-1.5 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition">Lyrics</button>
+        <button onclick="selectTrackForPush('${t.id}')" class="px-3 py-1.5 bg-brand/20 border border-brand/40 text-brand font-bold rounded-xl hover:bg-brand hover:text-black transition">Send Push</button>
         ${t.status === 'hold'
           ? `<button onclick="updateStatus('${t.id}', 'approved')" class="px-3 py-1.5 bg-brand text-black font-bold rounded-xl hover:bg-brand-light transition">Make Live</button>`
           : `<button onclick="updateStatus('${t.id}', 'hold')" class="px-3 py-1.5 bg-amber-500 text-black font-bold rounded-xl hover:bg-amber-400 transition">Hold</button>`}
