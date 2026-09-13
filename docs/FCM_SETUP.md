@@ -1,23 +1,32 @@
-# Nest Music — Real FCM Setup (project jokefi)
+# Nest Music — Real FCM (project jokefi)
 
-## Done in repo / builds
+## Working now
 
-- Android apps registered: `com.nestmusic.app`, `com.nestmusic.admin`
-- Client `google-services.json` baked into:
-  - `apps/user/android/app/google-services.json`
-  - `apps/admin/android/app/google-services.json`
-- Sender ID / project number: `968982416863`
-- User APK requests `POST_NOTIFICATIONS` and registers tokens to RTDB `device_tokens/*`
-- Admin / approve flows write `notification_requests`
-- Vercel sender: `POST|GET /api/fcm-send` and `/api/fcm-drain` (FCM HTTP v1)
+- Client `google-services.json` on disk (gitignored) for:
+  - `apps/user/android/app/google-services.json` → `com.nestmusic.app`
+  - `apps/admin/android/app/google-services.json` → `com.nestmusic.admin` (+ app)
+- Sender ID: `968982416863`
+- Vercel `/api/fcm-send` + `/api/fcm-drain` use **firebase-admin** + `FIREBASE_SERVICE_ACCOUNT`
+- Admin UI / track approve write `notification_requests`; sender delivers to `device_tokens`
+- User app registers FCM tokens via Capacitor PushNotifications + `POST_NOTIFICATIONS`
 
-## Remaining (server push)
+## Local / CI rebuild notes
 
-1. Firebase Console → Project settings → Service accounts → **Generate new private key**
-2. Vercel project `nest-music` → Environment Variables (Production):
-   - `FIREBASE_SERVICE_ACCOUNT` = entire JSON (one line)
-   - Optional: `FCM_SEND_SECRET`, `FIREBASE_PROJECT_ID=jokefi`, `FIREBASE_DATABASE_URL=https://jokefi-default-rtdb.firebaseio.com`
-3. Redeploy Vercel (or wait for next deploy)
-4. Test: Admin → Send Push, or `curl -X POST https://nest-music.vercel.app/api/fcm-send -H 'Content-Type: application/json' -d '{"requestId":"..."}'`
+Keep `google-services.json` files on disk (not in git). Admin SDK JSON lives outside the repo
+(e.g. `/home/box/.secrets/nest-music/firebase-admin.json`) and only in Vercel env.
 
-**Never commit** the Admin SDK private key to git.
+```bash
+# Vercel env (already set in production for this project)
+# FIREBASE_SERVICE_ACCOUNT=<stringified JSON>
+# FIREBASE_PROJECT_ID=jokefi
+# FIREBASE_DATABASE_URL=https://jokefi-default-rtdb.firebaseio.com
+```
+
+Test:
+```bash
+curl -X POST https://nest-music.vercel.app/api/fcm-send \
+  -H 'Content-Type: application/json' \
+  -d '{"title":"Nest Music","body":"hello","type":"system"}'
+```
+
+Stale tokens return `NotRegistered` and can be pruned later.

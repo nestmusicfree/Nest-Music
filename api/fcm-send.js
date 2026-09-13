@@ -1,16 +1,14 @@
 /**
- * Nest Music FCM HTTP v1 sender (Vercel serverless).
- * Env:
- *   FIREBASE_SERVICE_ACCOUNT = full JSON string of Firebase service account
- *   FCM_SEND_SECRET (optional) = shared secret for Authorization: Bearer ...
+ * Nest Music FCM HTTP v1 sender (Vercel serverless) using firebase-admin.
+ * Env: FIREBASE_SERVICE_ACCOUNT = stringified service account JSON
+ * Optional: FCM_SEND_SECRET (Bearer), FIREBASE_DATABASE_URL, FIREBASE_PROJECT_ID
  *
- * POST /api/fcm-send
- *   body: { requestId?: string, title?, body?, songId?, data? }
- * If requestId is provided, loads notification_requests/{id} from RTDB.
- * Also supports GET (cron) to drain pending notification_requests with status!=sent.
+ * POST { requestId? , title?, body?, songId?, type? }
+ * GET  drains pending notification_requests (status != sent)
  */
 
-const PROJECT_ID = process.env.FIREBASE_PROJECT_ID || 'jokefi';
+const admin = require('firebase-admin');
+
 const DB_URL = process.env.FIREBASE_DATABASE_URL || 'https://jokefi-default-rtdb.firebaseio.com';
 
 function cors(res) {
@@ -29,52 +27,15 @@ function getServiceAccount() {
   }
 }
 
-async function getAccessToken(sa) {
-  const now = Math.floor(Date.now() / 1000);
-  const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
-  const claim = Buffer.from(JSON.stringify({
-    iss: sa.client_email,
-    sub: sa.client_email,
-    aud: 'https://oauth2.googleapis.com/token',
-    iat: now,
-    exp: now + 3600,
-    scope: 'https://www.googleapis.com/auth/firebase.messaging https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email'
-  })).toString('base64url');
-  const crypto = await import('crypto');
-  const sign = crypto.createSign('RSA-SHA256');
-  sign.update(`${header}.${claim}`);
-  sign.end();
-  const sig = sign.sign(sa.private_key, 'base64url');
-  const jwt = `${header}.${claim}.${sig}`;
-  const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({
-      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-      assertion: jwt
-    })
+function initAdmin() {
+  if (admin.apps.length) return admin.app();
+  const sa = getServiceAccount();
+  if (!sa) throw new Error('FIREBASE_SERVICE_ACCOUNT not configured');
+  return admin.initializeApp({
+    credential: admin.credential.cert(sa),
+    databaseURL: DB_URL,
+    projectId: process.env.FIREBASE_PROJECT_ID || sa.project_id || 'jokefi'
   });
-  const data = await tokenRes.json();
-  if (!data.access_token) throw new Error('Failed to mint Google access token: ' + JSON.stringify(data));
-  return data.access_token;
-}
-
-async function rtdbGet(path, accessToken) {
-  const url = `${DB_URL}/${path}.json?access_token=${encodeURIComponent(accessToken)}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`RTDB GET ${path} ${res.status}`);
-  return res.json();
-}
-
-async function rtdbPatch(path, body, accessToken) {
-  const url = `${DB_URL}/${path}.json?access_token=${encodeURIComponent(accessToken)}`;
-  const res = await fetch(url, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
-  if (!res.ok) throw new Error(`RTDB PATCH ${path} ${res.status}`);
-  return res.json();
 }
 
 function collectTokens(tree) {
@@ -92,56 +53,37 @@ function collectTokens(tree) {
   return [...tokens];
 }
 
-async function sendFcm(accessToken, token, payload) {
-  const res = await fetch(`https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      message: {
+async function deliver(payload) {
+  const db = admin.database();
+  const snap = await db.ref('device_tokens').once('value');
+  const tokens = collectTokens(snap.val());
+  let sent = 0, failed = 0;
+  const errors = [];
+
+  for (const token of tokens) {
+    try {
+      await admin.messaging().send({
         token,
         notification: {
-          title: payload.title,
-          body: payload.body
+          title: payload.title || 'Nest Music',
+          body: payload.body || ''
         },
         data: {
           songId: String(payload.songId || ''),
-          type: String(payload.type || 'song'),
-          click_action: 'FLUTTER_NOTIFICATION_CLICK'
+          type: String(payload.type || 'song')
         },
         android: {
-          priority: 'HIGH',
+          priority: 'high',
           notification: {
             channelId: 'nest_music_notifications',
-            sound: 'default',
-            clickAction: 'FLUTTER_NOTIFICATION_CLICK'
+            sound: 'default'
           }
         }
-      }
-    })
-  });
-  const json = await res.json().catch(() => ({}));
-  return { ok: res.ok, status: res.status, json };
-}
-
-async function deliver(accessToken, payload) {
-  const tokensTree = await rtdbGet('device_tokens', accessToken);
-  const tokens = collectTokens(tokensTree);
-  let sent = 0, failed = 0;
-  const errors = [];
-  for (const token of tokens) {
-    try {
-      const r = await sendFcm(accessToken, token, payload);
-      if (r.ok) sent++;
-      else {
-        failed++;
-        if (errors.length < 5) errors.push(r.json);
-      }
+      });
+      sent++;
     } catch (e) {
       failed++;
-      if (errors.length < 5) errors.push(String(e));
+      if (errors.length < 5) errors.push(String(e && e.message || e));
     }
   }
   return { sent, failed, tokenCount: tokens.length, errors };
@@ -151,12 +93,11 @@ module.exports = async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
 
-  const sa = getServiceAccount();
-  if (!sa) {
+  if (!getServiceAccount()) {
     return res.status(503).json({
       ok: false,
       error: 'FIREBASE_SERVICE_ACCOUNT not configured on Vercel',
-      hint: 'Paste the Firebase service account JSON into Vercel env FIREBASE_SERVICE_ACCOUNT, then redeploy.'
+      hint: 'Set FIREBASE_SERVICE_ACCOUNT to the Admin SDK JSON string, then redeploy.'
     });
   }
 
@@ -169,20 +110,21 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const accessToken = await getAccessToken(sa);
-    let payload = {
-      title: 'Nest Music',
-      body: 'New update',
-      songId: '',
-      type: 'song'
-    };
-    let requestId = null;
+    initAdmin();
+    const db = admin.database();
 
     if (req.method === 'POST') {
       const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
-      requestId = body.requestId || null;
+      let payload = {
+        title: body.title || 'Nest Music',
+        body: body.body || '',
+        songId: body.songId || '',
+        type: body.type || 'song'
+      };
+      const requestId = body.requestId || null;
       if (requestId) {
-        const reqData = await rtdbGet(`notification_requests/${requestId}`, accessToken);
+        const snap = await db.ref(`notification_requests/${requestId}`).once('value');
+        const reqData = snap.val();
         if (!reqData) return res.status(404).json({ ok: false, error: 'notification request not found' });
         payload = {
           title: reqData.title || 'Nest Music',
@@ -190,28 +132,22 @@ module.exports = async function handler(req, res) {
           songId: reqData.songId || reqData.trackId || '',
           type: reqData.type || 'song'
         };
-      } else {
-        payload = {
-          title: body.title || payload.title,
-          body: body.body || payload.body,
-          songId: body.songId || '',
-          type: body.type || 'song'
-        };
       }
-      const result = await deliver(accessToken, payload);
+      const result = await deliver(payload);
       if (requestId) {
-        await rtdbPatch(`notification_requests/${requestId}`, {
+        await db.ref(`notification_requests/${requestId}`).update({
           status: 'sent',
           sentAt: Date.now(),
           sentCount: result.sent,
           failedCount: result.failed
-        }, accessToken);
+        });
       }
       return res.status(200).json({ ok: true, ...result });
     }
 
-    // GET / drain latest unsent
-    const all = await rtdbGet('notification_requests', accessToken);
+    // GET — drain pending
+    const allSnap = await db.ref('notification_requests').once('value');
+    const all = allSnap.val();
     if (!all) return res.status(200).json({ ok: true, processed: 0 });
     const pending = Object.entries(all)
       .filter(([, v]) => v && v.status !== 'sent')
@@ -219,18 +155,18 @@ module.exports = async function handler(req, res) {
     let processed = 0;
     const results = [];
     for (const [id, reqData] of pending) {
-      const result = await deliver(accessToken, {
+      const result = await deliver({
         title: reqData.title || 'Nest Music',
         body: reqData.body || '',
         songId: reqData.songId || reqData.trackId || '',
         type: reqData.type || 'song'
       });
-      await rtdbPatch(`notification_requests/${id}`, {
+      await db.ref(`notification_requests/${id}`).update({
         status: 'sent',
         sentAt: Date.now(),
         sentCount: result.sent,
         failedCount: result.failed
-      }, accessToken);
+      });
       processed++;
       results.push({ id, ...result });
     }

@@ -18,6 +18,9 @@ public/
 *.apk
 !dist-apks/*.apk
 apps/keystore/keystore.properties
+# Firebase secrets / client configs (keep on disk for local builds only)
+**/google-services.json
 *firebase-adminsdk*.json
 *serviceAccount*.json
 **/service-account*.json
+**/firebase-admin.json
